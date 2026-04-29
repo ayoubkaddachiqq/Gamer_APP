@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox spacing="15.0" styleClass="glass-card" stylesheets="@../style.css"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.Controller.PostCardController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12.0">
+        <Circle radius="20.0" fill="#2c3a4c" stroke="#00eefc" strokeWidth="1.5" />
+        <VBox spacing="2.0">
+            <Label fx:id="userNameLabel" text="GhostProtocol_" styleClass="user-name" />
+            <HBox spacing="8.0" alignment="CENTER_LEFT">
+                <Label fx:id="gameTagLabel" text="VALORANT" styleClass="game-tag-badge" />
+                <Label text="2h ago" style="-fx-text-fill: #64748b; -fx-font-size: 11px;" />
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <Label fx:id="contentLabel" wrapText="true" styleClass="post-content"
+           text="Just reached Platinum III! The visual fidelity in this update is insane. 🚀" />
+
+    <Region prefHeight="1.0" style="-fx-background-color: rgba(255,255,255,0.1);" />
+
+    <HBox spacing="15.0" alignment="CENTER_LEFT">
+        <Button text="👍 GG's" styleClass="action-button" />
+        <Button text="💬 Comments" styleClass="action-button" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Share" styleClass="action-button" />
+    </HBox>
+</VBox>

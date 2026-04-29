@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.MainController"
+            stylesheets="@../style.css" styleClass="main-background">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" spacing="20.0" styleClass="top-nav">
+            <padding><Insets left="25.0" right="25.0"/></padding>
+            <Label text="TEAM HUB" styleClass="logo-text" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField promptText="Search talents..." styleClass="search-bar" prefWidth="300.0"/>
+            <Button text="Notifications" styleClass="icon-button"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" styleClass="sidebar" stylesheets="@../style.css">
+            <Button text="🏠 Home" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="🌍 Explore" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="🏆 Tournaments" styleClass="sidebar-button" maxWidth="Infinity" />
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox fx:id="feedContainer" spacing="25" alignment="TOP_CENTER">
+                <padding>
+                    <Insets top="30" right="50" bottom="30" left="50"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

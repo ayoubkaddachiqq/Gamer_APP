@@ -1,0 +1,82 @@
+/* GLOBAL SETTINGS */
+.root {
+    -fx-background-color: #051424; /* Dark Nexus Blue */
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+/* SIDEBAR STYLING - To keep it pretty */
+.sidebar {
+    -fx-background-color: #0d1c2d;
+    -fx-border-color: rgba(189, 0, 255, 0.3);
+    -fx-border-width: 0 1 0 0;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(189, 0, 255, 0.1);
+    -fx-text-fill: #bd00ff;
+}
+
+/* THE GLASS CARD - The one you liked */
+.glass-card {
+    -fx-background-color: rgba(18, 33, 49, 0.8);
+    -fx-background-radius: 15;
+    -fx-border-color: linear-gradient(to bottom right, #bd00ff, #00eefc);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0, 0, 8);
+}
+
+.user-name {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.game-tag-badge {
+    -fx-background-color: linear-gradient(to right, #bd00ff, #7e00aa);
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10;
+    -fx-background-radius: 10;
+}
+
+.post-content {
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 4;
+}
+
+/* SCROLLBAR - Making it invisible/sleek */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 5;
+}
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+}
+.logo-text {
+    -fx-font-family: "Space Grotesk", "System";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    /* Neon Gradient Text */
+    -fx-text-fill: linear-gradient(to right, #00eefc, #bd00ff);
+    /* Neon Glow Effect */
+    -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.7), 10, 0.5, 0, 0);
+    -fx-letter-spacing: 2px;
+}

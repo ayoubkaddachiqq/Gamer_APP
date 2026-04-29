@@ -11,6 +11,8 @@ public class Post {
 
 
 
+    public Post(){}
+
 
     public Post(int id, int userId, String content, String gameTag, Timestamp createdAt) {
         this.id = id;
