@@ -13,6 +13,12 @@ public class Post {
 
     public Post(){}
 
+    public Post(int userId, String content, String gameTag) {
+        this.userId = userId;
+        this.content = content;
+        this.gameTag = gameTag;
+    }
+
 
     public Post(int id, int userId, String content, String gameTag, Timestamp createdAt) {
         this.id = id;
