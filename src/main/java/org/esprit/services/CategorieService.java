@@ -1,3 +1,4 @@
+// service liée :categorie
 package org.esprit.services;
 
 import org.esprit.models.Categorie;
