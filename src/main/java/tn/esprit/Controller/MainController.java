@@ -20,6 +20,8 @@ public class MainController {
     public void initialize() {
         System.out.println("Interface loaded successfully!");
         loadTemporaryData();
+
+
     }
 
     // Inside MainController.java
