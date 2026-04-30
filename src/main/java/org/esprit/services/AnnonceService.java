@@ -117,4 +117,33 @@ public class AnnonceService {
         }
         return list;
     }
+    public void valider(Annonce a) throws Exception {
+        if (a.getTitre() == null || a.getTitre().trim().isEmpty())
+            throw new Exception("❌ Le titre est obligatoire !");
+
+        if (a.getTitre().length() < 5)
+            throw new Exception("❌ Le titre doit contenir au moins 5 caractères !");
+
+        if (a.getTitre().length() > 200)
+            throw new Exception("❌ Le titre ne doit pas dépasser 200 caractères !");
+
+        if (a.getDescription() == null || a.getDescription().trim().isEmpty())
+            throw new Exception("❌ La description est obligatoire !");
+
+        if (a.getJeu() == null || a.getJeu().trim().isEmpty())
+            throw new Exception("❌ Le jeu est obligatoire !");
+
+        if (a.getSalaire() < 0)
+            throw new Exception("❌ Le salaire ne peut pas être négatif !");
+
+        if (a.getSalaire() > 100000)
+            throw new Exception("❌ Le salaire semble invalide (max 100 000) !");
+
+        if (a.getIdCategorie() <= 0)
+            throw new Exception("❌ Veuillez choisir une catégorie !");
+
+        List<String> statutsValides = List.of("OUVERTE", "FERMEE", "EN_ATTENTE");
+        if (!statutsValides.contains(a.getStatut()))
+            throw new Exception("❌ Statut invalide ! Valeurs acceptées : OUVERTE, FERMEE, EN_ATTENTE");
+    }
 }
