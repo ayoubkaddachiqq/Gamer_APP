@@ -10,7 +10,7 @@ public class Main {
         AnnonceService annonceService = new AnnonceService();
         CategorieService categorieService = new CategorieService();
 
-        // --- TEST CATEGORIE ---
+        //___TEST CATEGORIE___
         Categorie cat = new Categorie();
         cat.setNom("Tank");
         cat.setDescription("Joueur défensif");
