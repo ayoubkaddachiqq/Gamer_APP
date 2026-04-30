@@ -185,3 +185,40 @@
     -fx-border-radius: 50%;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 238, 252, 0.5), 10, 0, 0, 0);
 }
+/* Glass Card Effect */
+.glass-card {
+    -fx-background-color: rgba(30, 41, 59, 0.6);
+    -fx-border-color: rgba(51, 65, 85, 0.5);
+}
+
+/* Text Area Styling */
+.post-text-area {
+    -fx-background-color: rgba(5, 20, 36, 0.5);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #64748b;
+    -fx-border-color: #334155;
+    -fx-border-radius: 10;
+}
+
+/* Action Buttons (Media, Clip, Poll) */
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-cursor: hand;
+}
+.action-button:hover {
+    -fx-text-fill: #ecb2ff; /* Primary color */
+}
+
+/* The Main Post Button */
+.post-button {
+    -fx-background-color: #bd00ff; /* Primary Container */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 8 25 8 25;
+    -fx-cursor: hand;
+}
+.post-button:hover {
+    -fx-opacity: 0.9;
+}

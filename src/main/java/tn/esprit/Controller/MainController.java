@@ -1,56 +1,81 @@
 package tn.esprit.Controller;
-import javafx.fxml.FXMLLoader;
-import tn.esprit.entities.Post;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import tn.esprit.entities.Post;
+import tn.esprit.services.ServicePost; // Ensure this is imported
+
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainController {
 
-    // This ID must match the fx:id="feedContainer" in your MainInterface.fxml
     @FXML
     private VBox feedContainer;
 
-    /**
-     * This method runs as soon as the FXML is loaded.
-     */
+    @FXML
+    private TextArea postInput; // Linked to your FXML TextArea
+
+    private ServicePost servicePost = new ServicePost();
+
+
+    @FXML private ComboBox<String> gameTagSelector;
+
     @FXML
     public void initialize() {
-        System.out.println("Interface loaded successfully!");
-        loadTemporaryData();
-
-
-    }
-
-    // Inside MainController.java
-    private void loadTemporaryData() {
-        for (int i = 1; i <= 3; i++) {
-            Post dummy = new Post();
-            dummy.setContent("Looking for a duo mate to climb the ranks! Message me if interested.");
-            dummy.setGameTag("VALORANT");
-
-            addPostToFeed(dummy);
+        System.out.println("Initializing controller...");
+        try {
+            List<Post> posts = servicePost.getAll();
+            System.out.println("Fetched " + posts.size() + " posts from DB.");
+            for (Post p : posts) {
+                addPostToFeed(p);
+            }
+        } catch (Exception e) {
+            System.err.println("Database loading failed: " + e.getMessage());
         }
     }
+
+    @FXML
+    private void handleCreatePost() {
+        String content = postInput.getText();
+        String selectedGame = gameTagSelector.getValue();
+
+        if (content == null || content.trim().isEmpty()) return;
+
+        Post newPost = new Post();
+        newPost.setContent(content);
+        newPost.setGameTag(selectedGame != null ? selectedGame : "General");
+        newPost.setUserId(1);
+
+        servicePost.add(newPost);
+        addPostToFeed(newPost);
+        postInput.clear();
+    }
+
+    @FXML
+    private void handleMedia() {
+        // Open a FileChooser to let the user select an image
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            System.out.println("Media selected: " + selectedFile.getAbsolutePath());
+        }
+    }
+
     private void addPostToFeed(Post post) {
         try {
-            // 1. Load the small PostCard design
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/PostCard.fxml"));
             VBox card = loader.load();
-
-            // 2. Get the controller of that specific card
             PostCardController cardController = loader.getController();
-
-            // 3. Send the Post data to that card's controller
             cardController.setData(post);
-
-            // 4. Add the card to the main window's feed
-            feedContainer.getChildren().add(card);
-
+            feedContainer.getChildren().add(0, card); // Adds to the top
         } catch (IOException e) {
-            System.err.println("Error: Could not find or load PostCard.fxml");
             e.printStackTrace();
         }
     }

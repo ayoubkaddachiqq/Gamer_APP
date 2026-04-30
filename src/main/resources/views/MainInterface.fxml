@@ -80,15 +80,43 @@
     </left>
 
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
-            <VBox fx:id="feedContainer" spacing="25" alignment="TOP_CENTER">
-                <padding>
-                    <Insets top="30" right="50" bottom="30" left="50"/>
-                </padding>
-            </VBox>
+        <ScrollPane fx:id="scrollArea" fitToWidth="true" prefHeight="800" prefWidth="600"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <content>
+                <VBox fx:id="mainWrapper" spacing="15" alignment="TOP_CENTER" style="-fx-padding: 30 50 30 50;">
+
+                    <VBox spacing="10"
+                          style="-fx-background-color: #1e293b; -fx-padding: 20; -fx-background-radius: 15; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 15;">
+
+                        <HBox spacing="15" alignment="CENTER">
+                            <TextArea fx:id="postInput"
+                                      promptText="What's happening?"
+                                      prefHeight="80"
+                                      HBox.hgrow="ALWAYS"
+                                      style="-fx-control-inner-background: #051424; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 10;" />
+                        </HBox>
+
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Button text="Media"
+                                    onAction="#handleMedia"
+                                    style="-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-cursor: hand;" />
+
+                            <ComboBox fx:id="gameTagSelector"
+                                      promptText="Game Tag"
+                                      style="-fx-background-color: #051424; -fx-text-fill: white;" />
+
+                            <Region HBox.hgrow="ALWAYS" /> <Button text="Post"
+                                                                   onAction="#handleCreatePost"
+                                                                   style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25 8 25;" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox fx:id="feedContainer" spacing="25" alignment="TOP_CENTER" />
+
+                </VBox>
+            </content>
         </ScrollPane>
     </center>
-
     <right>
         <VBox prefWidth="230.0" spacing="25.0" styleClass="sidebar"
               style="-fx-border-width: 0 0 0 1; -fx-background-color: #051424;">
