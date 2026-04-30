@@ -9,8 +9,40 @@ import java.util.List;
 public class AnnonceService {
     private Connection cnx = MyDatabase.getInstance().getConnection();
 
+    // VALIDATION
+    public void valider(Annonce a) throws Exception {
+        if (a.getTitre() == null || a.getTitre().trim().isEmpty())
+            throw new Exception("❌ Le titre est obligatoire !");
+
+        if (a.getTitre().length() < 5)
+            throw new Exception("❌ Le titre doit contenir au moins 5 caractères !");
+
+        if (a.getTitre().length() > 200)
+            throw new Exception("❌ Le titre ne doit pas dépasser 200 caractères !");
+
+        if (a.getDescription() == null || a.getDescription().trim().isEmpty())
+            throw new Exception("❌ La description est obligatoire !");
+
+        if (a.getJeu() == null || a.getJeu().trim().isEmpty())
+            throw new Exception("❌ Le jeu est obligatoire !");
+
+        if (a.getSalaire() < 0)
+            throw new Exception("❌ Le salaire ne peut pas être négatif !");
+
+        if (a.getSalaire() > 100000)
+            throw new Exception("❌ Le salaire semble invalide (max 100 000) !");
+
+        if (a.getIdCategorie() <= 0)
+            throw new Exception("❌ Veuillez choisir une catégorie !");
+
+        List<String> statutsValides = List.of("OUVERTE", "FERMEE", "EN_ATTENTE");
+        if (!statutsValides.contains(a.getStatut()))
+            throw new Exception("❌ Statut invalide ! Valeurs acceptées : OUVERTE, FERMEE, EN_ATTENTE");
+    }
+
     // CREATE
-    public void ajouter(Annonce a) throws SQLException {
+    public void ajouter(Annonce a) throws Exception {
+        valider(a); // ← validation avant insertion
         String sql = "INSERT INTO annonce (titre, description, jeu, salaire, date_publication, statut, id_categorie) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
@@ -25,7 +57,23 @@ public class AnnonceService {
         System.out.println("✅ Annonce ajoutée !");
     }
 
-    // READ ALL (avec JOIN pour récupérer le nom de la catégorie)
+    // UPDATE
+    public void modifier(Annonce a) throws Exception {
+        valider(a); // ← validation avant modification
+        String sql = "UPDATE annonce SET titre=?, description=?, jeu=?, salaire=?, statut=?, id_categorie=? WHERE id=?";
+        PreparedStatement ps = cnx.prepareStatement(sql);
+        ps.setString(1, a.getTitre());
+        ps.setString(2, a.getDescription());
+        ps.setString(3, a.getJeu());
+        ps.setDouble(4, a.getSalaire());
+        ps.setString(5, a.getStatut());
+        ps.setInt(6, a.getIdCategorie());
+        ps.setInt(7, a.getId());
+        ps.executeUpdate();
+        System.out.println("✅ Annonce modifiée !");
+    }
+
+    // READ ALL
     public List<Annonce> getAll() throws SQLException {
         List<Annonce> list = new ArrayList<>();
         String sql = "SELECT a.*, c.nom AS nom_categorie " +
@@ -72,21 +120,6 @@ public class AnnonceService {
         return null;
     }
 
-    // UPDATE
-    public void modifier(Annonce a) throws SQLException {
-        String sql = "UPDATE annonce SET titre=?, description=?, jeu=?, salaire=?, statut=?, id_categorie=? WHERE id=?";
-        PreparedStatement ps = cnx.prepareStatement(sql);
-        ps.setString(1, a.getTitre());
-        ps.setString(2, a.getDescription());
-        ps.setString(3, a.getJeu());
-        ps.setDouble(4, a.getSalaire());
-        ps.setString(5, a.getStatut());
-        ps.setInt(6, a.getIdCategorie());
-        ps.setInt(7, a.getId());
-        ps.executeUpdate();
-        System.out.println("✅ Annonce modifiée !");
-    }
-
     // DELETE
     public void supprimer(int id) throws SQLException {
         String sql = "DELETE FROM annonce WHERE id=?";
@@ -116,34 +149,5 @@ public class AnnonceService {
             list.add(a);
         }
         return list;
-    }
-    public void valider(Annonce a) throws Exception {
-        if (a.getTitre() == null || a.getTitre().trim().isEmpty())
-            throw new Exception("❌ Le titre est obligatoire !");
-
-        if (a.getTitre().length() < 5)
-            throw new Exception("❌ Le titre doit contenir au moins 5 caractères !");
-
-        if (a.getTitre().length() > 200)
-            throw new Exception("❌ Le titre ne doit pas dépasser 200 caractères !");
-
-        if (a.getDescription() == null || a.getDescription().trim().isEmpty())
-            throw new Exception("❌ La description est obligatoire !");
-
-        if (a.getJeu() == null || a.getJeu().trim().isEmpty())
-            throw new Exception("❌ Le jeu est obligatoire !");
-
-        if (a.getSalaire() < 0)
-            throw new Exception("❌ Le salaire ne peut pas être négatif !");
-
-        if (a.getSalaire() > 100000)
-            throw new Exception("❌ Le salaire semble invalide (max 100 000) !");
-
-        if (a.getIdCategorie() <= 0)
-            throw new Exception("❌ Veuillez choisir une catégorie !");
-
-        List<String> statutsValides = List.of("OUVERTE", "FERMEE", "EN_ATTENTE");
-        if (!statutsValides.contains(a.getStatut()))
-            throw new Exception("❌ Statut invalide ! Valeurs acceptées : OUVERTE, FERMEE, EN_ATTENTE");
     }
 }
