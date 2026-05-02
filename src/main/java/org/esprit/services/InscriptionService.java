@@ -1,13 +1,13 @@
 package org.esprit.services;
 
+import org.esprit.interfaces.IService;
 import org.esprit.models.Inscription;
 import org.esprit.utils.MyDataBase;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InscriptionService {
+public class InscriptionService implements IService<Inscription> {
 
     private Connection connection;
 
@@ -15,14 +15,14 @@ public class InscriptionService {
         connection = MyDataBase.getInstance().getConnection();
     }
 
-    public void ajouter(Inscription i) {
-        String sql = "INSERT INTO inscription (evenement_id, nom_joueur, email, statut) VALUES (?, ?, ?, ?)";
+    @Override
+    public void add(Inscription i) {
+        String sql = "INSERT INTO inscription (evenement_id, utilisateur_id, statut) VALUES (?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, i.getEvenementId());
-            ps.setString(2, i.getNomJoueur());
-            ps.setString(3, i.getEmail());
-            ps.setString(4, i.getStatut());
+            ps.setInt(2, i.getUtilisateurId());
+            ps.setString(3, i.getStatut());
             ps.executeUpdate();
             System.out.println("Inscription ajoutée !");
         } catch (SQLException ex) {
@@ -30,6 +30,7 @@ public class InscriptionService {
         }
     }
 
+    @Override
     public List<Inscription> getAll() {
         List<Inscription> liste = new ArrayList<>();
         String sql = "SELECT * FROM inscription";
@@ -40,8 +41,7 @@ public class InscriptionService {
                 Inscription i = new Inscription();
                 i.setId(rs.getInt("id"));
                 i.setEvenementId(rs.getInt("evenement_id"));
-                i.setNomJoueur(rs.getString("nom_joueur"));
-                i.setEmail(rs.getString("email"));
+                i.setUtilisateurId(rs.getInt("utilisateur_id"));
                 i.setStatut(rs.getString("statut"));
                 if (rs.getTimestamp("date_inscription") != null) {
                     i.setDateInscription(rs.getTimestamp("date_inscription").toLocalDateTime());
@@ -54,14 +54,14 @@ public class InscriptionService {
         return liste;
     }
 
-    public void modifier(Inscription i) {
-        String sql = "UPDATE inscription SET nom_joueur=?, email=?, statut=? WHERE id=?";
+    @Override
+    public void update(Inscription i) {
+        String sql = "UPDATE inscription SET utilisateur_id=?, statut=? WHERE id=?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, i.getNomJoueur());
-            ps.setString(2, i.getEmail());
-            ps.setString(3, i.getStatut());
-            ps.setInt(4, i.getId());
+            ps.setInt(1, i.getUtilisateurId());
+            ps.setString(2, i.getStatut());
+            ps.setInt(3, i.getId());
             ps.executeUpdate();
             System.out.println("Inscription modifiée !");
         } catch (SQLException ex) {
@@ -69,11 +69,12 @@ public class InscriptionService {
         }
     }
 
-    public void supprimer(int id) {
+    @Override
+    public void delete(Inscription i) {
         String sql = "DELETE FROM inscription WHERE id=?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, i.getId());
             ps.executeUpdate();
             System.out.println("Inscription supprimée !");
         } catch (SQLException ex) {
