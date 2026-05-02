@@ -132,4 +132,32 @@ public class EvenementService implements IService<Evenement> {
         }
         return liste;
     }
+    public List<Evenement> rechercherParLieu(String lieu) {
+        List<Evenement> liste = new ArrayList<>();
+        String sql = "SELECT * FROM evenement WHERE lieu LIKE ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + lieu + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Evenement e = new Evenement();
+                e.setId(rs.getInt("id"));
+                e.setTitre(rs.getString("titre"));
+                e.setDescription(rs.getString("description"));
+                e.setTypeId(rs.getInt("type_id"));
+                e.setDateDebut(rs.getTimestamp("date_debut").toLocalDateTime());
+                e.setDateFin(rs.getTimestamp("date_fin").toLocalDateTime());
+                e.setLieu(rs.getString("lieu"));
+                e.setLatitude(rs.getDouble("latitude"));
+                e.setLongitude(rs.getDouble("longitude"));
+                e.setNbParticipantsMax(rs.getInt("nb_participants_max"));
+                e.setStatut(rs.getString("statut"));
+                e.setImage(rs.getString("image"));
+                liste.add(e);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur recherche lieu : " + ex.getMessage());
+        }
+        return liste;
+    }
 }
