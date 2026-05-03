@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.esprit.controllers.GestionEvenementController">
+
+    <!-- TITRE -->
+    <Label text="🎮 Gestion des Événements" layoutX="30" layoutY="20"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- BARRE DE RECHERCHE -->
+    <Label text="Recherche par titre :" layoutX="30" layoutY="80"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfRecherchetitre" layoutX="180" layoutY="76"
+               prefWidth="200" promptText="Titre..."
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Recherche par lieu :" layoutX="400" layoutY="80"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfRechercheLieu" layoutX="550" layoutY="76"
+               prefWidth="200" promptText="Lieu..."
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Button fx:id="btnRechercher" text="🔍 Rechercher" layoutX="770" layoutY="76"
+            onAction="#rechercher"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+
+    <Button text="✖ Réinitialiser" layoutX="890" layoutY="76"
+            onAction="#reinitialiser"
+            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold;"/>
+
+    <!-- TABLEAU -->
+    <TableView fx:id="tableEvenements" layoutX="30" layoutY="120"
+               prefWidth="1140" prefHeight="480"
+               style="-fx-background-color: #1c2333;">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colTitre" text="Titre" prefWidth="180"/>
+            <TableColumn fx:id="colType" text="Type" prefWidth="120"/>
+            <TableColumn fx:id="colLieu" text="Lieu" prefWidth="150"/>
+            <TableColumn fx:id="colDateDebut" text="Date Début" prefWidth="150"/>
+            <TableColumn fx:id="colDateFin" text="Date Fin" prefWidth="150"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <!-- BOUTONS ACTIONS -->
+    <Button text="➕ Ajouter" layoutX="180" layoutY="620"
+            onAction="#ouvrirAjouter"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="✏️ Modifier" layoutX="350" layoutY="620"
+            onAction="#ouvrirModifier"
+            style="-fx-background-color: #ffa502; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="🗑️ Supprimer" layoutX="520" layoutY="620"
+            onAction="#supprimer"
+            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="👁️ Détails" layoutX="690" layoutY="620"
+            onAction="#ouvrirDetails"
+            style="-fx-background-color: #7bed9f; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="📋 Inscriptions" layoutX="860" layoutY="620"
+            onAction="#ouvrirInscriptions"
+            style="-fx-background-color: #a29bfe; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+</AnchorPane>

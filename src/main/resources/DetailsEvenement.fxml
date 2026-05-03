@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
+
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.esprit.controllers.DetailsEvenementController">
+
+    <!-- TITRE -->
+    <Label text="👁️ Détails de l'Événement" layoutX="30" layoutY="20"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+    <!-- INFOS -->
+    <Label text="Titre :" layoutX="30" layoutY="80"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbTitre" layoutX="150" layoutY="80"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Description :" layoutX="30" layoutY="120"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbDescription" layoutX="150" layoutY="120"
+           prefWidth="450" wrapText="true"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Type :" layoutX="30" layoutY="160"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbType" layoutX="150" layoutY="160"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Lieu :" layoutX="30" layoutY="200"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbLieu" layoutX="150" layoutY="200"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Date Début :" layoutX="30" layoutY="240"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbDateDebut" layoutX="150" layoutY="240"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Date Fin :" layoutX="30" layoutY="280"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbDateFin" layoutX="150" layoutY="280"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Nb Participants :" layoutX="30" layoutY="320"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbNbMax" layoutX="150" layoutY="320"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <Label text="Statut :" layoutX="30" layoutY="360"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px;"/>
+    <Label fx:id="lbStatut" layoutX="150" layoutY="360"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+
+    <!-- GOOGLE MAPS -->
+    <Label text="📍 Localisation sur la carte :" layoutX="700" layoutY="100"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <WebView fx:id="mapView" layoutX="550" layoutY="150"
+             prefWidth="560" prefHeight="500"/>
+    <Label text="Affiche d'événement :" layoutX="30" layoutY="420"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+    <javafx.scene.image.ImageView fx:id="imageEvenement" layoutX="150" layoutY="450"
+                                  fitWidth="250" fitHeight="230"
+                                  preserveRatio="true"/>
+
+    <!-- BOUTON RETOUR -->
+    <Button text="↩️ Retour" layoutX="30" layoutY="700"
+            onAction="#retour"
+            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+</AnchorPane>

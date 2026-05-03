@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.esprit.controllers.GestionInscriptionController">
+
+    <!-- TITRE -->
+    <Label text="📋 Gestion des Inscriptions" layoutX="30" layoutY="20"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+    <Label fx:id="lbEvenement" layoutX="30" layoutY="60"
+           style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+
+    <!-- FORMULAIRE -->
+    <Label text="Utilisateur ID :" layoutX="30" layoutY="110"
+           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfUtilisateurId" layoutX="160" layoutY="106" prefWidth="200"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Button text="➕ Inscrire" layoutX="160" layoutY="150"
+            onAction="#inscrire"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+
+    <!-- TABLEAU -->
+    <TableView fx:id="tableInscriptions" layoutX="30" layoutY="210"
+               prefWidth="1140" prefHeight="400"
+               style="-fx-background-color: #1c2333;">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+            <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="150"/>
+            <TableColumn fx:id="colDateInscription" text="Date Inscription" prefWidth="200"/>
+            <TableColumn fx:id="colStatut" text="Statut" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- BOUTONS -->
+    <Button text="🗑️ Supprimer" layoutX="230" layoutY="660"
+            onAction="#supprimer"
+            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="✅ Confirmer" layoutX="400" layoutY="660"
+            onAction="#confirmerInscription"
+            style="-fx-background-color: #7bed9f; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="❌ Annuler" layoutX="570" layoutY="660"
+            onAction="#annulerInscription"
+            style="-fx-background-color: #ffa502; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <Button text="↩️ Retour" layoutX="740" layoutY="660"
+            onAction="#retour"
+            style="-fx-background-color: #a29bfe; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+</AnchorPane>

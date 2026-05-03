@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.esprit.controllers.AjouterEvenementController">
+
+    <!-- TITRE -->
+    <Label text="➕ Ajouter / Modifier un Événement" layoutX="30" layoutY="20"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- FORMULAIRE -->
+    <Label text="Titre :" layoutX="30" layoutY="80" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfTitre" layoutX="150" layoutY="76" prefWidth="300"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Description :" layoutX="30" layoutY="130" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextArea fx:id="taDescription" layoutX="150" layoutY="126" prefWidth="300" prefHeight="80"
+              style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Type :" layoutX="30" layoutY="230" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <ComboBox fx:id="cbType" layoutX="150" layoutY="226" prefWidth="300"
+              style="-fx-background-color: #1c2333; -fx-text-fill: white;"/>
+
+    <Label text="Date Début :" layoutX="30" layoutY="280" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfDateDebut" layoutX="150" layoutY="276" prefWidth="300"
+               promptText="2026-05-01T18:00"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Date Fin :" layoutX="30" layoutY="330" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfDateFin" layoutX="150" layoutY="326" prefWidth="300"
+               promptText="2026-05-01T22:00"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Lieu :" layoutX="30" layoutY="380" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfLieu" layoutX="150" layoutY="376" prefWidth="300"
+               promptText="Ex: Tunis, Lac 2"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Nb Participants :" layoutX="30" layoutY="430" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfNbMax" layoutX="150" layoutY="426" prefWidth="300"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+
+    <Label text="Statut :" layoutX="30" layoutY="480" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <ComboBox fx:id="cbStatut" layoutX="150" layoutY="476" prefWidth="300"
+              style="-fx-background-color: #1c2333; -fx-text-fill: white;"/>
+
+    <Label text="Image :" layoutX="30" layoutY="530" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+    <TextField fx:id="tfImage" layoutX="150" layoutY="526" prefWidth="200"
+               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+    <Button text="📁 Choisir" layoutX="360" layoutY="526"
+            onAction="#choisirImage"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+
+    <!-- BOUTONS -->
+    <Button fx:id="btnSauvegarder" text="💾 Sauvegarder" layoutX="150" layoutY="620"
+            onAction="#sauvegarder"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 180px;"/>
+
+    <Button text="↩️ Retour" layoutX="350" layoutY="620"
+            onAction="#retour"
+            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+
+    <!-- GOOGLE MAPS WebView -->
+    <Label text="📍 Localisation :" layoutX="600" layoutY="80"
+           style="-fx-text-fill: #00f5ff; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <Button text="🗺️ Voir sur Maps" layoutX="600" layoutY="110"
+            onAction="#ouvrirMaps"
+            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+    <javafx.scene.web.WebView fx:id="mapView" layoutX="600" layoutY="150"
+                              prefWidth="560" prefHeight="500"/>
+
+</AnchorPane>
