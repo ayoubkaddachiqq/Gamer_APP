@@ -20,7 +20,7 @@ public class MainFx extends Application {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("TeamHub — Gestion des Événements");
+            primaryStage.setTitle("TeamHub - Gestion des Evenements");
             primaryStage.setWidth(1200);
             primaryStage.setHeight(800);
             primaryStage.show();

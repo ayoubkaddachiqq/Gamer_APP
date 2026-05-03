@@ -9,12 +9,14 @@ import javafx.scene.web.WebView;
 import org.esprit.models.Evenement;
 import org.esprit.models.TypeEvenement;
 import org.esprit.services.TypeEvenementService;
+import org.esprit.utils.UiEffects;
 import java.io.IOException;
 import java.util.List;
 import javafx.scene.shape.Rectangle;
 
 public class DetailsEvenementController {
 
+    @FXML private Parent rootPane;
     @FXML private Label lbTitre;
     @FXML private Label lbDescription;
     @FXML private Label lbType;
@@ -28,6 +30,8 @@ public class DetailsEvenementController {
     private TypeEvenementService typeService = new TypeEvenementService();
     @FXML
     void initialize() {
+        UiEffects.applyEntranceAndHover(rootPane);
+
         Evenement e = GestionEvenementController.evenementSelectionne;
         if (e != null) {
             lbTitre.setText(e.getTitre());

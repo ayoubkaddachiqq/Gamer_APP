@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.esprit.models.Evenement;
 import org.esprit.models.Inscription;
 import org.esprit.services.InscriptionService;
+import org.esprit.utils.UiEffects;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 
 public class GestionInscriptionController {
 
+    @FXML private Parent rootPane;
     @FXML private Label lbEvenement;
     @FXML private TextField tfUtilisateurId;
     @FXML private TableView<Inscription> tableInscriptions;
@@ -31,6 +33,8 @@ public class GestionInscriptionController {
 
     @FXML
     void initialize() {
+        UiEffects.applyEntranceAndHover(rootPane);
+
         evenement = GestionEvenementController.evenementSelectionne;
 
         if (evenement != null) {

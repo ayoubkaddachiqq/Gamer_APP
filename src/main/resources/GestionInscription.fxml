@@ -1,57 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+<BorderPane fx:id="rootPane"
+            prefHeight="800.0"
+            prefWidth="1200.0"
+            styleClass="app-shell"
+            stylesheets="@styles/gaming-theme.css"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.esprit.controllers.GestionInscriptionController">
 
-    <!-- TITRE -->
-    <Label text="📋 Gestion des Inscriptions" layoutX="30" layoutY="20"
-           style="-fx-text-fill: #00f5ff; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+    <left>
+        <VBox prefWidth="230" spacing="20" styleClass="sidebar">
+            <padding>
+                <Insets top="28" right="18" bottom="28" left="18"/>
+            </padding>
+            <VBox spacing="4">
+                <Label text="Gamer App" styleClass="brand-title"/>
+                <Label text="Registrations" styleClass="brand-subtitle"/>
+            </VBox>
+            <VBox spacing="8">
+                <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Inscriptions" styleClass="nav-button-active"/>
+            </VBox>
+        </VBox>
+    </left>
 
-    <Label fx:id="lbEvenement" layoutX="30" layoutY="60"
-           style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+    <center>
+        <VBox spacing="18" styleClass="content">
+            <HBox alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Gestion des inscriptions" styleClass="page-title"/>
+                    <Label fx:id="lbEvenement" styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
+            </HBox>
 
-    <!-- FORMULAIRE -->
-    <Label text="Utilisateur ID :" layoutX="30" layoutY="110"
-           style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfUtilisateurId" layoutX="160" layoutY="106" prefWidth="200"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+            <VBox spacing="16" styleClass="glass-panel" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
 
-    <Button text="➕ Inscrire" layoutX="160" layoutY="150"
-            onAction="#inscrire"
-            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+                <HBox alignment="BOTTOM_LEFT" spacing="12">
+                    <VBox spacing="6">
+                        <Label text="Utilisateur ID" styleClass="form-label"/>
+                        <TextField fx:id="tfUtilisateurId" prefWidth="260" promptText="Ex: 42"/>
+                    </VBox>
+                    <Button text="Inscrire" onAction="#inscrire" styleClass="primary-button"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Selectionne une ligne pour confirmer, annuler ou supprimer." styleClass="muted-label"/>
+                </HBox>
 
-    <!-- TABLEAU -->
-    <TableView fx:id="tableInscriptions" layoutX="30" layoutY="210"
-               prefWidth="1140" prefHeight="400"
-               style="-fx-background-color: #1c2333;">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
-            <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="150"/>
-            <TableColumn fx:id="colDateInscription" text="Date Inscription" prefWidth="200"/>
-            <TableColumn fx:id="colStatut" text="Statut" prefWidth="150"/>
-        </columns>
-    </TableView>
+                <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="90"/>
+                        <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="180"/>
+                        <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="240"/>
+                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="180"/>
+                    </columns>
+                </TableView>
 
-    <!-- BOUTONS -->
-    <Button text="🗑️ Supprimer" layoutX="230" layoutY="660"
-            onAction="#supprimer"
-            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
-
-    <Button text="✅ Confirmer" layoutX="400" layoutY="660"
-            onAction="#confirmerInscription"
-            style="-fx-background-color: #7bed9f; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
-
-    <Button text="❌ Annuler" layoutX="570" layoutY="660"
-            onAction="#annulerInscription"
-            style="-fx-background-color: #ffa502; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
-
-    <Button text="↩️ Retour" layoutX="740" layoutY="660"
-            onAction="#retour"
-            style="-fx-background-color: #a29bfe; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
-</AnchorPane>
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button text="Supprimer" onAction="#supprimer" styleClass="danger-button"/>
+                    <Button text="Confirmer" onAction="#confirmerInscription" styleClass="success-button"/>
+                    <Button text="Annuler" onAction="#annulerInscription" styleClass="warning-button"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

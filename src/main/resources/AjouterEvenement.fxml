@@ -1,77 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #1a0533, #0d1117, #1a0533);"
+<BorderPane fx:id="rootPane"
+            prefHeight="800.0"
+            prefWidth="1200.0"
+            styleClass="app-shell"
+            stylesheets="@styles/gaming-theme.css"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.esprit.controllers.AjouterEvenementController">
 
-    <!-- TITRE -->
-    <Label text="➕ Ajouter / Modifier un Événement" layoutX="30" layoutY="20"
-           style="-fx-text-fill: #00f5ff; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <left>
+        <VBox prefWidth="230" spacing="20" styleClass="sidebar">
+            <padding>
+                <Insets top="28" right="18" bottom="28" left="18"/>
+            </padding>
+            <VBox spacing="4">
+                <Label text="Gamer App" styleClass="brand-title"/>
+                <Label text="Event editor" styleClass="brand-subtitle"/>
+            </VBox>
+            <VBox spacing="8">
+                <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Edition" styleClass="nav-button-active"/>
+                <Button maxWidth="Infinity" text="Carte" onAction="#ouvrirMaps" styleClass="nav-button"/>
+            </VBox>
+        </VBox>
+    </left>
 
-    <!-- FORMULAIRE -->
-    <Label text="Titre :" layoutX="30" layoutY="80" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfTitre" layoutX="150" layoutY="76" prefWidth="300"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+    <center>
+        <VBox spacing="18" styleClass="content">
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Ajouter / Modifier un evenement" styleClass="page-title"/>
+                    <Label text="Configure les informations, le lieu, la capacite et l'affiche." styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
+            </HBox>
 
-    <Label text="Description :" layoutX="30" layoutY="130" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextArea fx:id="taDescription" layoutX="150" layoutY="126" prefWidth="300" prefHeight="80"
-              style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+            <HBox spacing="18" VBox.vgrow="ALWAYS">
+                <GridPane hgap="16" vgap="14" prefWidth="520" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="34"/>
+                        <ColumnConstraints percentWidth="66"/>
+                    </columnConstraints>
 
-    <Label text="Type :" layoutX="30" layoutY="230" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <ComboBox fx:id="cbType" layoutX="150" layoutY="226" prefWidth="300"
-              style="-fx-background-color: #1c2333; -fx-text-fill: white;"/>
+                    <Label text="Titre" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfTitre" promptText="Nom de l'evenement" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-    <Label text="Date Début :" layoutX="30" layoutY="280" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfDateDebut" layoutX="150" layoutY="276" prefWidth="300"
-               promptText="2026-05-01T18:00"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+                    <Label text="Description" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextArea fx:id="taDescription" prefRowCount="4" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <Label text="Date Fin :" layoutX="30" layoutY="330" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfDateFin" layoutX="150" layoutY="326" prefWidth="300"
-               promptText="2026-05-01T22:00"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+                    <Label text="Type" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="cbType" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <Label text="Lieu :" layoutX="30" layoutY="380" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfLieu" layoutX="150" layoutY="376" prefWidth="300"
-               promptText="Ex: Tunis, Lac 2"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+                    <Label text="Date debut" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfDateDebut" promptText="2026-05-01T18:00" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-    <Label text="Nb Participants :" layoutX="30" layoutY="430" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfNbMax" layoutX="150" layoutY="426" prefWidth="300"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
+                    <Label text="Date fin" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfDateFin" promptText="2026-05-01T22:00" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-    <Label text="Statut :" layoutX="30" layoutY="480" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <ComboBox fx:id="cbStatut" layoutX="150" layoutY="476" prefWidth="300"
-              style="-fx-background-color: #1c2333; -fx-text-fill: white;"/>
+                    <Label text="Lieu" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfLieu" promptText="Ex: Tunis, Lac 2" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-    <Label text="Image :" layoutX="30" layoutY="530" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-    <TextField fx:id="tfImage" layoutX="150" layoutY="526" prefWidth="200"
-               style="-fx-background-color: #1c2333; -fx-text-fill: white; -fx-border-color: #00f5ff;"/>
-    <Button text="📁 Choisir" layoutX="360" layoutY="526"
-            onAction="#choisirImage"
-            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
+                    <Label text="Participants max" styleClass="form-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfNbMax" promptText="128" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
-    <!-- BOUTONS -->
-    <Button fx:id="btnSauvegarder" text="💾 Sauvegarder" layoutX="150" layoutY="620"
-            onAction="#sauvegarder"
-            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 180px;"/>
+                    <Label text="Statut" styleClass="form-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="cbStatut" maxWidth="Infinity" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-    <Button text="↩️ Retour" layoutX="350" layoutY="620"
-            onAction="#retour"
-            style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-width: 150px;"/>
+                    <Label text="Image" styleClass="form-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                    <HBox spacing="10" GridPane.rowIndex="8" GridPane.columnIndex="1">
+                        <TextField fx:id="tfImage" HBox.hgrow="ALWAYS" promptText="Chemin de l'affiche"/>
+                        <Button text="Choisir" onAction="#choisirImage" styleClass="secondary-button"/>
+                    </HBox>
 
-    <!-- GOOGLE MAPS WebView -->
-    <Label text="📍 Localisation :" layoutX="600" layoutY="80"
-           style="-fx-text-fill: #00f5ff; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-    <Button text="🗺️ Voir sur Maps" layoutX="600" layoutY="110"
-            onAction="#ouvrirMaps"
-            style="-fx-background-color: #00f5ff; -fx-text-fill: #0d1117; -fx-font-weight: bold;"/>
-    <javafx.scene.web.WebView fx:id="mapView" layoutX="600" layoutY="150"
-                              prefWidth="560" prefHeight="500"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="9" GridPane.columnIndex="1">
+                        <Button fx:id="btnSauvegarder" text="Sauvegarder" onAction="#sauvegarder" styleClass="primary-button"/>
+                        <Button text="Retour" onAction="#retour" styleClass="danger-button"/>
+                    </HBox>
+                </GridPane>
 
-</AnchorPane>
+                <VBox spacing="14" HBox.hgrow="ALWAYS" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Localisation" styleClass="section-title"/>
+                            <Label text="Entre un lieu puis charge la carte." styleClass="page-subtitle"/>
+                        </VBox>
+                        <Button text="Voir sur Maps" onAction="#ouvrirMaps" styleClass="primary-button"/>
+                    </HBox>
+                    <WebView fx:id="mapView" prefHeight="560"
+                             style="-fx-background-color: #0f1729; -fx-border-color: rgba(168, 85, 247, 0.28);"
+                             VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

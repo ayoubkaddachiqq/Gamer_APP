@@ -12,12 +12,14 @@ import org.esprit.models.Evenement;
 import org.esprit.services.EvenementService;
 import org.esprit.models.TypeEvenement;
 import org.esprit.services.TypeEvenementService;
+import org.esprit.utils.UiEffects;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class GestionEvenementController {
 
+    @FXML private Parent rootPane;
     @FXML private TableView<Evenement> tableEvenements;
     @FXML private TableColumn<Evenement, Integer> colId;
     @FXML private TableColumn<Evenement, String> colTitre;
@@ -35,6 +37,8 @@ public class GestionEvenementController {
 
     @FXML
     void initialize() {
+        UiEffects.applyEntranceAndHover(rootPane);
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colType.setCellValueFactory(cellData -> {

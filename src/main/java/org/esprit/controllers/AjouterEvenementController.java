@@ -11,6 +11,7 @@ import org.esprit.models.Evenement;
 import org.esprit.models.TypeEvenement;
 import org.esprit.services.EvenementService;
 import org.esprit.services.TypeEvenementService;
+import org.esprit.utils.UiEffects;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class AjouterEvenementController {
 
+    @FXML private Parent rootPane;
     @FXML private TextField tfTitre;
     @FXML private TextArea taDescription;
     @FXML private ComboBox<TypeEvenement> cbType;
@@ -37,6 +39,8 @@ public class AjouterEvenementController {
 
     @FXML
     void initialize() {
+        UiEffects.applyEntranceAndHover(rootPane);
+
         // Charger les types
         List<TypeEvenement> types = typeService.getAll();
         cbType.getItems().addAll(types);
