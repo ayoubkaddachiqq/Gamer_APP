@@ -39,7 +39,7 @@
                     <!-- Notifications Button with Red Dot -->
                     <StackPane>
                         <children>
-                            <Button mnemonicParsing="false" styleClass="icon-button" text="!" />
+                            <Button mnemonicParsing="false" styleClass="icon-button" text="🔔" />
                             <Circle fill="#ff4b4b" radius="4.0" StackPane.alignment="TOP_RIGHT">
                                 <StackPane.margin>
                                     <Insets right="5.0" top="5.0" />
@@ -73,7 +73,8 @@
 
     <left>
         <VBox spacing="10" styleClass="sidebar">
-            <Button text="🏠 Home" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="🏠 Home" onAction="#handleHome" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="📋 My Posts" onAction="#handleMyPosts" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button text="🌍 Explore" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button text="🏆 Tournaments" styleClass="sidebar-button" maxWidth="Infinity" />
         </VBox>

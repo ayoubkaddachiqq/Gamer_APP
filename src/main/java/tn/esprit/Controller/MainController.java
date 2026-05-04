@@ -2,10 +2,12 @@ package tn.esprit.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServicePost; // Ensure this is imported
 
@@ -29,6 +31,13 @@ public class MainController {
     @FXML
     public void initialize() {
         System.out.println("Initializing controller...");
+        gameTagSelector.getItems().addAll(
+            "General", "VALORANT", "League of Legends", "CS2", "Fortnite",
+            "Apex Legends", "Overwatch 2", "Dota 2", "Rocket League",
+            "EA FC 25", "Call of Duty", "Minecraft", "GTA V", "Rainbow Six Siege"
+        );
+        gameTagSelector.setValue("General");
+
         try {
             List<Post> posts = servicePost.getAll();
             System.out.println("Fetched " + posts.size() + " posts from DB.");
@@ -74,9 +83,34 @@ public class MainController {
             VBox card = loader.load();
             PostCardController cardController = loader.getController();
             cardController.setData(post);
-            feedContainer.getChildren().add(0, card); // Adds to the top
+            feedContainer.getChildren().add(0, card);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMyPosts() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MyPosts.fxml"));
+            javafx.scene.Parent root = loader.load();
+            MyPostsController controller = loader.getController();
+            controller.init((Stage) feedContainer.getScene().getWindow());
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setTitle("My Posts - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleHome() {
+        feedContainer.getChildren().clear();
+        List<Post> posts = servicePost.getAll();
+        for (Post p : posts) {
+            addPostToFeed(p);
         }
     }
 }

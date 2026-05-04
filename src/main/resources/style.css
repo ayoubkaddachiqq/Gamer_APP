@@ -90,7 +90,7 @@
 .dark-search-bar {
     -fx-background-color: #051424; /* Even darker than the background */
     -fx-background-radius: 20;
-    -fx-border-color: rgba(157, 139, 160, 0.3);
+    -fx-border-color: rgba(0, 238, 252, 0.3);
     -fx-border-radius: 20;
     -fx-text-fill: white;
     -fx-prompt-text-fill: #64748b;
@@ -127,17 +127,6 @@
     -fx-font-size: 13px;
 }
 
-.player-name {
-    -fx-text-fill: #d4e4fa;
-    -fx-font-size: 13px;
-}
-
-.player-row:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 5;
-    -fx-cursor: hand;
-}
-
 .trending-item {
     -fx-padding: 5;
     -fx-background-radius: 5;
@@ -149,23 +138,9 @@
     -fx-background-color: rgba(189, 0, 255, 0.1); /* Subtle purple tint */
 }
 
-.icon-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #94a3b8;
-    -fx-font-size: 18px;
-    -fx-cursor: hand;
-    -fx-padding: 5;
-}
-
-.icon-button:hover {
-    -fx-text-fill: #00eefc; /* Neon cyan glow */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 238, 252, 0.3), 10, 0, 0, 0);
-    -fx-background-color: rgba(255, 255, 255, 0.05);
-    -fx-background-radius: 5;
-}
 .profile-container {
     -fx-padding: 5 10;
-    -fx-background-color: #2b2b2b;
+    -fx-background-color: rgba(13, 28, 45, 0.8);
     -fx-background-radius: 20;
 }
 
@@ -185,12 +160,6 @@
     -fx-border-radius: 50%;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 238, 252, 0.5), 10, 0, 0, 0);
 }
-/* Glass Card Effect */
-.glass-card {
-    -fx-background-color: rgba(30, 41, 59, 0.6);
-    -fx-border-color: rgba(51, 65, 85, 0.5);
-}
-
 /* Text Area Styling */
 .post-text-area {
     -fx-background-color: rgba(5, 20, 36, 0.5);

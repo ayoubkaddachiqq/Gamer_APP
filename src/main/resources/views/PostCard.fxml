@@ -17,7 +17,7 @@
             <Label fx:id="userNameLabel" text="GhostProtocol_" styleClass="user-name" />
             <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Label fx:id="gameTagLabel" text="VALORANT" styleClass="game-tag-badge" />
-                <Label text="2h ago" style="-fx-text-fill: #64748b; -fx-font-size: 11px;" />
+                <Label fx:id="postDateLabel" text="2h ago" style="-fx-text-fill: #64748b; -fx-font-size: 11px;" />
             </HBox>
         </VBox>
     </HBox>
@@ -28,9 +28,42 @@
     <Region prefHeight="1.0" style="-fx-background-color: rgba(255,255,255,0.1);" />
 
     <HBox spacing="15.0" alignment="CENTER_LEFT">
-        <Button text="👍 GG's" styleClass="action-button" />
-        <Button text="💬 Comments" styleClass="action-button" />
+        <Button fx:id="likeButton" text="👍 GG's" styleClass="action-button" />
+        <Button fx:id="commentsButton" onAction="#toggleComments" styleClass="action-button">
+            <text>💬 Comments</text>
+        </Button>
         <Region HBox.hgrow="ALWAYS" />
-        <Button text="Share" styleClass="action-button" />
+        <Button fx:id="shareButton" text="Share" styleClass="action-button" />
     </HBox>
+
+    <HBox fx:id="editActions" spacing="15.0" alignment="CENTER_RIGHT" visible="false" managed="false">
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="✏ Edit" onAction="#handleEdit"
+                style="-fx-background-color: #2c3a4c; -fx-text-fill: #00eefc; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25 8 25;" />
+        <Button text="🗑 Delete" onAction="#handleDelete"
+                style="-fx-background-color: #ff4b4b; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25 8 25;" />
+    </HBox>
+
+    <VBox fx:id="commentsSection" visible="false" managed="false" spacing="10.0"
+          style="-fx-background-color: #0d1c2d; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 10;">
+
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background: transparent; -fx-background-color: transparent; -fx-border-color: transparent;"
+                    prefHeight="200.0">
+            <content>
+                <VBox fx:id="commentsList" spacing="8.0" />
+            </content>
+        </ScrollPane>
+
+        <Separator style="-fx-background-color: rgba(255,255,255,0.1);" />
+
+        <HBox spacing="10.0" alignment="CENTER_LEFT">
+            <Circle radius="14.0" fill="#2c3a4c" stroke="#00eefc" strokeWidth="1.0" />
+            <TextField fx:id="commentInput" promptText="Write a comment..."
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #1e293b; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 20; -fx-padding: 5 15 5 15;" />
+            <Button text="Send" onAction="#handleAddComment"
+                    style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 6 20 6 20;" />
+        </HBox>
+    </VBox>
 </VBox>
