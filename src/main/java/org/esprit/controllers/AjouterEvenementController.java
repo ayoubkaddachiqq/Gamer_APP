@@ -105,7 +105,7 @@ public class AjouterEvenementController {
             if (evenementAModifier == null) {
                 // AJOUTER
                 Evenement e = new Evenement(titre, description, type.getId(),
-                        dateDebut, dateFin, lieu, 0, 0, nbMax, statut);
+                        dateDebut, dateFin, lieu, nbMax, statut);
                 e.setImage(image);
                 service.add(e);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

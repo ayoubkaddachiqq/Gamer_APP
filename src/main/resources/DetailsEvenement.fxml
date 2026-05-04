@@ -45,12 +45,12 @@
             </HBox>
 
             <HBox spacing="18" VBox.vgrow="ALWAYS">
-                <VBox spacing="16" prefWidth="430" styleClass="glass-panel">
+                <VBox spacing="16" minWidth="360" prefWidth="470" styleClass="glass-panel">
                     <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
 
-                    <ImageView fx:id="imageEvenement" fitWidth="380" fitHeight="230" preserveRatio="true"
+                    <ImageView fx:id="imageEvenement" fitWidth="420" fitHeight="235" preserveRatio="true"
                                style="-fx-background-color: #0f1729;"/>
 
                     <VBox spacing="8">
@@ -78,12 +78,12 @@
                     </GridPane>
                 </VBox>
 
-                <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="glass-panel">
+                <VBox spacing="12" prefWidth="660" maxWidth="760" HBox.hgrow="ALWAYS" styleClass="glass-panel">
                     <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
                     <Label text="Localisation sur la carte" styleClass="section-title"/>
-                    <WebView fx:id="mapView" prefHeight="610"
+                    <WebView fx:id="mapView" prefHeight="560" maxHeight="580"
                              style="-fx-background-color: #0f1729; -fx-border-color: rgba(168, 85, 247, 0.28);"
                              VBox.vgrow="ALWAYS"/>
                 </VBox>

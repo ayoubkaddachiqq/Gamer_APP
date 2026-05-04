@@ -27,6 +27,7 @@
             <VBox spacing="8">
                 <Button maxWidth="Infinity" text="Evenements" styleClass="nav-button-active"/>
                 <Button maxWidth="Infinity" text="Inscriptions" onAction="#ouvrirInscriptions" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Ajouter event" onAction="#ouvrirAjouter" styleClass="nav-button"/>
             </VBox>
 
@@ -106,6 +107,7 @@
                     <Button text="Modifier" onAction="#ouvrirModifier" styleClass="warning-button"/>
                     <Button text="Supprimer" onAction="#supprimer" styleClass="danger-button"/>
                     <Button text="Details" onAction="#ouvrirDetails" styleClass="success-button"/>
+                    <Button text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
                     <Button text="Inscriptions" onAction="#ouvrirInscriptions" styleClass="purple-button"/>
                 </HBox>
             </VBox>

@@ -41,21 +41,21 @@
                 <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
             </HBox>
 
-            <HBox spacing="18" VBox.vgrow="ALWAYS">
-                <GridPane hgap="16" vgap="14" prefWidth="520" styleClass="glass-panel">
+            <HBox spacing="14" alignment="TOP_LEFT" fillHeight="true" VBox.vgrow="ALWAYS">
+                <GridPane hgap="12" vgap="9" minWidth="0" prefWidth="430" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="glass-panel">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets top="14" right="14" bottom="14" left="14"/>
                     </padding>
                     <columnConstraints>
-                        <ColumnConstraints percentWidth="34"/>
-                        <ColumnConstraints percentWidth="66"/>
+                        <ColumnConstraints percentWidth="32"/>
+                        <ColumnConstraints percentWidth="68"/>
                     </columnConstraints>
 
                     <Label text="Titre" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="tfTitre" promptText="Nom de l'evenement" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Description" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="taDescription" prefRowCount="4" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextArea fx:id="taDescription" prefRowCount="2" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Type" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                     <ComboBox fx:id="cbType" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
@@ -87,9 +87,9 @@
                     </HBox>
                 </GridPane>
 
-                <VBox spacing="14" HBox.hgrow="ALWAYS" styleClass="glass-panel">
+                <VBox spacing="10" minWidth="0" prefWidth="430" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="glass-panel">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets top="14" right="14" bottom="14" left="14"/>
                     </padding>
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <VBox spacing="4" HBox.hgrow="ALWAYS">
@@ -98,7 +98,7 @@
                         </VBox>
                         <Button text="Voir sur Maps" onAction="#ouvrirMaps" styleClass="primary-button"/>
                     </HBox>
-                    <WebView fx:id="mapView" prefHeight="560"
+                    <WebView fx:id="mapView" prefHeight="440" maxHeight="470"
                              style="-fx-background-color: #0f1729; -fx-border-color: rgba(168, 85, 247, 0.28);"
                              VBox.vgrow="ALWAYS"/>
                 </VBox>

@@ -173,4 +173,14 @@ public class GestionEvenementController {
         }
     }
 
+    @FXML
+    void ouvrirAdmin(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AdminInscription.fxml"));
+            tableEvenements.getScene().setRoot(root);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

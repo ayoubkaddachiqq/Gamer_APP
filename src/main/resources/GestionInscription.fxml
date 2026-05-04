@@ -51,7 +51,7 @@
                     </VBox>
                     <Button text="Inscrire" onAction="#inscrire" styleClass="primary-button"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label text="Selectionne une ligne pour confirmer, annuler ou supprimer." styleClass="muted-label"/>
+                    <Label text="Statut ajoute automatiquement : En attente" styleClass="muted-label"/>
                 </HBox>
 
                 <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS">
@@ -63,11 +63,6 @@
                     </columns>
                 </TableView>
 
-                <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <Button text="Supprimer" onAction="#supprimer" styleClass="danger-button"/>
-                    <Button text="Confirmer" onAction="#confirmerInscription" styleClass="success-button"/>
-                    <Button text="Annuler" onAction="#annulerInscription" styleClass="warning-button"/>
-                </HBox>
             </VBox>
         </VBox>
     </center>

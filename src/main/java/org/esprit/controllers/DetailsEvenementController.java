@@ -63,10 +63,10 @@ public class DetailsEvenementController {
             }
         }
         Rectangle clip = new Rectangle();
-        clip.setWidth(mapView.getPrefWidth());
-        clip.setHeight(mapView.getPrefHeight());
         clip.setArcWidth(30);
         clip.setArcHeight(30);
+        clip.widthProperty().bind(mapView.widthProperty());
+        clip.heightProperty().bind(mapView.heightProperty());
 
         mapView.setClip(clip);
         Rectangle clipImg = new Rectangle();

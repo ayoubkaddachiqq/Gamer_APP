@@ -10,8 +10,6 @@ public class Evenement {
     private LocalDateTime dateDebut;
     private LocalDateTime dateFin;
     private String lieu;
-    private double latitude;
-    private double longitude;
     private int nbParticipantsMax;
     private String statut;
     private String image;
@@ -20,16 +18,13 @@ public class Evenement {
 
     public Evenement(String titre, String description, int typeId,
                      LocalDateTime dateDebut, LocalDateTime dateFin,
-                     String lieu, double latitude, double longitude,
-                     int nbParticipantsMax, String statut) {
+                     String lieu, int nbParticipantsMax, String statut) {
         this.titre = titre;
         this.description = description;
         this.typeId = typeId;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.lieu = lieu;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.nbParticipantsMax = nbParticipantsMax;
         this.statut = statut;
     }
@@ -48,10 +43,6 @@ public class Evenement {
     public void setDateFin(LocalDateTime dateFin) { this.dateFin = dateFin; }
     public String getLieu() { return lieu; }
     public void setLieu(String lieu) { this.lieu = lieu; }
-    public double getLatitude() { return latitude; }
-    public void setLatitude(double latitude) { this.latitude = latitude; }
-    public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) { this.longitude = longitude; }
     public int getNbParticipantsMax() { return nbParticipantsMax; }
     public void setNbParticipantsMax(int nbParticipantsMax) { this.nbParticipantsMax = nbParticipantsMax; }
     public String getStatut() { return statut; }

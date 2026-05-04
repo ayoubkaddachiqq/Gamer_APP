@@ -17,7 +17,7 @@ public class EvenementService implements IService<Evenement> {
 
     @Override
     public void add(Evenement e) {
-        String sql = "INSERT INTO evenement (titre, description, type_id, date_debut, date_fin, lieu, latitude, longitude, nb_participants_max, statut, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO evenement (titre, description, type_id, date_debut, date_fin, lieu, nb_participants_max, statut, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, e.getTitre());
@@ -26,11 +26,9 @@ public class EvenementService implements IService<Evenement> {
             ps.setTimestamp(4, Timestamp.valueOf(e.getDateDebut()));
             ps.setTimestamp(5, Timestamp.valueOf(e.getDateFin()));
             ps.setString(6, e.getLieu());
-            ps.setDouble(7, e.getLatitude());
-            ps.setDouble(8, e.getLongitude());
-            ps.setInt(9, e.getNbParticipantsMax());
-            ps.setString(10, e.getStatut());
-            ps.setString(11, e.getImage());
+            ps.setInt(7, e.getNbParticipantsMax());
+            ps.setString(8, e.getStatut());
+            ps.setString(9, e.getImage());
             ps.executeUpdate();
             System.out.println("Événement ajouté !");
         } catch (SQLException ex) {
@@ -54,8 +52,6 @@ public class EvenementService implements IService<Evenement> {
                 e.setDateDebut(rs.getTimestamp("date_debut").toLocalDateTime());
                 e.setDateFin(rs.getTimestamp("date_fin").toLocalDateTime());
                 e.setLieu(rs.getString("lieu"));
-                e.setLatitude(rs.getDouble("latitude"));
-                e.setLongitude(rs.getDouble("longitude"));
                 e.setNbParticipantsMax(rs.getInt("nb_participants_max"));
                 e.setStatut(rs.getString("statut"));
                 e.setImage(rs.getString("image"));
@@ -69,7 +65,7 @@ public class EvenementService implements IService<Evenement> {
 
     @Override
     public void update(Evenement e) {
-        String sql = "UPDATE evenement SET titre=?, description=?, type_id=?, date_debut=?, date_fin=?, lieu=?, latitude=?, longitude=?, nb_participants_max=?, statut=?, image=? WHERE id=?";
+        String sql = "UPDATE evenement SET titre=?, description=?, type_id=?, date_debut=?, date_fin=?, lieu=?, nb_participants_max=?, statut=?, image=? WHERE id=?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, e.getTitre());
@@ -78,12 +74,10 @@ public class EvenementService implements IService<Evenement> {
             ps.setTimestamp(4, Timestamp.valueOf(e.getDateDebut()));
             ps.setTimestamp(5, Timestamp.valueOf(e.getDateFin()));
             ps.setString(6, e.getLieu());
-            ps.setDouble(7, e.getLatitude());
-            ps.setDouble(8, e.getLongitude());
-            ps.setInt(9, e.getNbParticipantsMax());
-            ps.setString(10, e.getStatut());
-            ps.setString(11, e.getImage());
-            ps.setInt(12, e.getId());
+            ps.setInt(7, e.getNbParticipantsMax());
+            ps.setString(8, e.getStatut());
+            ps.setString(9, e.getImage());
+            ps.setInt(10, e.getId());
             ps.executeUpdate();
             System.out.println("Événement modifié !");
         } catch (SQLException ex) {
@@ -120,8 +114,6 @@ public class EvenementService implements IService<Evenement> {
                 e.setDateDebut(rs.getTimestamp("date_debut").toLocalDateTime());
                 e.setDateFin(rs.getTimestamp("date_fin").toLocalDateTime());
                 e.setLieu(rs.getString("lieu"));
-                e.setLatitude(rs.getDouble("latitude"));
-                e.setLongitude(rs.getDouble("longitude"));
                 e.setNbParticipantsMax(rs.getInt("nb_participants_max"));
                 e.setStatut(rs.getString("statut"));
                 e.setImage(rs.getString("image"));
@@ -148,8 +140,6 @@ public class EvenementService implements IService<Evenement> {
                 e.setDateDebut(rs.getTimestamp("date_debut").toLocalDateTime());
                 e.setDateFin(rs.getTimestamp("date_fin").toLocalDateTime());
                 e.setLieu(rs.getString("lieu"));
-                e.setLatitude(rs.getDouble("latitude"));
-                e.setLongitude(rs.getDouble("longitude"));
                 e.setNbParticipantsMax(rs.getInt("nb_participants_max"));
                 e.setStatut(rs.getString("statut"));
                 e.setImage(rs.getString("image"));
