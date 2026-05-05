@@ -145,8 +145,12 @@ public class AnnonceService {
             Annonce a = new Annonce();
             a.setId(rs.getInt("id"));
             a.setTitre(rs.getString("titre"));
+            a.setDescription(rs.getString("description"));
             a.setJeu(rs.getString("jeu"));
+            a.setSalaire(rs.getDouble("salaire"));
+            a.setDatePublication(rs.getDate("date_publication"));
             a.setStatut(rs.getString("statut"));
+            a.setIdCategorie(rs.getInt("id_categorie"));
             a.setNomCategorie(rs.getString("nom_categorie"));
             list.add(a);
         }

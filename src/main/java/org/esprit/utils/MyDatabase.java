@@ -7,9 +7,9 @@ public class MyDatabase {
     private static MyDatabase instance;
     private Connection connection;
 
-    private static final String URL = "jdbc:mysql://localhost:3306/gesannonce";
+    private static final String URL = "jdbc:mysql://localhost:3306/TeamHub?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = ""; // vide pour XAMPP
 
     private MyDatabase() {
         try {

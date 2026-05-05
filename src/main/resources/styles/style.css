@@ -1,0 +1,182 @@
+/* Thème Sombre: Violet et Bleu Foncé */
+
+.root {
+    -fx-background-color: #0d1117; /* Fond général très sombre (bleu nuit) */
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* --- Typographie --- */
+.label {
+    -fx-text-fill: #e6edf3;
+}
+.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cda8ff; /* Violet clair */
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    -fx-background-color: #161b22; /* Bleu foncé */
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 1 0 0;
+}
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 16px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 15 20 15 20;
+    -fx-cursor: hand;
+}
+.sidebar-btn:hover {
+    -fx-background-color: #21262d;
+    -fx-text-fill: #cda8ff; /* Violet au survol */
+}
+.sidebar-btn.active {
+    -fx-background-color: #1f242e;
+    -fx-border-color: #8a2be2; /* Violet vif */
+    -fx-border-width: 0 0 0 4;
+    -fx-text-fill: #cda8ff;
+}
+
+/* --- Champs de saisie --- */
+.text-field, .text-area, .combo-box {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #e6edf3;
+    -fx-prompt-text-fill: #8b949e;
+    -fx-padding: 8;
+}
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #8a2be2; /* Violet vif au focus */
+    -fx-effect: dropshadow(three-pass-box, rgba(138,43,226,0.3), 5, 0, 0, 0);
+}
+.combo-box .list-cell {
+    -fx-background-color: #161b22;
+    -fx-text-fill: #e6edf3;
+}
+.combo-box .list-cell:hover {
+    -fx-background-color: #8a2be2;
+    -fx-text-fill: white;
+}
+
+/* --- Boutons --- */
+.button {
+    -fx-background-color: #238636; /* Vert par défaut pour validation */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #2ea043;
+}
+
+.btn-primary {
+    -fx-background-color: #8a2be2; /* Violet vif */
+}
+.btn-primary:hover {
+    -fx-background-color: #9b47e5;
+}
+
+.btn-danger {
+    -fx-background-color: #da3633;
+}
+.btn-danger:hover {
+    -fx-background-color: #f85149;
+}
+
+/* --- TableView --- */
+.table-view {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+.table-view .column-header-background {
+    -fx-background-color: #21262d;
+    -fx-background-radius: 6 6 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 1 0 0;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #cda8ff; /* Violet clair pour les en-têtes */
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 0 10;
+}
+.table-row-cell {
+    -fx-background-color: #161b22;
+    -fx-text-fill: #e6edf3;
+    -fx-cell-size: 40px;
+}
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+}
+.table-row-cell:odd {
+    -fx-background-color: #0d1117;
+}
+.table-row-cell:selected {
+    -fx-background-color: rgba(138,43,226,0.2); /* Fond violet très léger */
+}
+.table-view .cell {
+    -fx-text-fill: #e6edf3;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 0 10;
+}
+
+/* --- Cards (Formulaires) --- */
+.card {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 5);
+}
+
+/* --- Gestion Annonces: theme gaming violet sombre --- */
+.gaming-root {
+    -fx-background-color: linear-gradient(to bottom right, #090914, #141020 55%, #090914);
+}
+
+.gaming-header {
+    -fx-background-color: #120f1f;
+    -fx-border-color: #38235f;
+    -fx-border-width: 0 0 1 0;
+}
+
+.gaming-content {
+    -fx-background-color: transparent;
+}
+
+.gaming-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d8b4fe;
+}
+
+.form-panel {
+    -fx-background-color: #161225;
+    -fx-border-color: #6d28d9;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.35), 18, 0, 0, 0);
+}
+
+.btn-secondary {
+    -fx-background-color: #312e81;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #4338ca;
+}
