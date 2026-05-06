@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.Controller.MainController"
@@ -21,11 +22,21 @@
             <!-- Spacer to push search to middle -->
             <Region HBox.hgrow="ALWAYS" />
 
-            <!-- CENTER: Search Bar -->
-            <HBox alignment="CENTER" spacing="10" styleClass="search-container">
-                <TextField fx:id="searchBar" promptText="Search for players, teams or tags..."
-                           prefWidth="400.0" styleClass="dark-search-bar" />
-            </HBox>
+            <!-- CENTER: Search Bar + Filters -->
+            <VBox alignment="CENTER" spacing="8" styleClass="search-container">
+                <HBox alignment="CENTER" spacing="10">
+                    <TextField fx:id="searchBar" promptText="Search for players, teams or tags..."
+                               prefWidth="400.0" styleClass="dark-search-bar" />
+                    <Button fx:id="searchButton" text="🔍" onAction="#handleSearch" styleClass="search-button" />
+                </HBox>
+                <HBox fx:id="filterBar" alignment="CENTER" spacing="10" visible="false" managed="false" styleClass="filter-bar">
+                    <ComboBox fx:id="filterTime" promptText="Time" prefWidth="120" styleClass="filter-combo" />
+                    <ComboBox fx:id="filterGameTag" promptText="Game Tag" prefWidth="140" styleClass="filter-combo" />
+                    <ComboBox fx:id="filterType" promptText="Type" prefWidth="110" styleClass="filter-combo" />
+                    <Button text="Apply" onAction="#applyFilters" styleClass="filter-apply-btn" />
+                    <Button text="Clear" onAction="#clearFilters" styleClass="filter-clear-btn" />
+                </HBox>
+            </VBox>
 
             <!-- Spacer to push profile/icons to the right -->
             <Region HBox.hgrow="ALWAYS" />
@@ -34,12 +45,12 @@
             <HBox alignment="CENTER_RIGHT" spacing="15.0">
                 <children>
                     <!-- Messagerie Button -->
-                    <Button mnemonicParsing="false" styleClass="icon-button" text="&#128488;" />
+                    <Button mnemonicParsing="false" onAction="#handleMessages" styleClass="icon-button" text="&#128488;" />
 
                     <!-- Notifications Button with Red Dot -->
                     <StackPane>
                         <children>
-                            <Button mnemonicParsing="false" styleClass="icon-button" text="🔔" />
+                            <Button mnemonicParsing="false" onAction="#handleNotifications" styleClass="icon-button" text="🔔" />
                             <Circle fill="#ff4b4b" radius="4.0" StackPane.alignment="TOP_RIGHT">
                                 <StackPane.margin>
                                     <Insets right="5.0" top="5.0" />
@@ -49,7 +60,7 @@
                     </StackPane>
 
                     <!-- Parametres Button -->
-                    <Button mnemonicParsing="false" styleClass="icon-button" text="⚙" />
+                    <Button mnemonicParsing="false" onAction="#handleSettings" styleClass="icon-button" text="⚙" />
 
                     <!-- Vertical Separator -->
                     <Region prefHeight="30.0" prefWidth="1.0" style="-fx-background-color: rgba(255,255,255,0.1);" />
@@ -59,11 +70,14 @@
                         <children>
                             <VBox alignment="CENTER_RIGHT">
                                 <children>
-                                    <Label text="Player_One" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" />
+                                    <Label fx:id="headerUsernameLabel" text="Player_One" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" />
                                     <Label text="Online" style="-fx-text-fill: #00ff88; -fx-font-size: 10px;" />
                                 </children>
                             </VBox>
-                            <Circle fill="#1e293b" radius="18.0" stroke="#00eefc" strokeType="INSIDE" strokeWidth="1.5" />
+                            <StackPane fx:id="headerAvatarStack" style="-fx-cursor: hand;" onMouseClicked="#handleChangeProfilePhoto">
+                                <Circle radius="18.0" fill="#1e293b" stroke="#00eefc" strokeType="INSIDE" strokeWidth="1.5" />
+                                <ImageView fx:id="headerAvatarImage" />
+                            </StackPane>
                         </children>
                     </HBox>
                 </children>
@@ -75,8 +89,8 @@
         <VBox spacing="10" styleClass="sidebar">
             <Button text="🏠 Home" onAction="#handleHome" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button text="📋 My Posts" onAction="#handleMyPosts" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="🌍 Explore" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="🏆 Tournaments" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="🌍 Explore" onAction="#handleExplore" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="🏆 Tournaments" onAction="#handleTournaments" styleClass="sidebar-button" maxWidth="Infinity" />
         </VBox>
     </left>
 
@@ -96,6 +110,8 @@
                                       HBox.hgrow="ALWAYS"
                                       style="-fx-control-inner-background: #051424; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 10;" />
                         </HBox>
+
+                        <VBox fx:id="mediaPreviewContainer" spacing="5" />
 
                         <HBox spacing="15" alignment="CENTER_LEFT">
                             <Button text="Media"

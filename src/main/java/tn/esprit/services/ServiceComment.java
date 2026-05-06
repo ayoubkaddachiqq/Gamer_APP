@@ -64,7 +64,7 @@ public class ServiceComment implements IService<Comment> {
 
     @Override
     public void delete(int id) {
-        String qry = "DELETE FROM comments WHERE id = ?";
+        String qry = "DELETE FROM        comments WHERE id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(qry)) {
             ps.setInt(1, id);
             ps.executeUpdate();
