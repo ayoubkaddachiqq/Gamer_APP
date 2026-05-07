@@ -9,6 +9,14 @@ import java.util.List;
 
 public class CategorieService {
     private Connection cnx = MyDatabase.getInstance().getConnection();
+    private static final String[][] CATEGORIES_PAR_DEFAUT = {
+            {"Tank", "Joueur defensif"},
+            {"Support", "Joueur support"},
+            {"Attaquant", "Joueur offensif"},
+            {"Defenseur", "Joueur defensif"},
+            {"Strategiste", "Joueur tactique"},
+            {"Coach", "Encadrement equipe"}
+    };
 
     // VALIDATION
     public void valider(Categorie c) throws Exception {
@@ -56,7 +64,7 @@ public class CategorieService {
     // READ ALL
     public List<Categorie> getAll() throws SQLException {
         List<Categorie> list = new ArrayList<>();
-        String sql = "SELECT * FROM categorie";
+        String sql = "SELECT * FROM categorie ORDER BY nom";
         Statement st = cnx.createStatement();
         ResultSet rs = st.executeQuery(sql);
         while (rs.next()) {
@@ -67,6 +75,14 @@ public class CategorieService {
             list.add(c);
         }
         return list;
+    }
+
+    public void assurerCategoriesParDefaut() throws Exception {
+        for (String[] categorie : CATEGORIES_PAR_DEFAUT) {
+            if (!nomExiste(categorie[0], 0)) {
+                ajouter(new Categorie(0, categorie[0], categorie[1]));
+            }
+        }
     }
 
     // READ BY ID

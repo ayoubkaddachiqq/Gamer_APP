@@ -4,7 +4,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -29,7 +31,7 @@
                 <TextField fx:id="tfTitre" promptText="Titre de l'annonce" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                 <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <TextField fx:id="tfDescription" promptText="Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextArea fx:id="tfDescription" prefRowCount="3" promptText="Description" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                 <Label text="Jeu" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                 <TextField fx:id="tfJeu" promptText="Nom du jeu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -43,7 +45,17 @@
                 <Label text="Categorie" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                 <ComboBox fx:id="cbCategorie" prefWidth="420.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-                <HBox alignment="CENTER_RIGHT" spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                <Label text="Image" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <HBox alignment="CENTER_LEFT" spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                    <ImageView fx:id="imagePreview" fitHeight="90.0" fitWidth="140.0" preserveRatio="true" styleClass="image-preview" />
+                    <VBox spacing="8.0">
+                        <TextField fx:id="tfImagePath" editable="false" prefWidth="260.0" promptText="Aucune image choisie" />
+                        <Button onAction="#choisirImage" styleClass="btn-secondary" text="Choisir image" />
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                    <Button onAction="#corrigerOrthographe" styleClass="btn-secondary" text="Corriger orthographe" />
                     <Button onAction="#annuler" styleClass="btn-secondary" text="Annuler" />
                     <Button onAction="#enregistrerAnnonce" styleClass="btn-primary" text="Enregistrer" />
                 </HBox>

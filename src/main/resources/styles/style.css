@@ -1,7 +1,7 @@
 /* Thème Sombre: Violet et Bleu Foncé */
 
 .root {
-    -fx-background-color: #0d1117; /* Fond général très sombre (bleu nuit) */
+    -fx-background-color: #0d1117;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 14px;
 }
@@ -13,12 +13,12 @@
 .title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #cda8ff; /* Violet clair */
+    -fx-text-fill: #cda8ff;
 }
 
 /* --- Sidebar --- */
 .sidebar {
-    -fx-background-color: #161b22; /* Bleu foncé */
+    -fx-background-color: #161b22;
     -fx-border-color: #30363d;
     -fx-border-width: 0 1 0 0;
 }
@@ -32,11 +32,11 @@
 }
 .sidebar-btn:hover {
     -fx-background-color: #21262d;
-    -fx-text-fill: #cda8ff; /* Violet au survol */
+    -fx-text-fill: #cda8ff;
 }
 .sidebar-btn.active {
     -fx-background-color: #1f242e;
-    -fx-border-color: #8a2be2; /* Violet vif */
+    -fx-border-color: #8a2be2;
     -fx-border-width: 0 0 0 4;
     -fx-text-fill: #cda8ff;
 }
@@ -52,8 +52,17 @@
     -fx-padding: 8;
 }
 .text-field:focused, .text-area:focused, .combo-box:focused {
-    -fx-border-color: #8a2be2; /* Violet vif au focus */
+    -fx-border-color: #8a2be2;
     -fx-effect: dropshadow(three-pass-box, rgba(138,43,226,0.3), 5, 0, 0, 0);
+}
+.text-area .content {
+    -fx-background-color: #0d1117;
+    -fx-background-radius: 6;
+}
+.text-area {
+    -fx-control-inner-background: #0d1117;
+    -fx-highlight-fill: #8a2be2;
+    -fx-highlight-text-fill: white;
 }
 .combo-box .list-cell {
     -fx-background-color: #161b22;
@@ -66,7 +75,7 @@
 
 /* --- Boutons --- */
 .button {
-    -fx-background-color: #238636; /* Vert par défaut pour validation */
+    -fx-background-color: #238636;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
@@ -78,7 +87,7 @@
 }
 
 .btn-primary {
-    -fx-background-color: #8a2be2; /* Violet vif */
+    -fx-background-color: #8a2be2;
 }
 .btn-primary:hover {
     -fx-background-color: #9b47e5;
@@ -89,6 +98,13 @@
 }
 .btn-danger:hover {
     -fx-background-color: #f85149;
+}
+
+.btn-secondary {
+    -fx-background-color: #312e81;
+}
+.btn-secondary:hover {
+    -fx-background-color: #4338ca;
 }
 
 /* --- TableView --- */
@@ -102,39 +118,132 @@
     -fx-background-color: #21262d;
     -fx-background-radius: 6 6 0 0;
 }
-.table-view .column-header, .table-view .filler {
+.table-view .column-header {
     -fx-background-color: transparent;
     -fx-size: 40px;
     -fx-border-color: #30363d;
     -fx-border-width: 0 1 0 0;
 }
 .table-view .column-header .label {
-    -fx-text-fill: #cda8ff; /* Violet clair pour les en-têtes */
+    -fx-text-fill: #cda8ff;
     -fx-font-weight: bold;
-    -fx-alignment: center-left;
-    -fx-padding: 0 0 0 10;
+    -fx-alignment: CENTER;
 }
-.table-row-cell {
+.table-view .table-row-cell {
     -fx-background-color: #161b22;
     -fx-text-fill: #e6edf3;
-    -fx-cell-size: 40px;
+    -fx-cell-size: 58px;
 }
-.table-row-cell:empty {
+.table-view .table-row-cell:empty {
     -fx-background-color: transparent;
 }
-.table-row-cell:odd {
+.table-view .table-row-cell:odd {
     -fx-background-color: #0d1117;
 }
-.table-row-cell:selected {
-    -fx-background-color: rgba(138,43,226,0.2); /* Fond violet très léger */
+.table-view .table-row-cell:selected {
+    -fx-background-color: rgba(138,43,226,0.2);
 }
 .table-view .cell {
     -fx-text-fill: #e6edf3;
-    -fx-alignment: center-left;
-    -fx-padding: 0 0 0 10;
+    -fx-padding: 0 8 0 8;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 1 0 0;
+}
+.table-view .button {
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 12px;
 }
 
-/* --- Cards (Formulaires) --- */
+/* --- SUPPRESSION DE L'ENTOURAGE ROUGE/INDÉSIRABLE --- */
+.table-view .column-header-background .filler {
+    -fx-background-color: #21262d;
+    -fx-border-color: #30363d;
+    -fx-border-width: 0 0 0 1;
+}
+
+.table-view .filler {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+}
+
+.table-view .show-hide-columns-button {
+    -fx-background-color: #21262d;
+    -fx-border-color: #30363d;
+    -fx-opacity: 0;
+}
+
+.table-view .corner {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+}
+
+/* --- Liste d'annonces --- */
+.list-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 14 0;
+}
+
+.list-view .list-cell:empty {
+    -fx-padding: 0;
+}
+
+.annonce-card {
+    -fx-background-color: #161b22;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+}
+
+.annonce-card:hover {
+    -fx-border-color: #8a2be2;
+}
+
+.annonce-card-image {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.annonce-card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.annonce-card-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #d1d5db;
+}
+
+.annonce-badge {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+    -fx-min-width: 110;
+}
+
+.annonce-badge-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #9ca3af;
+}
+
+.annonce-badge-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+}
+
+/* --- Cards --- */
 .card {
     -fx-background-color: #161b22;
     -fx-border-color: #30363d;
@@ -144,7 +253,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 5);
 }
 
-/* --- Gestion Annonces: theme gaming violet sombre --- */
+/* --- Theme Gaming --- */
 .gaming-root {
     -fx-background-color: linear-gradient(to bottom right, #090914, #141020 55%, #090914);
 }
@@ -173,10 +282,9 @@
     -fx-effect: dropshadow(three-pass-box, rgba(124,58,237,0.35), 18, 0, 0, 0);
 }
 
-.btn-secondary {
-    -fx-background-color: #312e81;
-}
-
-.btn-secondary:hover {
-    -fx-background-color: #4338ca;
+.image-preview {
+    -fx-background-color: #0d1117;
+    -fx-border-color: #30363d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
 }

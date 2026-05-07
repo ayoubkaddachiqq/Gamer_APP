@@ -3,14 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="1000.0" styleClass="gaming-root"
+<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="gaming-root"
             xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.esprit.controllers.GestionAnnonceController">
@@ -21,29 +20,20 @@
             </padding>
             <Label styleClass="gaming-title" text="Gestion des Annonces" />
             <HBox alignment="CENTER_LEFT" spacing="12.0">
-                <TextField fx:id="tfRecherche" prefWidth="320.0" promptText="Rechercher par titre ou jeu" />
+                <TextField fx:id="tfRecherche" prefWidth="320.0" promptText="Rechercher par titre, description ou jeu" />
+                <TextField fx:id="tfSalaireMin" prefWidth="120.0" promptText="Salaire min" />
+                <TextField fx:id="tfSalaireMax" prefWidth="120.0" promptText="Salaire max" />
                 <Button onAction="#rechercherAnnonce" styleClass="btn-primary" text="Rechercher" />
                 <Button onAction="#ajouterAnnonce" styleClass="btn-primary" text="Ajouter" />
-                <Button onAction="#modifierAnnonce" styleClass="btn-secondary" text="Modifier" />
-                <Button onAction="#supprimerAnnonce" styleClass="btn-danger" text="Supprimer" />
             </HBox>
         </VBox>
     </top>
     <center>
-        <VBox styleClass="gaming-content">
+        <VBox alignment="TOP_CENTER" fillWidth="true" styleClass="gaming-content">
             <padding>
                 <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
             </padding>
-            <TableView fx:id="tableAnnonces" prefHeight="560.0" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colId" prefWidth="70.0" text="ID" />
-                    <TableColumn fx:id="colTitre" prefWidth="220.0" text="Titre" />
-                    <TableColumn fx:id="colJeu" prefWidth="170.0" text="Jeu" />
-                    <TableColumn fx:id="colSalaire" prefWidth="130.0" text="Salaire" />
-                    <TableColumn fx:id="colStatut" prefWidth="150.0" text="Statut" />
-                    <TableColumn fx:id="colCategorie" prefWidth="200.0" text="Categorie" />
-                </columns>
-            </TableView>
+            <ListView fx:id="listAnnonces" prefHeight="620.0" prefWidth="1244.0" VBox.vgrow="ALWAYS" />
         </VBox>
     </center>
 </BorderPane>

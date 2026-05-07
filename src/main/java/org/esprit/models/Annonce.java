@@ -12,6 +12,7 @@ public class Annonce {
     private String statut;
     private int idCategorie;
     private String nomCategorie;
+    private String imagePath;
 
     public Annonce() {}
 
@@ -33,6 +34,8 @@ public class Annonce {
     public void setIdCategorie(int idCategorie) { this.idCategorie = idCategorie; }
     public String getNomCategorie() { return nomCategorie; }
     public void setNomCategorie(String nomCategorie) { this.nomCategorie = nomCategorie; }
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     @Override
     public String toString() {
