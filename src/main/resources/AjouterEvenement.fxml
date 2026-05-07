@@ -55,33 +55,52 @@
                     <TextField fx:id="tfTitre" promptText="Nom de l'evenement" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Description" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextArea fx:id="taDescription" prefRowCount="2" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <TextArea fx:id="taDescription" prefRowCount="2" wrapText="true"/>
+                        <Button text="Corriger l'orthographe" onAction="#corrigerDescription" styleClass="secondary-button"/>
+                    </VBox>
 
                     <Label text="Type" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                     <ComboBox fx:id="cbType" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Date debut" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="tfDateDebut" promptText="2026-05-01T18:00" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <HBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                        <DatePicker fx:id="dpDateDebut" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="tfHeureDebut" prefWidth="92" promptText="18:00"/>
+                    </HBox>
 
                     <Label text="Date fin" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                    <TextField fx:id="tfDateFin" promptText="2026-05-01T22:00" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                    <HBox spacing="8" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                        <DatePicker fx:id="dpDateFin" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="tfHeureFin" prefWidth="92" promptText="22:00"/>
+                    </HBox>
 
                     <Label text="Lieu" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
                     <TextField fx:id="tfLieu" promptText="Ex: Tunis, Lac 2" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 
-                    <Label text="Participants max" styleClass="form-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                    <TextField fx:id="tfNbMax" promptText="128" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                    <Label text="Meteo" styleClass="form-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="weather-card" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                        <Label fx:id="lbWeatherIcon" text="--" styleClass="weather-icon"/>
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lbWeatherTitle" text="Meteo non verifiee" styleClass="weather-title"/>
+                            <Label fx:id="lbWeatherDetails" text="Choisir lieu et date debut" wrapText="true" styleClass="weather-details"/>
+                        </VBox>
+                        <Button text="Verifier" onAction="#verifierMeteo" styleClass="secondary-button"/>
+                    </HBox>
 
-                    <Label text="Statut" styleClass="form-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                    <ComboBox fx:id="cbStatut" maxWidth="Infinity" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+                    <Label text="Participants max" styleClass="form-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                    <TextField fx:id="tfNbMax" promptText="128" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 
-                    <Label text="Image" styleClass="form-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-                    <HBox spacing="10" GridPane.rowIndex="8" GridPane.columnIndex="1">
+                    <Label text="Statut" styleClass="form-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="cbStatut" maxWidth="Infinity" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+                    <Label text="Image" styleClass="form-label" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                    <HBox spacing="10" GridPane.rowIndex="9" GridPane.columnIndex="1">
                         <TextField fx:id="tfImage" HBox.hgrow="ALWAYS" promptText="Chemin de l'affiche"/>
                         <Button text="Choisir" onAction="#choisirImage" styleClass="secondary-button"/>
                     </HBox>
 
-                    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="9" GridPane.columnIndex="1">
+                    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="10" GridPane.columnIndex="1">
                         <Button fx:id="btnSauvegarder" text="Sauvegarder" onAction="#sauvegarder" styleClass="primary-button"/>
                         <Button text="Retour" onAction="#retour" styleClass="danger-button"/>
                     </HBox>

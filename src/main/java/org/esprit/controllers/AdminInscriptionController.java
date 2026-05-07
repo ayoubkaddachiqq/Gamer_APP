@@ -35,9 +35,9 @@ public class AdminInscriptionController {
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
 
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colEvenementId.setCellValueFactory(new PropertyValueFactory<>("evenementId"));
-        colUtilisateurId.setCellValueFactory(new PropertyValueFactory<>("utilisateurId"));
+        colId.setVisible(false);
+        colEvenementId.setVisible(false);
+        colUtilisateurId.setVisible(false);
         colDateInscription.setCellValueFactory(new PropertyValueFactory<>("dateInscription"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
 

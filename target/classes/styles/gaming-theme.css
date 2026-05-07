@@ -181,6 +181,39 @@
     -fx-text-fill: #ffffff;
 }
 
+.compact-action-button {
+    -fx-padding: 7 9;
+    -fx-font-size: 11px;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+}
+
+.weather-card {
+    -fx-background-color: linear-gradient(to right, rgba(14, 165, 233, 0.16), rgba(168, 85, 247, 0.12));
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: rgba(125, 211, 252, 0.28);
+    -fx-padding: 10;
+}
+
+.weather-icon {
+    -fx-text-fill: #e0f2fe;
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-min-width: 34;
+    -fx-alignment: CENTER;
+}
+
+.weather-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 800;
+}
+
+.weather-details {
+    -fx-text-fill: #93c5fd;
+    -fx-font-size: 12px;
+}
+
 .table-view {
     -fx-background-color: transparent;
     -fx-border-color: rgba(116, 132, 166, 0.18);

@@ -5,9 +5,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import org.esprit.models.Evenement;
 import org.esprit.services.EvenementService;
 import org.esprit.models.TypeEvenement;
@@ -28,6 +30,7 @@ public class GestionEvenementController {
     @FXML private TableColumn<Evenement, LocalDateTime> colDateDebut;
     @FXML private TableColumn<Evenement, LocalDateTime> colDateFin;
     @FXML private TableColumn<Evenement, String> colStatut;
+    @FXML private TableColumn<Evenement, Void> colActions;
     @FXML private TextField tfRecherchetitre;
     @FXML private TextField tfRechercheLieu;
 
@@ -39,7 +42,9 @@ public class GestionEvenementController {
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
 
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        if (colId != null) {
+            colId.setVisible(false);
+        }
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colType.setCellValueFactory(cellData -> {
             int typeId = cellData.getValue().getTypeId();
@@ -54,10 +59,52 @@ public class GestionEvenementController {
         colLieu.setCellValueFactory(new PropertyValueFactory<>("lieu"));
         colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
         colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
-        colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
-
+        if (colStatut != null) {
+            colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        }
+        tableEvenements.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        configurerActions();
 
         chargerEvenements();
+    }
+
+    private void configurerActions() {
+        colActions.setCellFactory(column -> new TableCell<>() {
+            private final Button btnModifier = creerBoutonAction("Modifier", "Modifier", 78);
+            private final Button btnSupprimer = creerBoutonAction("Suppr.", "Supprimer", 72);
+            private final Button btnDetails = creerBoutonAction("Details", "Details", 68);
+            private final HBox actions = new HBox(8, btnModifier, btnSupprimer, btnDetails);
+
+            {
+                actions.setAlignment(Pos.CENTER);
+                btnModifier.getStyleClass().add("warning-button");
+                btnSupprimer.getStyleClass().add("danger-button");
+                btnDetails.getStyleClass().add("success-button");
+
+                btnModifier.setOnAction(event -> ouvrirModifier(getTableView().getItems().get(getIndex())));
+                btnSupprimer.setOnAction(event -> supprimer(getTableView().getItems().get(getIndex())));
+                btnDetails.setOnAction(event -> ouvrirDetails(getTableView().getItems().get(getIndex())));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : actions);
+            }
+        });
+    }
+
+    private Button creerBoutonAction(String texte, String tooltip, double largeur) {
+        Button button = new Button(texte);
+        button.setTooltip(new Tooltip(tooltip));
+        button.setMinWidth(largeur);
+        button.setPrefWidth(largeur);
+        button.setMaxWidth(largeur);
+        button.setMinHeight(30);
+        button.setPrefHeight(30);
+        button.setMaxHeight(30);
+        button.getStyleClass().add("compact-action-button");
+        return button;
     }
 
     private void chargerEvenements() {
@@ -116,6 +163,20 @@ public class GestionEvenementController {
         }
     }
 
+    private void ouvrirModifier(Evenement evenement) {
+        if (evenement == null) {
+            return;
+        }
+        try {
+            evenementSelectionne = evenement;
+            AjouterEvenementController.evenementAModifier = evenement;
+            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvenement.fxml"));
+            tableEvenements.getScene().setRoot(root);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @FXML
     void supprimer(ActionEvent event) {
         Evenement selected = tableEvenements.getSelectionModel().getSelectedItem();
@@ -129,6 +190,21 @@ public class GestionEvenementController {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmation");
         confirm.setContentText("Voulez-vous supprimer cet événement ?");
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                service.delete(selected);
+                chargerEvenements();
+            }
+        });
+    }
+
+    private void supprimer(Evenement selected) {
+        if (selected == null) {
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmation");
+        confirm.setContentText("Voulez-vous supprimer cet evenement ?");
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 service.delete(selected);
@@ -173,10 +249,36 @@ public class GestionEvenementController {
         }
     }
 
+    private void ouvrirDetails(Evenement evenement) {
+        if (evenement == null) {
+            return;
+        }
+        try {
+            evenementSelectionne = evenement;
+            Parent root = FXMLLoader.load(getClass().getResource("/DetailsEvenement.fxml"));
+            tableEvenements.getScene().setRoot(root);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @FXML
     void ouvrirAdmin(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/AdminInscription.fxml"));
+            tableEvenements.getScene().setRoot(root);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void ouvrirInscriptions(Evenement evenement) {
+        if (evenement == null) {
+            return;
+        }
+        try {
+            evenementSelectionne = evenement;
+            Parent root = FXMLLoader.load(getClass().getResource("/GestionInscription.fxml"));
             tableEvenements.getScene().setRoot(root);
         } catch (IOException e) {
             System.out.println(e.getMessage());

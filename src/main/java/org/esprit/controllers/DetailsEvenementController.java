@@ -1,5 +1,6 @@
 package org.esprit.controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
 import org.esprit.models.Evenement;
 import org.esprit.models.TypeEvenement;
+import org.esprit.services.MeteoService;
 import org.esprit.services.TypeEvenementService;
 import org.esprit.utils.UiEffects;
 import java.io.IOException;
@@ -25,9 +27,14 @@ public class DetailsEvenementController {
     @FXML private Label lbDateFin;
     @FXML private Label lbNbMax;
     @FXML private Label lbStatut;
+    @FXML private Label lbWeatherIcon;
+    @FXML private Label lbWeatherTitle;
+    @FXML private Label lbWeatherDetails;
     @FXML private WebView mapView;
     @FXML private javafx.scene.image.ImageView imageEvenement;
-    private TypeEvenementService typeService = new TypeEvenementService();
+    private final TypeEvenementService typeService = new TypeEvenementService();
+    private final MeteoService meteoService = new MeteoService();
+
     @FXML
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
@@ -48,6 +55,7 @@ public class DetailsEvenementController {
             lbDateFin.setText(e.getDateFin().toString());
             lbNbMax.setText(String.valueOf(e.getNbParticipantsMax()));
             lbStatut.setText(e.getStatut());
+            verifierMeteo(e);
 
             String url = "https://maps.google.com/?q=" + e.getLieu().replace(" ", "+");
             mapView.getEngine().load(url);
@@ -79,6 +87,26 @@ public class DetailsEvenementController {
         imageEvenement.setStyle(
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0.5, 0, 5);"
         );
+    }
+
+    private void verifierMeteo(Evenement evenement) {
+        afficherMeteo("Recherche en cours", "Analyse du lieu et de la date...", "...");
+        meteoService.chargerMeteo(evenement.getLieu(), evenement.getDateDebut().toLocalDate())
+                .thenAccept(meteo -> Platform.runLater(() ->
+                        afficherMeteo(meteo.titre(), meteo.details(), meteo.icon())
+                ))
+                .exceptionally(ex -> {
+                    Platform.runLater(() ->
+                            afficherMeteo("Meteo indisponible", "Verifier la connexion ou reessayer", "!")
+                    );
+                    return null;
+                });
+    }
+
+    private void afficherMeteo(String titre, String details, String icon) {
+        lbWeatherTitle.setText(titre);
+        lbWeatherDetails.setText(details);
+        lbWeatherIcon.setText(icon);
     }
 
     @FXML

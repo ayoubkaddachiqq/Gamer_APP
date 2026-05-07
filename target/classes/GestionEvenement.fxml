@@ -26,7 +26,6 @@
 
             <VBox spacing="8">
                 <Button maxWidth="Infinity" text="Evenements" styleClass="nav-button-active"/>
-                <Button maxWidth="Infinity" text="Inscriptions" onAction="#ouvrirInscriptions" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Ajouter event" onAction="#ouvrirAjouter" styleClass="nav-button"/>
             </VBox>
@@ -93,22 +92,17 @@
 
                 <TableView fx:id="tableEvenements" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
-                        <TableColumn fx:id="colTitre" text="Titre" prefWidth="220"/>
-                        <TableColumn fx:id="colType" text="Type" prefWidth="140"/>
-                        <TableColumn fx:id="colLieu" text="Lieu" prefWidth="170"/>
-                        <TableColumn fx:id="colDateDebut" text="Date debut" prefWidth="170"/>
-                        <TableColumn fx:id="colDateFin" text="Date fin" prefWidth="170"/>
-                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="130"/>
+                        <TableColumn fx:id="colTitre" text="Titre" prefWidth="230"/>
+                        <TableColumn fx:id="colType" text="Type" prefWidth="105"/>
+                        <TableColumn fx:id="colLieu" text="Lieu" prefWidth="145"/>
+                        <TableColumn fx:id="colDateDebut" text="Date debut" prefWidth="125"/>
+                        <TableColumn fx:id="colDateFin" text="Date fin" prefWidth="125"/>
+                        <TableColumn fx:id="colActions" text="Actions" prefWidth="280"/>
                     </columns>
                 </TableView>
 
                 <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <Button text="Modifier" onAction="#ouvrirModifier" styleClass="warning-button"/>
-                    <Button text="Supprimer" onAction="#supprimer" styleClass="danger-button"/>
-                    <Button text="Details" onAction="#ouvrirDetails" styleClass="success-button"/>
                     <Button text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
-                    <Button text="Inscriptions" onAction="#ouvrirInscriptions" styleClass="purple-button"/>
                 </HBox>
             </VBox>
         </VBox>

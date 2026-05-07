@@ -5,7 +5,9 @@ import org.esprit.models.Evenement;
 import org.esprit.utils.MyDataBase;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EvenementService implements IService<Evenement> {
 
@@ -91,10 +93,101 @@ public class EvenementService implements IService<Evenement> {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, e.getId());
-            ps.executeUpdate();
+            int lignesSupprimees = ps.executeUpdate();
+            if (lignesSupprimees > 0) {
+                renumeroterIdsEvenements();
+            }
             System.out.println("Événement supprimé !");
         } catch (SQLException ex) {
             System.out.println("Erreur suppression : " + ex.getMessage());
+        }
+    }
+
+    private void renumeroterIdsEvenements() throws SQLException {
+        Map<Integer, Integer> nouveauxIds = new LinkedHashMap<>();
+        String selectSql = "SELECT id FROM evenement ORDER BY id";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(selectSql)) {
+            int nouvelId = 1;
+            while (rs.next()) {
+                int ancienId = rs.getInt("id");
+                if (ancienId != nouvelId) {
+                    nouveauxIds.put(ancienId, nouvelId);
+                }
+                nouvelId++;
+            }
+        }
+
+        if (nouveauxIds.isEmpty()) {
+            reinitialiserAutoIncrement(compterEvenements() + 1);
+            return;
+        }
+
+        boolean autoCommitInitial = connection.getAutoCommit();
+        try {
+            connection.setAutoCommit(false);
+            definirVerificationCleEtrangere(false);
+
+            for (Map.Entry<Integer, Integer> entry : nouveauxIds.entrySet()) {
+                int ancienId = entry.getKey();
+                int nouvelIdTemporaire = -entry.getValue();
+                mettreAJourIdEvenement(ancienId, nouvelIdTemporaire);
+                mettreAJourIdEvenementInscription(ancienId, nouvelIdTemporaire);
+            }
+
+            for (int nouvelId : nouveauxIds.values()) {
+                int nouvelIdTemporaire = -nouvelId;
+                mettreAJourIdEvenement(nouvelIdTemporaire, nouvelId);
+                mettreAJourIdEvenementInscription(nouvelIdTemporaire, nouvelId);
+            }
+
+            reinitialiserAutoIncrement(compterEvenements() + 1);
+            definirVerificationCleEtrangere(true);
+            connection.commit();
+        } catch (SQLException ex) {
+            connection.rollback();
+            definirVerificationCleEtrangere(true);
+            throw ex;
+        } finally {
+            connection.setAutoCommit(autoCommitInitial);
+        }
+    }
+
+    private void mettreAJourIdEvenement(int ancienId, int nouvelId) throws SQLException {
+        String sql = "UPDATE evenement SET id=? WHERE id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, nouvelId);
+            ps.setInt(2, ancienId);
+            ps.executeUpdate();
+        }
+    }
+
+    private void mettreAJourIdEvenementInscription(int ancienId, int nouvelId) throws SQLException {
+        String sql = "UPDATE inscription SET evenement_id=? WHERE evenement_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, nouvelId);
+            ps.setInt(2, ancienId);
+            ps.executeUpdate();
+        }
+    }
+
+    private int compterEvenements() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM evenement";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    private void reinitialiserAutoIncrement(int prochainId) throws SQLException {
+        try (Statement st = connection.createStatement()) {
+            st.executeUpdate("ALTER TABLE evenement AUTO_INCREMENT = " + Math.max(prochainId, 1));
+        }
+    }
+
+    private void definirVerificationCleEtrangere(boolean active) throws SQLException {
+        try (Statement st = connection.createStatement()) {
+            st.execute("SET FOREIGN_KEY_CHECKS=" + (active ? "1" : "0"));
         }
     }
 

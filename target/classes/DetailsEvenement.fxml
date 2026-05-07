@@ -76,6 +76,17 @@
                         <Label text="Participants max" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                         <Label fx:id="lbNbMax" styleClass="label" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
                     </GridPane>
+
+                    <VBox spacing="8">
+                        <Label text="Meteo" styleClass="section-title"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="weather-card">
+                            <Label fx:id="lbWeatherIcon" text="--" styleClass="weather-icon"/>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label fx:id="lbWeatherTitle" text="Meteo non verifiee" styleClass="weather-title"/>
+                                <Label fx:id="lbWeatherDetails" text="Choisir lieu et date debut" wrapText="true" styleClass="weather-details"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
                 </VBox>
 
                 <VBox spacing="12" prefWidth="660" maxWidth="760" HBox.hgrow="ALWAYS" styleClass="glass-panel">

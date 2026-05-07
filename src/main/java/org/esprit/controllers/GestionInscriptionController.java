@@ -45,8 +45,8 @@ public class GestionInscriptionController {
             lbEvenement.setText("Evenement : " + evenement.getTitre());
         }
 
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colUtilisateurId.setCellValueFactory(new PropertyValueFactory<>("utilisateurId"));
+        colId.setVisible(false);
+        colUtilisateurId.setVisible(false);
         colDateInscription.setCellValueFactory(new PropertyValueFactory<>("dateInscription"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
 

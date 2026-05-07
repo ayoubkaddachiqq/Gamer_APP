@@ -46,9 +46,9 @@
 
                 <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
-                        <TableColumn fx:id="colEvenementId" text="Evenement ID" prefWidth="160"/>
-                        <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="180"/>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="0" visible="false"/>
+                        <TableColumn fx:id="colEvenementId" text="Evenement ID" prefWidth="0" visible="false"/>
+                        <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="0" visible="false"/>
                         <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="240"/>
                         <TableColumn fx:id="colStatut" text="Statut" prefWidth="180"/>
                     </columns>
