@@ -30,6 +30,9 @@ public class PostCardController {
     private Label userNameLabel;
 
     @FXML
+    private Label trendingBadge;
+
+    @FXML
     private Label gameTagLabel;
 
     @FXML
@@ -115,6 +118,18 @@ public class PostCardController {
         return DEFAULT_AVATAR;
     }
 
+    private String getUsername(int userId) {
+        try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT username FROM users WHERE id = ?")) {
+            ps.setInt(1, userId);
+            java.sql.ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String name = rs.getString("username");
+                if (name != null && !name.isEmpty()) return name;
+            }
+        } catch (Exception e) { /* ignore */ }
+        return "Player " + userId;
+    }
+
     public void setData(Post post) {
         this.post = post;
         if (post != null) {
@@ -133,6 +148,11 @@ public class PostCardController {
 
             if (postDateLabel != null && post.getCreatedAt() != null) {
                 postDateLabel.setText(formatTimeAgo(post.getCreatedAt().toInstant()));
+            }
+
+            if (trendingBadge != null && post.getTrendingScore() >= 10.0) {
+                trendingBadge.setVisible(true);
+                trendingBadge.setManaged(true);
             }
 
             loadUserAvatar();
@@ -173,10 +193,6 @@ public class PostCardController {
         if (shareCountLabel != null) {
             shareCountLabel.setVisible(!editable);
             shareCountLabel.setManaged(!editable);
-        }
-        if (imageContainer != null) {
-            imageContainer.setVisible(!editable);
-            imageContainer.setManaged(!editable);
         }
     }
 
@@ -242,37 +258,59 @@ public class PostCardController {
         if (userAvatarImage == null || post == null) return;
 
         String photoPath = getProfilePhoto(post.getUserId());
-        File imgFile = new File(photoPath).getAbsoluteFile();
-        if (imgFile.exists()) {
-            Image image = new Image(imgFile.toURI().toString());
-            double size = 40;
-            double scale = Math.max(size / image.getWidth(), size / image.getHeight());
-            userAvatarImage.setFitWidth(image.getWidth() * scale);
-            userAvatarImage.setFitHeight(image.getHeight() * scale);
-            userAvatarImage.setImage(image);
-            userAvatarImage.setPreserveRatio(true);
-            userAvatarImage.setClip(new Circle(size / 2));
-        } else {
-            System.out.println("Avatar not found at: " + imgFile.getAbsolutePath());
+        double size = 40;
+
+        if (loadAvatarImage(photoPath, userAvatarImage, size)) {
+            return;
         }
+
+        if (!DEFAULT_AVATAR.equals(photoPath)) {
+            if (loadAvatarImage(DEFAULT_AVATAR, userAvatarImage, size)) {
+                return;
+            }
+        }
+
+        System.out.println("No avatar found for user " + post.getUserId());
     }
 
     private void loadCommentAvatar() {
         if (commentAvatarImage == null) return;
 
         String photoPath = getProfilePhoto(CURRENT_USER_ID);
-        File imgFile = new File(photoPath).getAbsoluteFile();
-        if (imgFile.exists()) {
+        double size = 28;
+
+        if (loadAvatarImage(photoPath, commentAvatarImage, size)) {
+            return;
+        }
+
+        if (!DEFAULT_AVATAR.equals(photoPath)) {
+            if (loadAvatarImage(DEFAULT_AVATAR, commentAvatarImage, size)) {
+                return;
+            }
+        }
+
+        System.out.println("No avatar found for comment user");
+    }
+
+    private boolean loadAvatarImage(String path, ImageView imageView, double size) {
+        try {
+            File imgFile = new File(path).getAbsoluteFile();
+            if (!imgFile.exists()) {
+                return false;
+            }
             Image image = new Image(imgFile.toURI().toString());
-            double size = 28;
+            if (image.isError()) {
+                return false;
+            }
             double scale = Math.max(size / image.getWidth(), size / image.getHeight());
-            commentAvatarImage.setFitWidth(image.getWidth() * scale);
-            commentAvatarImage.setFitHeight(image.getHeight() * scale);
-            commentAvatarImage.setImage(image);
-            commentAvatarImage.setPreserveRatio(true);
-            commentAvatarImage.setClip(new Circle(size / 2));
-        } else {
-            System.out.println("Comment avatar not found at: " + imgFile.getAbsolutePath());
+            imageView.setFitWidth(image.getWidth() * scale);
+            imageView.setFitHeight(image.getHeight() * scale);
+            imageView.setImage(image);
+            imageView.setPreserveRatio(true);
+            imageView.setClip(new Circle(size / 2));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -349,9 +387,11 @@ public class PostCardController {
 
         boolean hasLiked = serviceLike.hasUserLiked(post.getId(), CURRENT_USER_ID);
         if (hasLiked) {
-            likeButton.setStyle("-fx-background-color: rgba(189, 0, 255, 0.3); -fx-text-fill: #bd00ff; -fx-font-size: 16px; -fx-cursor: hand; -fx-background-radius: 5;");
+            likeButton.getStyleClass().clear();
+            likeButton.getStyleClass().add("liked-button");
         } else {
-            likeButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-size: 16px; -fx-cursor: hand;");
+            likeButton.getStyleClass().clear();
+            likeButton.getStyleClass().add("action-button");
         }
     }
 
@@ -374,7 +414,7 @@ public class PostCardController {
         List<Comment> comments = serviceComment.getCommentsByPost(post.getId());
         if (comments.isEmpty()) {
             Label emptyLabel = new Label("No comments yet. Be the first!");
-            emptyLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-padding: 10 0;");
+            emptyLabel.getStyleClass().add("empty-comments-label");
             commentsList.getChildren().add(emptyLabel);
         } else {
             for (Comment c : comments) {
@@ -385,7 +425,7 @@ public class PostCardController {
 
     private HBox createCommentRow(Comment comment) {
         HBox row = new HBox(10);
-        row.setStyle("-fx-background-color: #1e293b; -fx-background-radius: 8; -fx-padding: 10;");
+        row.getStyleClass().add("comment-row");
 
         StackPane avatarPane = new StackPane();
         Circle bgCircle = new Circle(12);
@@ -417,21 +457,21 @@ public class PostCardController {
         VBox textBlock = new VBox(2);
         HBox.setHgrow(textBlock, javafx.scene.layout.Priority.ALWAYS);
 
-        Label authorLabel = new Label("Player " + comment.getUserId());
-        authorLabel.setStyle("-fx-text-fill: #00eefc; -fx-font-weight: bold; -fx-font-size: 12px;");
+        Label authorLabel = new Label(getUsername(comment.getUserId()));
+        authorLabel.getStyleClass().add("comment-author");
 
         Label textLabel = new Label(comment.getCommentText());
         textLabel.setWrapText(true);
-        textLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px;");
+        textLabel.getStyleClass().add("comment-text");
 
         String timeAgo = formatTimeAgo(comment.getCreatedAt().toInstant());
         Label timeLabel = new Label(timeAgo);
-        timeLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 10px;");
+        timeLabel.getStyleClass().add("comment-time");
 
         textBlock.getChildren().addAll(authorLabel, textLabel, timeLabel);
 
         Button deleteBtn = new Button("x");
-        deleteBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ff4b4b; -fx-font-size: 10px; -fx-cursor: hand;");
+        deleteBtn.getStyleClass().add("comment-delete-btn");
         deleteBtn.setOnAction(e -> handleDeleteComment(comment));
 
         row.getChildren().addAll(avatarPane, textBlock, deleteBtn);

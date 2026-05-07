@@ -2,6 +2,7 @@ package tn.esprit.services;
 
 import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
+import tn.esprit.entities.UserRanking;
 import tn.esprit.utils.MyDB;
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,17 +40,24 @@ public class ServicePost implements IService<Post> {
     }
 
     @Override
-    public void add(Post p) {
-        String qry = "INSERT INTO posts (user_id, content, game_tag) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+    public int add(Post p) {
+        String qry = "INSERT INTO posts (user_id, username, content, game_tag) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = cnx.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, p.getUserId());
-            ps.setString(2, p.getContent());
-            ps.setString(3, p.getGameTag());
+            ps.setString(2, p.getUsername() != null ? p.getUsername() : "");
+            ps.setString(3, p.getContent());
+            ps.setString(4, p.getGameTag());
             ps.executeUpdate();
-            System.out.println("Recruitment post created!");
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                System.out.println("Post created with ID: " + id);
+                return id;
+            }
         } catch (SQLException e) {
             System.err.println("Error creating post: " + e.getMessage());
         }
+        return -1;
     }
 
     @Override
@@ -81,6 +89,63 @@ public class ServicePost implements IService<Post> {
                 post.addImagePath(img.getImagePath());
             }
         }
+    }
+
+    public List<Post> getTrendingPosts() {
+        List<Post> posts = getAll();
+        ServiceLike serviceLike = new ServiceLike();
+        ServiceShare serviceShare = new ServiceShare();
+        ServiceComment serviceComment = new ServiceComment();
+
+        double now = System.currentTimeMillis();
+        for (Post post : posts) {
+            int likes = serviceLike.getLikeCount(post.getId());
+            int comments = serviceComment.getCommentsByPost(post.getId()).size();
+            int shares = serviceShare.getShareCount(post.getId());
+            double hoursAgo = (now - post.getCreatedAt().getTime()) / (1000.0 * 60 * 60);
+            if (hoursAgo < 1) hoursAgo = 1;
+            double score = ((likes * 2) + (comments * 3) + (shares * 4)) / Math.pow(hoursAgo, 1.5);
+            post.setTrendingScore(score);
+        }
+        posts.sort((a, b) -> Double.compare(b.getTrendingScore(), a.getTrendingScore()));
+        return posts;
+    }
+
+    public List<UserRanking> getUserLeaderboard() {
+        String qry = "SELECT user_id, username FROM posts GROUP BY user_id, username";
+        List<UserRanking> rankings = new ArrayList<>();
+        try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(qry)) {
+            ServiceLike serviceLike = new ServiceLike();
+            ServiceComment serviceComment = new ServiceComment();
+            ServiceShare serviceShare = new ServiceShare();
+            while (rs.next()) {
+                int userId = rs.getInt("user_id");
+                String username = rs.getString("username");
+                if (username == null || username.isEmpty()) {
+                    username = "Player " + userId;
+                }
+                List<Post> userPosts = getPostsByUser(userId);
+                int totalPosts = userPosts.size();
+                int totalLikes = 0, totalComments = 0, totalShares = 0;
+                for (Post p : userPosts) {
+                    totalLikes += serviceLike.getLikeCount(p.getId());
+                    totalComments += serviceComment.getCommentsByPost(p.getId()).size();
+                    totalShares += serviceShare.getShareCount(p.getId());
+                }
+                int score = (totalPosts * 5) + (totalLikes * 2) + (totalComments * 1) + (totalShares * 3);
+                String title;
+                if (score < 100) title = "Rookie";
+                else if (score < 500) title = "Veteran";
+                else if (score < 1000) title = "Elite";
+                else title = "Legend";
+                rankings.add(new UserRanking(userId, username, score, totalPosts, totalLikes, title));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error calculating leaderboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+        rankings.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+        return rankings;
     }
 
     public List<Post> search(String query) {
@@ -211,8 +276,6 @@ public class ServicePost implements IService<Post> {
 
     @Override
     public void delete(int id) {
-        ServiceImagePost serviceImagePost = new ServiceImagePost();
-        serviceImagePost.removeImagesByPost(id);
         String qry = "DELETE FROM posts WHERE id = ?";
         try (PreparedStatement ps = cnx.prepareStatement(qry)) {
             ps.setInt(1, id);

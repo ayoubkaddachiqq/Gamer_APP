@@ -141,25 +141,10 @@
                 <Insets top="30.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
 
-            <VBox spacing="15.0">
-                <Label text="CONNECTED PLAYERS"
+            <VBox fx:id="leaderboardContainer" spacing="15.0">
+                <Label text="LEADERBOARD"
                        style="-fx-text-fill: #00eefc; -fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1.5;" />
-
-                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="player-row">
-                    <Circle radius="4.0" fill="#00ff88" style="-fx-effect: dropshadow(three-pass-box, #00ff88, 10, 0.5, 0, 0);" />
-                    <VBox>
-                        <Label text="GhostProtocol_" styleClass="player-name" style="-fx-font-weight: bold;" />
-                        <Label text="In Lobby" style="-fx-text-fill: #64748b; -fx-font-size: 10px;" />
-                    </VBox>
-                </HBox>
-
-                <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="player-row">
-                    <Circle radius="4.0" fill="#00ff88" style="-fx-effect: dropshadow(three-pass-box, #00ff88, 10, 0.5, 0, 0);" />
-                    <VBox>
-                        <Label text="NeonNinja" styleClass="player-name" style="-fx-font-weight: bold;" />
-                        <Label text="Playing VALORANT" style="-fx-text-fill: #64748b; -fx-font-size: 10px;" />
-                    </VBox>
-                </HBox>
+                <VBox spacing="8.0" fx:id="leaderboardList" />
             </VBox>
 
             <Region prefHeight="1" style="-fx-background-color: rgba(255,255,255,0.05);" />

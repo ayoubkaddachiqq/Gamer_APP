@@ -17,17 +17,21 @@ public class ServiceComment implements IService<Comment> {
     }
 
     @Override
-    public void add(Comment c) {
+    public int add(Comment c) {
         String qry = "INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = cnx.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, c.getPostId());
             ps.setInt(2, c.getUserId());
             ps.setString(3, c.getCommentText());
             ps.executeUpdate();
-            System.out.println("Comment added!");
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         } catch (SQLException e) {
             System.err.println("Error adding comment: " + e.getMessage());
         }
+        return -1;
     }
 
     @Override

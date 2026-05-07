@@ -11,10 +11,8 @@ public class Post {
     private String content;
     private String gameTag;
     private Timestamp createdAt;
-    private List<String> imagePaths;
-
-
-
+    private double trendingScore;
+    private List<String> imagePaths = new ArrayList<>();
     public Post(){}
 
     public Post(int userId, String content, String gameTag) {
@@ -73,6 +71,9 @@ public class Post {
     public List<String> getImagePaths() { return imagePaths; }
     public void setImagePaths(List<String> imagePaths) { this.imagePaths = imagePaths; }
     public void addImagePath(String path) { this.imagePaths.add(path); }
+
+    public double getTrendingScore() { return trendingScore; }
+    public void setTrendingScore(double score) { this.trendingScore = score; }
 
     @Override
     public String toString() {

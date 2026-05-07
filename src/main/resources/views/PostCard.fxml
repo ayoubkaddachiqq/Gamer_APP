@@ -18,7 +18,10 @@
             <ImageView fx:id="userAvatarImage" fitWidth="40" fitHeight="40" preserveRatio="true" />
         </StackPane>
         <VBox spacing="2.0">
-            <Label fx:id="userNameLabel" text="GhostProtocol_" styleClass="user-name" />
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+                <Label fx:id="userNameLabel" text="GhostProtocol_" styleClass="user-name" />
+                <Label fx:id="trendingBadge" text="🔥 HOT" styleClass="trending-badge" visible="false" managed="false" />
+            </HBox>
             <HBox spacing="8.0" alignment="CENTER_LEFT">
                 <Label fx:id="gameTagLabel" text="VALORANT" styleClass="game-tag-badge" />
                 <Label fx:id="postDateLabel" text="2h ago" style="-fx-text-fill: #64748b; -fx-font-size: 11px;" />

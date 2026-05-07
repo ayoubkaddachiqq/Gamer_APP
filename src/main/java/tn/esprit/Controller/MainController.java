@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tn.esprit.entities.UserRanking;
 import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
@@ -65,6 +66,9 @@ public class MainController {
 
     @FXML
     private Label headerUsernameLabel;
+
+    @FXML
+    private VBox leaderboardList;
 
     private ServicePost servicePost = new ServicePost();
     private ServiceShare serviceShare = new ServiceShare();
@@ -197,11 +201,55 @@ public class MainController {
 
     private void loadFeed() {
         feedContainer.getChildren().clear();
-        List<Post> posts = servicePost.getAll();
+        List<Post> posts = servicePost.getTrendingPosts();
         servicePost.loadImagesForPosts(posts);
-        System.out.println("Fetched " + posts.size() + " posts from DB.");
+        System.out.println("Fetched " + posts.size() + " posts sorted by trending score.");
         for (Post p : posts) {
             addPostToFeed(p);
+        }
+        loadLeaderboard();
+    }
+
+    private void loadLeaderboard() {
+        if (leaderboardList == null) return;
+        leaderboardList.getChildren().clear();
+        List<UserRanking> rankings = servicePost.getUserLeaderboard();
+        int rank = 1;
+        for (UserRanking u : rankings) {
+            HBox row = new HBox(10);
+            row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            row.getStyleClass().add("leaderboard-row");
+
+            Label rankLabel = new Label("#" + rank);
+            rankLabel.setStyle("-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 13px; -fx-min-width: 25px;");
+            if (rank == 1) rankLabel.setStyle("-fx-text-fill: #ffd700; -fx-font-weight: bold; -fx-font-size: 15px; -fx-min-width: 25px;");
+            else if (rank == 2) rankLabel.setStyle("-fx-text-fill: #c0c0c0; -fx-font-weight: bold; -fx-font-size: 14px; -fx-min-width: 25px;");
+            else if (rank == 3) rankLabel.setStyle("-fx-text-fill: #cd7f32; -fx-font-weight: bold; -fx-font-size: 14px; -fx-min-width: 25px;");
+
+            VBox infoBox = new VBox(2);
+            HBox.setHgrow(infoBox, javafx.scene.layout.Priority.ALWAYS);
+
+            Label nameLabel = new Label(u.getUsername());
+            nameLabel.getStyleClass().add("leaderboard-name");
+            Label statsLabel = new Label(u.getTitle() + " | Score: " + u.getScore());
+            statsLabel.getStyleClass().add("leaderboard-stats");
+
+            Label badgeLabel = new Label(getBadgeEmoji(u.getTitle()));
+            badgeLabel.setStyle("-fx-font-size: 16px;");
+
+            infoBox.getChildren().addAll(nameLabel, statsLabel);
+            row.getChildren().addAll(rankLabel, badgeLabel, infoBox);
+            leaderboardList.getChildren().add(row);
+            rank++;
+        }
+    }
+
+    private String getBadgeEmoji(String title) {
+        switch (title) {
+            case "Legend": return "👑";
+            case "Elite": return "🔥";
+            case "Veteran": return "⭐";
+            default: return "🎮";
         }
     }
 
@@ -268,21 +316,22 @@ public class MainController {
         newPost.setUserId(CURRENT_USER_ID);
         newPost.setUsername("Ayoub");
 
-        servicePost.add(newPost);
-        Post savedPost = servicePost.getAll().get(0);
-
-        if (!tempSelectedImages.isEmpty()) {
-            for (File img : tempSelectedImages) {
-                try {
-                    String fileName = "post_" + savedPost.getId() + "_" + System.currentTimeMillis() + "_" + img.getName();
-                    String destPath = "uploads/images/" + fileName;
-                    Path dest = Paths.get(destPath).toAbsolutePath();
-                    Files.copy(img.toPath(), dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println("Saved post image to: " + dest.toAbsolutePath());
-                    serviceImagePost.addImage(savedPost.getId(), destPath);
-                    newPost.addImagePath(destPath);
-                } catch (IOException e) {
-                    System.err.println("Error saving image: " + e.getMessage());
+        int postId = servicePost.add(newPost);
+        if (postId > 0) {
+            newPost.setId(postId);
+            if (!tempSelectedImages.isEmpty()) {
+                for (File img : tempSelectedImages) {
+                    try {
+                        String fileName = "post_" + postId + "_" + System.currentTimeMillis() + "_" + img.getName();
+                        String destPath = "uploads/images/" + fileName;
+                        Path dest = Paths.get(destPath).toAbsolutePath();
+                        Files.copy(img.toPath(), dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("Saved post image to: " + dest.toAbsolutePath());
+                        serviceImagePost.addImage(postId, destPath);
+                        newPost.addImagePath(destPath);
+                    } catch (IOException e) {
+                        System.err.println("Error saving image: " + e.getMessage());
+                    }
                 }
             }
         }
@@ -374,12 +423,11 @@ public class MainController {
         sharedPost.setUserId(CURRENT_USER_ID);
         sharedPost.setUsername("Ayoub");
 
-        servicePost.add(sharedPost);
-        Post savedSharedPost = servicePost.getAll().get(0);
+        int sharedPostId = servicePost.add(sharedPost);
 
         List<ImagePost> originalImages = serviceImagePost.getImagesByPost(originalPost.getId());
         for (ImagePost img : originalImages) {
-            serviceImagePost.addImage(savedSharedPost.getId(), img.getImagePath());
+            serviceImagePost.addImage(sharedPostId, img.getImagePath());
         }
 
         loadFeed();

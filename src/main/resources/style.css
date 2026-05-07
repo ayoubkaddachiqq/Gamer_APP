@@ -273,3 +273,92 @@
     -fx-background-color: rgba(0, 238, 252, 0.2);
     -fx-effect: dropshadow(three-pass-box, rgba(0, 238, 252, 0.3), 8, 0, 0, 0);
 }
+
+.comment-row {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+}
+
+.comment-author {
+    -fx-text-fill: #00eefc;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.comment-text {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+.comment-time {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 10px;
+}
+
+.comment-delete-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff4b4b;
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+}
+
+.empty-comments-label {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-padding: 10 0;
+}
+
+.liked-button {
+    -fx-background-color: rgba(189, 0, 255, 0.3);
+    -fx-text-fill: #bd00ff;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+
+/* LEADERBOARD STYLES */
+.leaderboard-row {
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-transition: 0.2s;
+}
+
+.leaderboard-row:hover {
+    -fx-background-color: rgba(189, 0, 255, 0.1);
+}
+
+.leaderboard-name {
+    -fx-text-fill: #d4e4fa;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.leaderboard-stats {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 11px;
+}
+
+/* TRENDING BADGE */
+.trending-badge {
+    -fx-background-color: linear-gradient(to right, #ff6b35, #ff4b4b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 3 10;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 75, 75, 0.4), 6, 0, 0, 0);
+}
+
+.trending-score-label {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 10px;
+}

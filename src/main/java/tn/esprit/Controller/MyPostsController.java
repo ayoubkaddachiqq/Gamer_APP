@@ -38,6 +38,7 @@ public class MyPostsController {
 
         List<Post> posts = servicePost.getAll();
         posts.removeIf(p -> p.getUserId() != CURRENT_USER_ID);
+        servicePost.loadImagesForPosts(posts);
 
         if (posts.isEmpty()) {
             emptyLabel.setVisible(true);
