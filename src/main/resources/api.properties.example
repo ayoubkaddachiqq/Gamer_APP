@@ -1,0 +1,7 @@
+# RAWG Video Games Database API
+# Get your key at: https://rawg.io/apidocs
+rawg.api.key=YOUR_RAWG_API_KEY_HERE
+
+# Perspective API (coming soon)
+# Get your key at: https://developers.perspectiveapi.com/
+perspective.api.key=YOUR_PERSPECTIVE_API_KEY_HERE

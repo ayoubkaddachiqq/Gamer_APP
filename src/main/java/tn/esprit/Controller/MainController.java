@@ -20,6 +20,10 @@ import tn.esprit.services.ServicePost;
 import tn.esprit.entities.Share;
 import tn.esprit.services.ServiceShare;
 
+import javafx.application.Platform;
+import tn.esprit.api.GameTrendingClient;
+import tn.esprit.api.model.TrendingGame;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -70,7 +74,11 @@ public class MainController {
     @FXML
     private VBox leaderboardList;
 
+    @FXML
+    private VBox trendingGamesContainer;
+
     private ServicePost servicePost = new ServicePost();
+    private GameTrendingClient gameTrendingClient = new GameTrendingClient();
     private ServiceShare serviceShare = new ServiceShare();
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private static final int CURRENT_USER_ID = 1;
@@ -125,6 +133,7 @@ public class MainController {
         loadHeaderProfile();
         setupSearchBar();
         loadFeed();
+        loadTrendingGames();
     }
 
     private void loadHeaderProfile() {
@@ -242,6 +251,76 @@ public class MainController {
             leaderboardList.getChildren().add(row);
             rank++;
         }
+    }
+
+    private void loadTrendingGames() {
+        if (trendingGamesContainer == null) return;
+        new Thread(() -> {
+            try {
+                List<TrendingGame> games = gameTrendingClient.fetch();
+
+                List<byte[]> imageBytesList = new ArrayList<>();
+                for (TrendingGame game : games) {
+                    if (game.getImageUrl() != null && !game.getImageUrl().isEmpty()) {
+                        try {
+                            imageBytesList.add(gameTrendingClient.downloadImage(game.getImageUrl()));
+                        } catch (Exception e) {
+                            imageBytesList.add(null);
+                        }
+                    } else {
+                        imageBytesList.add(null);
+                    }
+                }
+
+                Platform.runLater(() -> {
+                    trendingGamesContainer.getChildren().clear();
+                    for (int i = 0; i < games.size(); i++) {
+                        TrendingGame game = games.get(i);
+                        byte[] imageBytes = imageBytesList.get(i);
+
+                        HBox row = new HBox(10);
+                        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                        row.getStyleClass().add("trending-item");
+
+                        Label rankLabel = new Label(String.valueOf(i + 1));
+                        rankLabel.setStyle("-fx-text-fill: #64748b; -fx-font-weight: bold; -fx-min-width: 18px;");
+
+                        ImageView thumbView = new ImageView();
+                        thumbView.setFitWidth(36);
+                        thumbView.setFitHeight(36);
+                        thumbView.setPreserveRatio(true);
+                        if (imageBytes != null) {
+                            thumbView.setImage(new Image(new java.io.ByteArrayInputStream(imageBytes)));
+                        }
+                        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(36, 36);
+                        clip.setArcWidth(8);
+                        clip.setArcHeight(8);
+                        thumbView.setClip(clip);
+
+                        VBox infoBox = new VBox(2);
+                        HBox.setHgrow(infoBox, javafx.scene.layout.Priority.ALWAYS);
+
+                        Label nameLabel = new Label(game.getName());
+                        nameLabel.getStyleClass().add("player-name");
+
+                        Label ratingLabel = new Label("⭐ " + String.format("%.1f", game.getRating()));
+                        ratingLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 9px;");
+
+                        infoBox.getChildren().addAll(nameLabel, ratingLabel);
+                        row.getChildren().addAll(rankLabel, thumbView, infoBox);
+                        trendingGamesContainer.getChildren().add(row);
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("⚠  Error fetching trending games: " + e.getMessage());
+                Platform.runLater(() -> {
+                    trendingGamesContainer.getChildren().clear();
+                    Label errorLabel = new Label("Failed to load");
+                    errorLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px;");
+                    trendingGamesContainer.getChildren().add(errorLabel);
+                });
+            }
+        }).start();
     }
 
     private String getBadgeEmoji(String title) {

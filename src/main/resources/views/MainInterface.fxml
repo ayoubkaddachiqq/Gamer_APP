@@ -153,23 +153,7 @@
                 <Label text="TRENDING GAMES"
                        style="-fx-text-fill: #bd00ff; -fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1.5;" />
 
-                <VBox spacing="10.0">
-                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="trending-item">
-                        <Label text="1" style="-fx-text-fill: #64748b; -fx-font-weight: bold;" />
-                        <VBox>
-                            <Label text="League of Legends" styleClass="player-name" />
-                            <Label text="2.4k Posts" style="-fx-text-fill: #64748b; -fx-font-size: 9px;" />
-                        </VBox>
-                    </HBox>
-
-                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="trending-item">
-                        <Label text="2" style="-fx-text-fill: #64748b; -fx-font-weight: bold;" />
-                        <VBox>
-                            <Label text="Valorant" styleClass="player-name" />
-                            <Label text="1.8k Posts" style="-fx-text-fill: #64748b; -fx-font-size: 9px;" />
-                        </VBox>
-                    </HBox>
-                </VBox>
+                <VBox fx:id="trendingGamesContainer" spacing="10.0" />
             </VBox>
         </VBox>
     </right>
