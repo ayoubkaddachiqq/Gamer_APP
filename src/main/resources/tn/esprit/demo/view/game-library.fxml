@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    Game Library View – TeamHub Desktop Application
+    Controller : tn.esprit.demo.controller.GameLibraryController
+    Window     : 1200 x 750
+-->
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.demo.controller.GameLibraryController"
+           prefWidth="1200" minWidth="1200" maxWidth="1200"
+           prefHeight="750" minHeight="750" maxHeight="750">
+
+    <!-- Background -->
+    <ImageView fitWidth="1200" fitHeight="750" preserveRatio="false" smooth="true">
+        <image><Image url="@bg.jpg" preserveRatio="false"/></image>
+    </ImageView>
+    <Region prefWidth="1200" prefHeight="750"
+            style="-fx-background-color: rgba(4,7,18,0.90);"/>
+
+    <!-- Root layout -->
+    <VBox prefWidth="1200" prefHeight="750" spacing="0">
+
+        <!-- ══ TOP NAV BAR ══ -->
+        <HBox alignment="CENTER_LEFT" spacing="24"
+              style="-fx-background-color: rgba(8,12,26,0.97);
+                     -fx-border-color: #1a2d42; -fx-border-width: 0 0 1 0;
+                     -fx-padding: 0 32;">
+            <prefHeight>58</prefHeight>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <StackPane prefWidth="30" prefHeight="30"
+                           style="-fx-background-color: #00E5FF; -fx-background-radius: 6;">
+                    <Label text="🎮" style="-fx-font-size: 14px;"/>
+                </StackPane>
+                <Label text="TEAM HUB"
+                       style="-fx-text-fill: #00E5FF; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="/"
+                       style="-fx-text-fill: #1a2d42; -fx-font-size: 16px;"/>
+                <Label text="Game Library"
+                       style="-fx-text-fill: #eef2f7; -fx-font-size: 14px;"/>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <Button text="← Back to Profile" onAction="#handleBackToProfile"
+                    style="-fx-background-color: transparent; -fx-text-fill: #7a8899;
+                           -fx-font-size: 12px; -fx-cursor: hand;
+                           -fx-border-color: #243044; -fx-border-radius: 6;
+                           -fx-background-radius: 6; -fx-padding: 7 14;"/>
+        </HBox>
+
+        <!-- ══ MAIN SCROLL ══ -->
+        <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;
+                           -fx-border-color: transparent;">
+            <VBox spacing="20" style="-fx-padding: 24 32;">
+
+                <!-- ── Search bar ── -->
+                <VBox spacing="10"
+                      style="-fx-background-color: rgba(12,18,34,0.90);
+                             -fx-background-radius: 10; -fx-border-color: #1a2d42;
+                             -fx-border-radius: 10; -fx-border-width: 1;
+                             -fx-padding: 18 22;">
+                    <Label text="SEARCH GAMES"
+                           style="-fx-text-fill: #00E5FF; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchField"
+                                   promptText="Search for a game…"
+                                   prefWidth="500"
+                                   style="-fx-background-color: #12192e; -fx-text-fill: #dde4f0;
+                                          -fx-prompt-text-fill: #3d4a5c; -fx-border-color: #243044;
+                                          -fx-border-radius: 7; -fx-background-radius: 7;
+                                          -fx-padding: 10 14; -fx-font-size: 13px;"/>
+                        <Button fx:id="searchBtn" text="Search" onAction="#handleSearch"
+                                style="-fx-background-color: #00E5FF; -fx-text-fill: #050814;
+                                       -fx-font-size: 13px; -fx-font-weight: bold;
+                                       -fx-background-radius: 7; -fx-cursor: hand;
+                                       -fx-padding: 10 20;"/>
+                        <ProgressIndicator fx:id="searchSpinner"
+                                           prefWidth="28" prefHeight="28"
+                                           visible="false" managed="false"
+                                           style="-fx-progress-color: #00E5FF;"/>
+                    </HBox>
+                    <!-- Search status / error -->
+                    <Label fx:id="searchStatusLabel" text=""
+                           wrapText="true"
+                           visible="false" managed="false"
+                           style="-fx-font-size: 11px; -fx-padding: 4 0 0 0;"/>
+                </VBox>
+
+                <!-- ── Search results ── -->
+                <VBox fx:id="resultsSection" spacing="10"
+                      visible="false" managed="false">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="SEARCH RESULTS"
+                               style="-fx-text-fill: #7a8899; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="resultCountLabel" text=""
+                               style="-fx-text-fill: #3d4a5c; -fx-font-size: 10px;"/>
+                    </HBox>
+                    <FlowPane fx:id="resultsPane" hgap="14" vgap="14" prefWrapLength="1136"/>
+                </VBox>
+
+                <!-- ── My Library ── -->
+                <VBox spacing="10">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="MY LIBRARY"
+                               style="-fx-text-fill: #7a8899; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="libraryCountLabel" text=""
+                               style="-fx-text-fill: #3d4a5c; -fx-font-size: 10px;"/>
+                    </HBox>
+                    <!-- Favorites limit warning -->
+                    <Label fx:id="favLimitLabel"
+                           text="You can only have 4 favorites. Unmark another game first."
+                           visible="false" managed="false"
+                           style="-fx-text-fill: #f59e0b; -fx-font-size: 11px;
+                                  -fx-background-color: rgba(245,158,11,0.08);
+                                  -fx-background-radius: 6; -fx-padding: 6 10;"/>
+                    <!-- Library empty state -->
+                    <Label fx:id="libraryEmptyLabel"
+                           text="Your library is empty. Search for games and add them!"
+                           visible="false" managed="false"
+                           style="-fx-text-fill: #3d4a5c; -fx-font-size: 12px;
+                                  -fx-padding: 10 0;"/>
+                    <FlowPane fx:id="libraryPane" hgap="14" vgap="14" prefWrapLength="1136"/>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</StackPane>

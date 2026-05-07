@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    Admin Dashboard – TeamHub Desktop Application
+    Controller : tn.esprit.demo.controller.AdminDashboardController
+    Window     : 1280 x 800
+-->
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.demo.controller.AdminDashboardController"
+           prefWidth="1280" minWidth="1280" maxWidth="1280"
+           prefHeight="800" minHeight="800" maxHeight="800">
+
+    <!-- Background -->
+    <ImageView fitWidth="1280" fitHeight="800" preserveRatio="false" smooth="true">
+        <image><Image url="@bg.jpg" preserveRatio="false"/></image>
+    </ImageView>
+    <Region prefWidth="1280" prefHeight="800"
+            style="-fx-background-color: rgba(4,7,18,0.93);"/>
+
+    <!-- Root layout -->
+    <VBox prefWidth="1280" prefHeight="800" spacing="0">
+
+        <!-- ══════════════════════════════════════
+             TOP NAV BAR
+             ══════════════════════════════════════ -->
+        <HBox alignment="CENTER_LEFT" spacing="20"
+              style="-fx-background-color: rgba(8,12,26,0.98);
+                     -fx-border-color: #1a2d42; -fx-border-width: 0 0 1 0;
+                     -fx-padding: 0 32;">
+            <prefHeight>58</prefHeight>
+
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <StackPane prefWidth="30" prefHeight="30"
+                           style="-fx-background-color: #ff4d4d; -fx-background-radius: 6;">
+                    <Label text="⚙" style="-fx-text-fill: #fff; -fx-font-size: 14px;"/>
+                </StackPane>
+                <VBox spacing="0">
+                    <Label text="TEAM HUB"
+                           style="-fx-text-fill: #00E5FF; -fx-font-size: 15px; -fx-font-weight: bold;"/>
+                    <Label text="ADMIN PANEL"
+                           style="-fx-text-fill: #ff4d4d; -fx-font-size: 9px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Admin identity -->
+            <HBox alignment="CENTER" spacing="8">
+                <StackPane prefWidth="32" prefHeight="32"
+                           style="-fx-background-color: rgba(255,77,77,0.15);
+                                  -fx-background-radius: 16;
+                                  -fx-border-color: #ff4d4d; -fx-border-radius: 16; -fx-border-width: 1;">
+                    <Label fx:id="adminInitialsLabel" text="AD"
+                           style="-fx-text-fill: #ff4d4d; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                </StackPane>
+                <VBox spacing="0">
+                    <Label fx:id="adminNameLabel" text="Administrator"
+                           style="-fx-text-fill: #eef2f7; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <Label text="SUPER ADMIN"
+                           style="-fx-text-fill: #ff4d4d; -fx-font-size: 9px;"/>
+                </VBox>
+            </HBox>
+
+            <Separator orientation="VERTICAL" style="-fx-background-color: #1a2d42;"/>
+
+            <Button text="⏻  Logout" onAction="#handleLogout"
+                    style="-fx-background-color: #1a2d42; -fx-text-fill: #7a8899;
+                           -fx-font-size: 12px; -fx-background-radius: 6; -fx-cursor: hand;
+                           -fx-padding: 7 14; -fx-border-color: #243044; -fx-border-radius: 6;"/>
+        </HBox>
+
+        <!-- ══════════════════════════════════════
+             CONTENT  (sidebar + main)
+             ══════════════════════════════════════ -->
+        <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+            <!-- ── Left sidebar nav ── -->
+            <VBox spacing="4" prefWidth="200" minWidth="200" maxWidth="200"
+                  style="-fx-background-color: rgba(8,12,26,0.90);
+                         -fx-border-color: #1a2d42; -fx-border-width: 0 1 0 0;
+                         -fx-padding: 20 12;">
+
+                <Label text="NAVIGATION"
+                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 9px; -fx-font-weight: bold;">
+                    <VBox.margin><Insets bottom="6"/></VBox.margin>
+                </Label>
+
+                <Button text="📊  Overview" onAction="#showOverview"
+                        prefWidth="176"
+                        style="-fx-background-color: rgba(0,229,255,0.10);
+                               -fx-text-fill: #00E5FF; -fx-font-size: 12px; -fx-font-weight: bold;
+                               -fx-background-radius: 7; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;
+                               -fx-padding: 9 12; -fx-border-color: rgba(0,229,255,0.3);
+                               -fx-border-radius: 7;"/>
+
+                <Button text="👥  Users" onAction="#showUsers"
+                        prefWidth="176"
+                        style="-fx-background-color: transparent; -fx-text-fill: #7a8899;
+                               -fx-font-size: 12px; -fx-background-radius: 7; -fx-cursor: hand;
+                               -fx-alignment: CENTER_LEFT; -fx-padding: 9 12;
+                               -fx-border-color: transparent; -fx-border-radius: 7;"/>
+
+                <Button text="🖼  Avatar Config" onAction="#showAvatarConfig"
+                        prefWidth="176"
+                        style="-fx-background-color: transparent; -fx-text-fill: #7a8899;
+                               -fx-font-size: 12px; -fx-background-radius: 7; -fx-cursor: hand;
+                               -fx-alignment: CENTER_LEFT; -fx-padding: 9 12;
+                               -fx-border-color: transparent; -fx-border-radius: 7;"/>
+
+                <Button text="📋  Activity Log" onAction="#showActivity"
+                        prefWidth="176"
+                        style="-fx-background-color: transparent; -fx-text-fill: #7a8899;
+                               -fx-font-size: 12px; -fx-background-radius: 7; -fx-cursor: hand;
+                               -fx-alignment: CENTER_LEFT; -fx-padding: 9 12;
+                               -fx-border-color: transparent; -fx-border-radius: 7;"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <!-- Version -->
+                <Label text="TeamHub v2.4.0-Pro"
+                       style="-fx-text-fill: #243044; -fx-font-size: 9px;"/>
+            </VBox>
+
+            <!-- ── Main content area ── -->
+            <ScrollPane HBox.hgrow="ALWAYS" fitToWidth="true"
+                        style="-fx-background: transparent; -fx-background-color: transparent;
+                               -fx-border-color: transparent;">
+
+                <VBox spacing="20" style="-fx-padding: 24 28;">
+
+                    <!-- ── Page title ── -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <VBox spacing="2">
+                            <Label fx:id="pageTitleLabel" text="Overview"
+                                   style="-fx-text-fill: #eef2f7; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                            <Label fx:id="pageSubtitleLabel" text="Platform health at a glance"
+                                   style="-fx-text-fill: #5a6478; -fx-font-size: 12px;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="↻  Refresh" onAction="#handleRefresh"
+                                style="-fx-background-color: #12192e; -fx-text-fill: #00E5FF;
+                                       -fx-font-size: 12px; -fx-border-color: #243044;
+                                       -fx-border-radius: 7; -fx-background-radius: 7;
+                                       -fx-padding: 8 16; -fx-cursor: hand;"/>
+                    </HBox>
+
+                    <!-- ════════════════════════
+                         OVERVIEW PANEL
+                         ════════════════════════ -->
+                    <VBox fx:id="overviewPanel" spacing="16">
+
+                        <!-- Stat cards row -->
+                        <HBox spacing="14">
+
+                            <!-- Total users -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="👥"  style="-fx-font-size: 18px;"/>
+                                    <Label text="TOTAL USERS"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <Label fx:id="statTotalUsers" text="—"
+                                       style="-fx-text-fill: #00E5FF; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label fx:id="statNewToday" text="— new today"
+                                       style="-fx-text-fill: #22c55e; -fx-font-size: 11px;"/>
+                            </VBox>
+
+                            <!-- Active users -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="✅"  style="-fx-font-size: 18px;"/>
+                                    <Label text="ACTIVE"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <Label fx:id="statActive" text="—"
+                                       style="-fx-text-fill: #22c55e; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="verified accounts"
+                                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 11px;"/>
+                            </VBox>
+
+                            <!-- Pending users -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="⏳"  style="-fx-font-size: 18px;"/>
+                                    <Label text="PENDING"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <Label fx:id="statPending" text="—"
+                                       style="-fx-text-fill: #f59e0b; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="unverified"
+                                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 11px;"/>
+                            </VBox>
+
+                            <!-- Locked users -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="🔒"  style="-fx-font-size: 18px;"/>
+                                    <Label text="LOCKED"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <Label fx:id="statLocked" text="—"
+                                       style="-fx-text-fill: #f87171; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="suspended accounts"
+                                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 11px;"/>
+                            </VBox>
+
+                            <!-- Logins today -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 18 20;">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="🔑"  style="-fx-font-size: 18px;"/>
+                                    <Label text="LOGINS TODAY"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                </HBox>
+                                <Label fx:id="statLoginsToday" text="—"
+                                       style="-fx-text-fill: #a78bfa; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="sessions"
+                                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 11px;"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- Role breakdown row -->
+                        <HBox spacing="14">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 14 20;">
+                                <Label text="ROLE BREAKDOWN"
+                                       style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                <HBox spacing="24" alignment="CENTER_LEFT">
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="🎮" style="-fx-font-size: 14px;"/>
+                                        <VBox spacing="1">
+                                            <Label text="PLAYERS" style="-fx-text-fill: #3d4a5c; -fx-font-size: 9px;"/>
+                                            <Label fx:id="statPlayers" text="—"
+                                                   style="-fx-text-fill: #00E5FF; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                                        </VBox>
+                                    </HBox>
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="🛡" style="-fx-font-size: 14px;"/>
+                                        <VBox spacing="1">
+                                            <Label text="TEAMS" style="-fx-text-fill: #3d4a5c; -fx-font-size: 9px;"/>
+                                            <Label fx:id="statTeams" text="—"
+                                                   style="-fx-text-fill: #38BDF8; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                                        </VBox>
+                                    </HBox>
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="⚙" style="-fx-font-size: 14px;"/>
+                                        <VBox spacing="1">
+                                            <Label text="ADMINS" style="-fx-text-fill: #3d4a5c; -fx-font-size: 9px;"/>
+                                            <Label fx:id="statAdmins" text="—"
+                                                   style="-fx-text-fill: #ff4d4d; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                                        </VBox>
+                                    </HBox>
+                                </HBox>
+                            </VBox>
+
+                            <!-- Recent activity preview -->
+                            <VBox spacing="6" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color: rgba(12,18,34,0.90);
+                                         -fx-background-radius: 10;
+                                         -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                         -fx-border-width: 1; -fx-padding: 14 20;">
+                                <HBox alignment="CENTER_LEFT">
+                                    <Label text="LATEST ACTIVITY"
+                                           style="-fx-text-fill: #5a6478; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Button text="View All →" onAction="#showActivity"
+                                            style="-fx-background-color: transparent; -fx-text-fill: #00E5FF;
+                                                   -fx-font-size: 10px; -fx-cursor: hand; -fx-border-color: transparent;"/>
+                                </HBox>
+                                <VBox fx:id="activityPreviewBox" spacing="4"/>
+                            </VBox>
+                        </HBox>
+
+                    </VBox>
+
+                    <!-- ════════════════════════
+                         USERS PANEL
+                         ════════════════════════ -->
+                    <VBox fx:id="usersPanel" spacing="12" visible="false" managed="false">
+
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <TextField fx:id="searchField" promptText="Search by username or email…"
+                                       prefWidth="260"
+                                       style="-fx-background-color: #12192e; -fx-text-fill: #dde4f0;
+                                              -fx-prompt-text-fill: #3d4a5c; -fx-border-color: #243044;
+                                              -fx-border-radius: 7; -fx-background-radius: 7;
+                                              -fx-padding: 8 12; -fx-font-size: 12px;"/>
+                            <Button text="Search" onAction="#handleSearch"
+                                    style="-fx-background-color: #00E5FF; -fx-text-fill: #050814;
+                                           -fx-font-size: 12px; -fx-font-weight: bold;
+                                           -fx-background-radius: 7; -fx-cursor: hand; -fx-padding: 8 16;"/>
+                            <Button text="Show All" onAction="#handleShowAll"
+                                    style="-fx-background-color: #12192e; -fx-text-fill: #7a8899;
+                                           -fx-font-size: 12px; -fx-border-color: #243044;
+                                           -fx-border-radius: 7; -fx-background-radius: 7;
+                                           -fx-padding: 8 14; -fx-cursor: hand;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="tableStatusLabel" text=""
+                                   style="-fx-text-fill: #5a6478; -fx-font-size: 11px;"/>
+                        </HBox>
+
+                        <TableView fx:id="userTable" prefHeight="420"
+                                   style="-fx-background-color: rgba(12,18,34,0.90);
+                                          -fx-background-radius: 10;
+                                          -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                          -fx-border-width: 1; -fx-text-fill: #dde4f0;">
+                            <columns>
+                                <TableColumn fx:id="colId"       text="ID"       prefWidth="55"/>
+                                <TableColumn fx:id="colUsername" text="Username" prefWidth="160"/>
+                                <TableColumn fx:id="colEmail"    text="Email"    prefWidth="230"/>
+                                <TableColumn fx:id="colRole"     text="Role"     prefWidth="90"/>
+                                <TableColumn fx:id="colStatus"   text="Status"   prefWidth="90"/>
+                                <TableColumn fx:id="colJoined"   text="Joined"   prefWidth="130"/>
+                                <TableColumn fx:id="colActions"  text="Actions"  prefWidth="160"/>
+                            </columns>
+                        </TableView>
+
+                    </VBox>
+
+                    <!-- ════════════════════════
+                         AVATAR CONFIG PANEL
+                         ════════════════════════ -->
+                    <VBox fx:id="avatarPanel" spacing="16" visible="false" managed="false">
+
+                        <VBox spacing="10"
+                              style="-fx-background-color: rgba(12,18,34,0.90);
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                     -fx-border-width: 1; -fx-padding: 20 24;">
+
+                            <Label text="AVATAR FOLDER CONFIGURATION"
+                                   style="-fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                            <Label text="Set a folder on this machine. All image files inside will appear as selectable avatars for all players."
+                                   wrapText="true"
+                                   style="-fx-text-fill: #5a6478; -fx-font-size: 12px;"/>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="folderPathField"
+                                           promptText="C:\avatars\teamhub  or  /home/user/avatars"
+                                           prefWidth="420"
+                                           style="-fx-background-color: #12192e; -fx-text-fill: #dde4f0;
+                                                  -fx-prompt-text-fill: #3d4a5c; -fx-border-color: #243044;
+                                                  -fx-border-radius: 7; -fx-background-radius: 7;
+                                                  -fx-padding: 10 12; -fx-font-size: 13px;"/>
+                                <Button text="📁  Browse" onAction="#handleBrowseFolder"
+                                        style="-fx-background-color: #12192e; -fx-text-fill: #dde4f0;
+                                               -fx-font-size: 12px; -fx-border-color: #243044;
+                                               -fx-border-radius: 7; -fx-background-radius: 7;
+                                               -fx-padding: 10 14; -fx-cursor: hand;"/>
+                                <Button text="Save" onAction="#handleSaveFolder"
+                                        style="-fx-background-color: #00E5FF; -fx-text-fill: #050814;
+                                               -fx-font-size: 13px; -fx-font-weight: bold;
+                                               -fx-background-radius: 7; -fx-cursor: hand; -fx-padding: 10 18;"/>
+                                <Button text="Clear" onAction="#handleClearFolder"
+                                        style="-fx-background-color: transparent; -fx-text-fill: #f87171;
+                                               -fx-font-size: 12px; -fx-border-color: #f87171;
+                                               -fx-border-radius: 7; -fx-background-radius: 7;
+                                               -fx-padding: 10 14; -fx-cursor: hand;"/>
+                            </HBox>
+
+                            <Label fx:id="folderStatusLabel" text=""
+                                   wrapText="true"
+                                   style="-fx-text-fill: #5a6478; -fx-font-size: 11px;"/>
+                        </VBox>
+
+                        <!-- Preview grid of images in folder -->
+                        <VBox spacing="10"
+                              style="-fx-background-color: rgba(12,18,34,0.90);
+                                     -fx-background-radius: 10;
+                                     -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                     -fx-border-width: 1; -fx-padding: 20 24;">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="FOLDER PREVIEW"
+                                       style="-fx-text-fill: #7a8899; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="folderCountLabel" text=""
+                                       style="-fx-text-fill: #3d4a5c; -fx-font-size: 10px;"/>
+                            </HBox>
+                            <javafx.scene.layout.FlowPane fx:id="folderPreviewPane"
+                                       hgap="10" vgap="10" prefWrapLength="900"
+                                       style="-fx-padding: 4 0 0 0;"/>
+                            <Label fx:id="folderEmptyLabel" text="No folder configured — images will appear here once you set and save a folder path."
+                                   wrapText="true"
+                                   style="-fx-text-fill: #3d4a5c; -fx-font-size: 11px;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- ════════════════════════
+                         ACTIVITY LOG PANEL
+                         ════════════════════════ -->
+                    <VBox fx:id="activityPanel" spacing="0" visible="false" managed="false"
+                          style="-fx-background-color: rgba(12,18,34,0.90);
+                                 -fx-background-radius: 10;
+                                 -fx-border-color: #1a2d42; -fx-border-radius: 10;
+                                 -fx-border-width: 1;">
+
+                        <HBox alignment="CENTER_LEFT" spacing="10"
+                              style="-fx-padding: 14 20 10 20;
+                                     -fx-border-color: #1a2d42; -fx-border-width: 0 0 1 0;">
+                            <Label text="RECENT ACTIVITY"
+                                   style="-fx-text-fill: #00E5FF; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="Last 50 events"
+                                   style="-fx-text-fill: #3d4a5c; -fx-font-size: 10px;"/>
+                        </HBox>
+
+                        <VBox fx:id="activityLogBox" spacing="0"/>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </HBox>
+    </VBox>
+</StackPane>
