@@ -30,9 +30,9 @@
             </HBox>
 
             <VBox spacing="8">
-                <Button maxWidth="Infinity" text="Evenements" styleClass="nav-button-active"/>
+                <Button fx:id="btnNavGestionEvenements" maxWidth="Infinity" text="Gestion des evenements" styleClass="nav-button-active"/>
                 <Button maxWidth="Infinity" text="Inscription user" onAction="#ouvrirInscriptionUser" styleClass="nav-button"/>
-                <Button maxWidth="Infinity" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="nav-button"/>
+                <Button fx:id="btnNavAdminInscriptions" maxWidth="Infinity" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="nav-button"/>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
@@ -54,7 +54,7 @@
                     <Label text="Gestion des evenements" styleClass="page-title"/>
                     <Label text="Consulte, filtre et pilote les evenements e-sport depuis un seul espace." styleClass="page-subtitle"/>
                 </VBox>
-                <Button text="Ajouter" onAction="#ouvrirAjouter" styleClass="primary-button"/>
+                <Button fx:id="btnAjouter" text="Ajouter" onAction="#ouvrirAjouter" styleClass="primary-button"/>
             </HBox>
 
             <HBox spacing="14">
@@ -108,7 +108,7 @@
 
                 <HBox alignment="CENTER_RIGHT" spacing="10">
                     <Button text="Interface user" onAction="#ouvrirInscriptionUser" styleClass="primary-button"/>
-                    <Button text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
+                    <Button fx:id="btnAdminInscriptionsFooter" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
                 </HBox>
             </VBox>
         </VBox>

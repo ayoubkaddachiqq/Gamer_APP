@@ -1,5 +1,6 @@
 package org.esprit.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +22,7 @@ import org.esprit.models.Evenement;
 import org.esprit.models.Inscription;
 import org.esprit.services.EvenementService;
 import org.esprit.services.InscriptionService;
+import org.esprit.security.AccessControl;
 import org.esprit.utils.UiEffects;
 
 import java.io.IOException;
@@ -50,6 +52,11 @@ public class AdminInscriptionController {
     @FXML
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
+
+        if (!AccessControl.requireAdmin()) {
+            Platform.runLater(() -> ouvrirPageSilencieusement("/GestionInscription.fxml"));
+            return;
+        }
 
         colId.setVisible(false);
         colEvenementId.setVisible(false);
@@ -160,6 +167,9 @@ public class AdminInscriptionController {
 
     @FXML
     void confirmerInscription(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         Inscription selected = getInscriptionSelectionnee();
         if (selected == null) {
             return;
@@ -170,6 +180,9 @@ public class AdminInscriptionController {
     }
 
     private void confirmerInscription(Inscription inscription) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         if (inscription == null) {
             return;
         }
@@ -180,6 +193,9 @@ public class AdminInscriptionController {
 
     @FXML
     void annulerInscription(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         Inscription selected = getInscriptionSelectionnee();
         if (selected == null) {
             return;
@@ -190,6 +206,9 @@ public class AdminInscriptionController {
     }
 
     private void annulerInscription(Inscription inscription) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         if (inscription == null) {
             return;
         }
@@ -200,6 +219,9 @@ public class AdminInscriptionController {
 
     @FXML
     void supprimer(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         Inscription selected = getInscriptionSelectionnee();
         if (selected == null) {
             return;
@@ -217,6 +239,9 @@ public class AdminInscriptionController {
     }
 
     private void supprimer(Inscription inscription) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         if (inscription == null) {
             return;
         }
@@ -234,8 +259,16 @@ public class AdminInscriptionController {
 
     @FXML
     void retour(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            ouvrirPageSilencieusement("/GestionInscription.fxml");
+            return;
+        }
+        ouvrirPageSilencieusement("/GestionEvenement.fxml");
+    }
+
+    private void ouvrirPageSilencieusement(String fxml) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/GestionEvenement.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
             tableInscriptions.getScene().setRoot(root);
         } catch (IOException e) {
             System.out.println(e.getMessage());

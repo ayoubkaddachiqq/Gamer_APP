@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.esprit.security.Session;
 import java.io.IOException;
 
 public class MainFx extends Application {
@@ -15,12 +16,13 @@ public class MainFx extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GestionEvenement.fxml"));
+        String startPage = Session.isAdmin() ? "/GestionEvenement.fxml" : "/GestionInscription.fxml";
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(startPage));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("TeamHub - Gestion des Evenements");
+            primaryStage.setTitle("TeamHub");
             primaryStage.setWidth(1200);
             primaryStage.setHeight(800);
             primaryStage.show();

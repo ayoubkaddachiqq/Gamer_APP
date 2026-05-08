@@ -28,8 +28,8 @@
                 </VBox>
             </HBox>
             <VBox spacing="8">
-                <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
-                <Button maxWidth="Infinity" text="Inscription user" styleClass="nav-button-active"/>
+                <Button fx:id="btnRetourEvenements" maxWidth="Infinity" text="Gestion des evenements" onAction="#retour" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Inscription aux evenements" styleClass="nav-button-active"/>
             </VBox>
         </VBox>
     </left>
@@ -41,7 +41,7 @@
                     <Label text="Inscription aux evenements" styleClass="page-title"/>
                     <Label text="Choisis une carte evenement, puis confirme ton inscription." styleClass="page-subtitle"/>
                 </VBox>
-                <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
+                <Button fx:id="btnRetourHeader" text="Retour" onAction="#retour" styleClass="secondary-button"/>
             </HBox>
 
             <HBox spacing="16" VBox.vgrow="ALWAYS">

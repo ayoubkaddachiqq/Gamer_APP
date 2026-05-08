@@ -2,16 +2,32 @@ package org.esprit.services;
 
 import org.esprit.interfaces.IService;
 import org.esprit.models.Evenement;
+import org.esprit.models.TypeEvenement;
 import org.esprit.utils.MyDataBase;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EvenementService implements IService<Evenement> {
 
     private Connection connection;
+    private static final int NOMBRE_MINIMUM_EVENEMENTS = 9;
+    private static final List<EvenementDemo> EVENEMENTS_DEMO = List.of(
+            new EvenementDemo("LAN Party CS2 - Sfax Gaming Night", "Soiree LAN autour de Counter-Strike 2 avec matchs amicaux.", "Entrainement", "Sfax, Centre Ville", 80, "Planifi\u00e9", LocalDateTime.of(2026, 5, 15, 19, 0), LocalDateTime.of(2026, 5, 15, 23, 0)),
+            new EvenementDemo("Entrainement Hebdomadaire - Team Phantom", "Session d'entrainement en ligne pour preparer les prochains matchs.", "Entrainement", "Online", 10, "Planifi\u00e9", LocalDateTime.of(2026, 5, 8, 21, 0), LocalDateTime.of(2026, 5, 8, 23, 0)),
+            new EvenementDemo("Gaming Meetup Tunis - Networking E-Sport", "Rencontre entre joueurs, coachs et organisateurs e-sport.", "Rencontre", "Tunis, El Menzah", 200, "Planifi\u00e9", LocalDateTime.of(2026, 5, 20, 17, 0), LocalDateTime.of(2026, 5, 20, 21, 0)),
+            new EvenementDemo("FIFA Champions Cup - Sousse", "Tournoi FIFA ouvert aux joueurs solo avec phases finales.", "Tournoi", "Sousse, Arena Gaming", 64, "Planifi\u00e9", LocalDateTime.of(2026, 5, 22, 18, 0), LocalDateTime.of(2026, 5, 22, 23, 30)),
+            new EvenementDemo("Valorant Night Scrims", "Scrims Valorant entre equipes locales avec debriefing tactique.", "Entrainement", "Ariana, Cyber Park", 40, "Planifi\u00e9", LocalDateTime.of(2026, 5, 24, 20, 0), LocalDateTime.of(2026, 5, 25, 0, 0)),
+            new EvenementDemo("Rocket League 2v2 Challenge", "Challenge Rocket League en duo avec inscription rapide.", "Tournoi", "Monastir, Gaming Zone", 32, "Planifi\u00e9", LocalDateTime.of(2026, 5, 27, 18, 30), LocalDateTime.of(2026, 5, 27, 22, 30)),
+            new EvenementDemo("Workshop Coaching E-Sport", "Atelier sur la communication, la preparation mentale et les roles en equipe.", "Workshop", "Tunis, Lac 2", 45, "Planifi\u00e9", LocalDateTime.of(2026, 5, 29, 16, 0), LocalDateTime.of(2026, 5, 29, 19, 0)),
+            new EvenementDemo("League of Legends Qualifier", "Qualifications League of Legends pour les equipes universitaires.", "Qualification", "Nabeul, Campus Gaming", 100, "Planifi\u00e9", LocalDateTime.of(2026, 6, 2, 17, 0), LocalDateTime.of(2026, 6, 2, 23, 0)),
+            new EvenementDemo("Fortnite Community Cup", "Cup communautaire Fortnite avec classement final et lots.", "Tournoi", "Bizerte, E-Sport Hall", 96, "Planifi\u00e9", LocalDateTime.of(2026, 6, 5, 19, 0), LocalDateTime.of(2026, 6, 5, 23, 30))
+    );
 
     public EvenementService() {
         connection = MyDataBase.getInstance().getConnection();
@@ -40,6 +56,7 @@ public class EvenementService implements IService<Evenement> {
 
     @Override
     public List<Evenement> getAll() {
+        garantirEvenementsDemo();
         List<Evenement> liste = new ArrayList<>();
         String sql = "SELECT * FROM evenement";
         try {
@@ -192,6 +209,7 @@ public class EvenementService implements IService<Evenement> {
     }
 
     public List<Evenement> rechercherParTitre(String titre) {
+        garantirEvenementsDemo();
         List<Evenement> liste = new ArrayList<>();
         String sql = "SELECT * FROM evenement WHERE titre LIKE ?";
         try {
@@ -218,6 +236,7 @@ public class EvenementService implements IService<Evenement> {
         return liste;
     }
     public List<Evenement> rechercherParLieu(String lieu) {
+        garantirEvenementsDemo();
         List<Evenement> liste = new ArrayList<>();
         String sql = "SELECT * FROM evenement WHERE lieu LIKE ?";
         try {
@@ -242,5 +261,90 @@ public class EvenementService implements IService<Evenement> {
             System.out.println("Erreur recherche lieu : " + ex.getMessage());
         }
         return liste;
+    }
+
+    private void garantirEvenementsDemo() {
+        try {
+            int total = compterEvenements();
+            if (total >= NOMBRE_MINIMUM_EVENEMENTS) {
+                return;
+            }
+
+            TypeEvenementService typeService = new TypeEvenementService();
+            typeService.garantirTypesParDefaut();
+            Map<String, Integer> types = chargerTypesParLibelle(typeService.getAll());
+            Set<String> titresExistants = chargerTitresEvenements();
+
+            for (EvenementDemo demo : EVENEMENTS_DEMO) {
+                if (total >= NOMBRE_MINIMUM_EVENEMENTS) {
+                    return;
+                }
+                if (titresExistants.contains(demo.titre.toLowerCase())) {
+                    continue;
+                }
+
+                Integer typeId = types.get(demo.type.toLowerCase());
+                if (typeId == null) {
+                    continue;
+                }
+
+                ajouterEvenementDemo(demo, typeId);
+                titresExistants.add(demo.titre.toLowerCase());
+                total++;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur initialisation evenements demo : " + ex.getMessage());
+        }
+    }
+
+    private Map<String, Integer> chargerTypesParLibelle(List<TypeEvenement> types) {
+        Map<String, Integer> result = new LinkedHashMap<>();
+        for (TypeEvenement type : types) {
+            result.put(type.getLibelle().trim().toLowerCase(), type.getId());
+        }
+        return result;
+    }
+
+    private Set<String> chargerTitresEvenements() throws SQLException {
+        Set<String> titres = new HashSet<>();
+        String sql = "SELECT titre FROM evenement";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String titre = rs.getString("titre");
+                if (titre != null) {
+                    titres.add(titre.toLowerCase());
+                }
+            }
+        }
+        return titres;
+    }
+
+    private void ajouterEvenementDemo(EvenementDemo demo, int typeId) throws SQLException {
+        String sql = "INSERT INTO evenement (titre, description, type_id, date_debut, date_fin, lieu, nb_participants_max, statut, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, demo.titre);
+            ps.setString(2, demo.description);
+            ps.setInt(3, typeId);
+            ps.setTimestamp(4, Timestamp.valueOf(demo.dateDebut));
+            ps.setTimestamp(5, Timestamp.valueOf(demo.dateFin));
+            ps.setString(6, demo.lieu);
+            ps.setInt(7, demo.nbParticipantsMax);
+            ps.setString(8, demo.statut);
+            ps.setString(9, null);
+            ps.executeUpdate();
+        }
+    }
+
+    private record EvenementDemo(
+            String titre,
+            String description,
+            String type,
+            String lieu,
+            int nbParticipantsMax,
+            String statut,
+            LocalDateTime dateDebut,
+            LocalDateTime dateFin
+    ) {
     }
 }

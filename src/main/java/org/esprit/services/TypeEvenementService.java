@@ -5,11 +5,24 @@ import org.esprit.models.TypeEvenement;
 import org.esprit.utils.MyDataBase;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TypeEvenementService implements IService<TypeEvenement> {
 
     private Connection connection;
+    private static final List<String> TYPES_PAR_DEFAUT = List.of(
+            "Entrainement",
+            "Tournoi",
+            "Rencontre",
+            "LAN Party",
+            "Workshop",
+            "Qualification",
+            "Finale",
+            "Streaming",
+            "Networking"
+    );
 
     public TypeEvenementService() {
         connection = MyDataBase.getInstance().getConnection();
@@ -30,6 +43,24 @@ public class TypeEvenementService implements IService<TypeEvenement> {
 
     @Override
     public List<TypeEvenement> getAll() {
+        garantirTypesParDefaut();
+        return lireTypes();
+    }
+
+    public void garantirTypesParDefaut() {
+        Set<String> libellesExistants = new LinkedHashSet<>();
+        for (TypeEvenement type : lireTypes()) {
+            libellesExistants.add(type.getLibelle().trim().toLowerCase());
+        }
+
+        for (String libelle : TYPES_PAR_DEFAUT) {
+            if (!libellesExistants.contains(libelle.toLowerCase())) {
+                add(new TypeEvenement(libelle));
+            }
+        }
+    }
+
+    private List<TypeEvenement> lireTypes() {
         List<TypeEvenement> liste = new ArrayList<>();
         String sql = "SELECT * FROM type_evenement";
         try {

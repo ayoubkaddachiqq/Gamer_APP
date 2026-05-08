@@ -1,5 +1,6 @@
 package org.esprit.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import org.esprit.models.Evenement;
 import org.esprit.services.EvenementService;
 import org.esprit.models.TypeEvenement;
 import org.esprit.services.TypeEvenementService;
+import org.esprit.security.AccessControl;
 import org.esprit.utils.UiEffects;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,6 +35,10 @@ public class GestionEvenementController {
     @FXML private TableColumn<Evenement, Void> colActions;
     @FXML private TextField tfRecherchetitre;
     @FXML private TextField tfRechercheLieu;
+    @FXML private Button btnNavGestionEvenements;
+    @FXML private Button btnNavAdminInscriptions;
+    @FXML private Button btnAjouter;
+    @FXML private Button btnAdminInscriptionsFooter;
 
     private TypeEvenementService typeService = new TypeEvenementService();
     private EvenementService service = new EvenementService();
@@ -41,6 +47,18 @@ public class GestionEvenementController {
     @FXML
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
+
+        if (!AccessControl.requireAdmin()) {
+            Platform.runLater(() -> ouvrirPageSilencieusement("/GestionInscription.fxml"));
+            return;
+        }
+
+        AccessControl.visibleForAdmin(
+                btnNavGestionEvenements,
+                btnNavAdminInscriptions,
+                btnAjouter,
+                btnAdminInscriptionsFooter
+        );
 
         if (colId != null) {
             colId.setVisible(false);
@@ -135,10 +153,12 @@ public class GestionEvenementController {
 
     @FXML
     void ouvrirAjouter(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         try {
             AjouterEvenementController.evenementAModifier = null;
-            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvenement.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/AjouterEvenement.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -146,6 +166,9 @@ public class GestionEvenementController {
 
     @FXML
     void ouvrirModifier(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         evenementSelectionne = tableEvenements.getSelectionModel().getSelectedItem();
         if (evenementSelectionne == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -156,22 +179,23 @@ public class GestionEvenementController {
         }
         try {
             AjouterEvenementController.evenementAModifier = evenementSelectionne;
-            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvenement.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/AjouterEvenement.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void ouvrirModifier(Evenement evenement) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         if (evenement == null) {
             return;
         }
         try {
             evenementSelectionne = evenement;
             AjouterEvenementController.evenementAModifier = evenement;
-            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvenement.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/AjouterEvenement.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -179,6 +203,9 @@ public class GestionEvenementController {
 
     @FXML
     void supprimer(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         Evenement selected = tableEvenements.getSelectionModel().getSelectedItem();
         if (selected == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -199,6 +226,9 @@ public class GestionEvenementController {
     }
 
     private void supprimer(Evenement selected) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         if (selected == null) {
             return;
         }
@@ -255,8 +285,7 @@ public class GestionEvenementController {
         }
         try {
             evenementSelectionne = evenement;
-            Parent root = FXMLLoader.load(getClass().getResource("/DetailsEvenement.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/DetailsEvenement.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -264,9 +293,11 @@ public class GestionEvenementController {
 
     @FXML
     void ouvrirAdmin(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/AdminInscription.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/AdminInscription.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -276,8 +307,7 @@ public class GestionEvenementController {
     void ouvrirInscriptionUser(ActionEvent event) {
         try {
             evenementSelectionne = null;
-            Parent root = FXMLLoader.load(getClass().getResource("/GestionInscription.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/GestionInscription.fxml");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -289,8 +319,20 @@ public class GestionEvenementController {
         }
         try {
             evenementSelectionne = evenement;
-            Parent root = FXMLLoader.load(getClass().getResource("/GestionInscription.fxml"));
-            tableEvenements.getScene().setRoot(root);
+            ouvrirPage("/GestionInscription.fxml");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void ouvrirPage(String fxml) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource(fxml));
+        rootPane.getScene().setRoot(root);
+    }
+
+    private void ouvrirPageSilencieusement(String fxml) {
+        try {
+            ouvrirPage(fxml);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

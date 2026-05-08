@@ -28,7 +28,7 @@
                 </VBox>
             </HBox>
             <VBox spacing="8">
-                <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Gestion des evenements" onAction="#retour" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Admin inscriptions" styleClass="nav-button-active"/>
             </VBox>
         </VBox>

@@ -21,6 +21,7 @@ import org.esprit.models.TypeEvenement;
 import org.esprit.services.EvenementService;
 import org.esprit.services.InscriptionService;
 import org.esprit.services.TypeEvenementService;
+import org.esprit.security.AccessControl;
 import org.esprit.utils.UiEffects;
 
 import java.io.File;
@@ -38,6 +39,8 @@ public class GestionInscriptionController {
     @FXML private Label lbSelection;
     @FXML private Label lbEmptyState;
     @FXML private Button btnInscrire;
+    @FXML private Button btnRetourEvenements;
+    @FXML private Button btnRetourHeader;
 
     private final EvenementService evenementService = new EvenementService();
     private final InscriptionService inscriptionService = new InscriptionService();
@@ -49,6 +52,7 @@ public class GestionInscriptionController {
     @FXML
     void initialize() {
         UiEffects.applyEntranceAndHover(rootPane);
+        AccessControl.visibleForAdmin(btnRetourEvenements, btnRetourHeader);
         evenementSelectionne = GestionEvenementController.evenementSelectionne;
         chargerEvenements();
         afficherSelection();
@@ -223,6 +227,9 @@ public class GestionInscriptionController {
 
     @FXML
     void retour(ActionEvent event) {
+        if (!AccessControl.requireAdmin()) {
+            return;
+        }
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/GestionEvenement.fxml"));
             rootPane.getScene().setRoot(root);
