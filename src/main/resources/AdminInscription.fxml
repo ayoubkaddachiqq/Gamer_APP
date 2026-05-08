@@ -18,10 +18,15 @@
             <padding>
                 <Insets top="28" right="18" bottom="28" left="18"/>
             </padding>
-            <VBox spacing="4">
-                <Label text="Gamer App" styleClass="brand-title"/>
-                <Label text="Admin registrations" styleClass="brand-subtitle"/>
-            </VBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label text="Team Hub" styleClass="brand-title"/>
+                    <Label text="Admin registrations" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
             <VBox spacing="8">
                 <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Admin inscriptions" styleClass="nav-button-active"/>
@@ -39,26 +44,43 @@
                 <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
             </HBox>
 
+            <HBox spacing="14">
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="Inscriptions" styleClass="muted-label"/>
+                    <Label fx:id="lbTotal" text="0" styleClass="stat-number"/>
+                </VBox>
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="En attente" styleClass="muted-label"/>
+                    <Label fx:id="lbEnAttente" text="0" styleClass="stat-number"/>
+                </VBox>
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="Confirmes" styleClass="muted-label"/>
+                    <Label fx:id="lbConfirmes" text="0" styleClass="stat-number"/>
+                </VBox>
+            </HBox>
+
             <VBox spacing="16" styleClass="glass-panel" VBox.vgrow="ALWAYS">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
 
+                <HBox alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Liste des demandes" styleClass="section-title"/>
+                        <Label text="Confirme, annule ou supprime chaque inscription directement depuis sa ligne." styleClass="page-subtitle"/>
+                    </VBox>
+                </HBox>
+
                 <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colId" text="ID" prefWidth="0" visible="false"/>
                         <TableColumn fx:id="colEvenementId" text="Evenement ID" prefWidth="0" visible="false"/>
-                        <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="0" visible="false"/>
-                        <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="240"/>
-                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="180"/>
+                        <TableColumn fx:id="colEvenement" text="Evenement" prefWidth="320"/>
+                        <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="180"/>
+                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="140"/>
+                        <TableColumn fx:id="colActions" text="Actions" prefWidth="270"/>
                     </columns>
                 </TableView>
-
-                <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <Button text="Supprimer" onAction="#supprimer" styleClass="danger-button"/>
-                    <Button text="Confirmer" onAction="#confirmerInscription" styleClass="success-button"/>
-                    <Button text="Annuler" onAction="#annulerInscription" styleClass="warning-button"/>
-                </HBox>
             </VBox>
         </VBox>
     </center>

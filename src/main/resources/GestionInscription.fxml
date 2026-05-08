@@ -18,52 +18,92 @@
             <padding>
                 <Insets top="28" right="18" bottom="28" left="18"/>
             </padding>
-            <VBox spacing="4">
-                <Label text="Gamer App" styleClass="brand-title"/>
-                <Label text="Registrations" styleClass="brand-subtitle"/>
-            </VBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label text="Team Hub" styleClass="brand-title"/>
+                    <Label text="User registration" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
             <VBox spacing="8">
                 <Button maxWidth="Infinity" text="Evenements" onAction="#retour" styleClass="nav-button"/>
-                <Button maxWidth="Infinity" text="Inscriptions" styleClass="nav-button-active"/>
+                <Button maxWidth="Infinity" text="Inscription user" styleClass="nav-button-active"/>
             </VBox>
         </VBox>
     </left>
 
     <center>
         <VBox spacing="18" styleClass="content">
-            <HBox alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" spacing="14">
                 <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label text="Gestion des inscriptions" styleClass="page-title"/>
-                    <Label fx:id="lbEvenement" styleClass="page-subtitle"/>
+                    <Label text="Inscription aux evenements" styleClass="page-title"/>
+                    <Label text="Choisis une carte evenement, puis confirme ton inscription." styleClass="page-subtitle"/>
                 </VBox>
                 <Button text="Retour" onAction="#retour" styleClass="secondary-button"/>
             </HBox>
 
-            <VBox spacing="16" styleClass="glass-panel" VBox.vgrow="ALWAYS">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+                <VBox spacing="14" styleClass="glass-panel" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Tous les evenements" styleClass="section-title"/>
+                            <Label text="Photo en haut, details en dessous, selection au clic." styleClass="page-subtitle"/>
+                        </VBox>
+                    </HBox>
 
-                <HBox alignment="BOTTOM_LEFT" spacing="12">
+                    <HBox alignment="BOTTOM_LEFT" spacing="12">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Recherche par titre" styleClass="form-label"/>
+                            <TextField fx:id="tfRechercheTitre" promptText="Titre de l'evenement"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Recherche par lieu" styleClass="form-label"/>
+                            <TextField fx:id="tfRechercheLieu" promptText="Lieu"/>
+                        </VBox>
+                        <HBox spacing="10" alignment="BOTTOM_LEFT">
+                            <Button text="Rechercher" onAction="#rechercher" styleClass="primary-button"/>
+                            <Button text="Reinitialiser" onAction="#reinitialiser" styleClass="secondary-button"/>
+                        </HBox>
+                    </HBox>
+
+                    <Label fx:id="lbEmptyState" text="Aucun evenement disponible." styleClass="muted-label"/>
+
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="event-scroll" VBox.vgrow="ALWAYS">
+                        <content>
+                            <FlowPane fx:id="eventsFlow" hgap="14" vgap="14" prefWrapLength="680"/>
+                        </content>
+                    </ScrollPane>
+                </VBox>
+
+                <VBox spacing="16" prefWidth="310" maxWidth="330" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
                     <VBox spacing="6">
-                        <Label text="Utilisateur ID" styleClass="form-label"/>
-                        <TextField fx:id="tfUtilisateurId" prefWidth="260" promptText="Ex: 42"/>
+                        <Label text="Inscription" styleClass="section-title"/>
+                        <Label fx:id="lbSelection" wrapText="true" styleClass="page-subtitle"/>
                     </VBox>
-                    <Button text="Inscrire" onAction="#inscrire" styleClass="primary-button"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Label text="Statut ajoute automatiquement : En attente" styleClass="muted-label"/>
-                </HBox>
 
-                <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn fx:id="colId" text="ID" prefWidth="0" visible="false"/>
-                        <TableColumn fx:id="colUtilisateurId" text="Utilisateur ID" prefWidth="0" visible="false"/>
-                        <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="240"/>
-                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="180"/>
-                    </columns>
-                </TableView>
+                    <VBox spacing="8">
+                        <Label text="Utilisateur ID" styleClass="form-label"/>
+                        <TextField fx:id="tfUtilisateurId" promptText="Ex: 42"/>
+                    </VBox>
 
-            </VBox>
+                    <Button fx:id="btnInscrire" maxWidth="Infinity" text="S'inscrire" onAction="#inscrire" styleClass="primary-button"/>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <VBox spacing="8" styleClass="user-register-note">
+                        <Label text="Statut" styleClass="muted-label"/>
+                        <Label text="En attente" styleClass="status-pill"/>
+                    </VBox>
+                </VBox>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

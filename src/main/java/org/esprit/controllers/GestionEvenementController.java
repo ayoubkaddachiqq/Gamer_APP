@@ -272,6 +272,17 @@ public class GestionEvenementController {
         }
     }
 
+    @FXML
+    void ouvrirInscriptionUser(ActionEvent event) {
+        try {
+            evenementSelectionne = null;
+            Parent root = FXMLLoader.load(getClass().getResource("/GestionInscription.fxml"));
+            tableEvenements.getScene().setRoot(root);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void ouvrirInscriptions(Evenement evenement) {
         if (evenement == null) {
             return;

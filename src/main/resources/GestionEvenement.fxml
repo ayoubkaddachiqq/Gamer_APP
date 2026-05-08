@@ -19,15 +19,20 @@
                 <Insets top="28" right="18" bottom="28" left="18"/>
             </padding>
 
-            <VBox spacing="4">
-                <Label text="Gamer App" styleClass="brand-title"/>
-                <Label text="Event operations" styleClass="brand-subtitle"/>
-            </VBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label text="Team Hub" styleClass="brand-title"/>
+                    <Label text="Event operations" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
 
             <VBox spacing="8">
                 <Button maxWidth="Infinity" text="Evenements" styleClass="nav-button-active"/>
+                <Button maxWidth="Infinity" text="Inscription user" onAction="#ouvrirInscriptionUser" styleClass="nav-button"/>
                 <Button maxWidth="Infinity" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="nav-button"/>
-                <Button maxWidth="Infinity" text="Ajouter event" onAction="#ouvrirAjouter" styleClass="nav-button"/>
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>
@@ -102,6 +107,7 @@
                 </TableView>
 
                 <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button text="Interface user" onAction="#ouvrirInscriptionUser" styleClass="primary-button"/>
                     <Button text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
                 </HBox>
             </VBox>
