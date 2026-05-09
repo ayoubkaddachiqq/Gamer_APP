@@ -89,6 +89,8 @@
             <TextField fx:id="commentInput" promptText="Write a comment..."
                        HBox.hgrow="ALWAYS"
                        style="-fx-background-color: #1e293b; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 20; -fx-padding: 5 15 5 15;" />
+            <Button text="Fix" onAction="#handleFixComment"
+                    style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-font-weight: bold; -fx-background-radius: 15; -fx-padding: 4 12 4 12; -fx-cursor: hand; -fx-font-size: 11px;" />
             <Button text="Send" onAction="#handleAddComment"
                     style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 6 20 6 20;" />
         </HBox>

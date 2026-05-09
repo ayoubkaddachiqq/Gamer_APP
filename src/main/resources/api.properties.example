@@ -2,6 +2,10 @@
 # Get your key at: https://rawg.io/apidocs
 rawg.api.key=YOUR_RAWG_API_KEY_HERE
 
-# Perspective API (coming soon)
-# Get your key at: https://developers.perspectiveapi.com/
-perspective.api.key=YOUR_PERSPECTIVE_API_KEY_HERE
+# Groq LLM API (text fixing)
+# Get your key at: https://console.groq.com
+groq.api.key=YOUR_GROQ_API_KEY_HERE
+
+# Hugging Face Inference API (toxicity detection)
+# Get your token at: https://huggingface.co/settings/tokens
+huggingface.api.token=YOUR_HF_TOKEN_HERE

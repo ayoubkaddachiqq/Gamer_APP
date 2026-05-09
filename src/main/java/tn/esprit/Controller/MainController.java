@@ -22,6 +22,10 @@ import tn.esprit.services.ServiceShare;
 
 import javafx.application.Platform;
 import tn.esprit.api.GameTrendingClient;
+import tn.esprit.api.TextFixClient;
+import tn.esprit.api.ToxicityClient;
+import tn.esprit.api.model.TextFixResult;
+import tn.esprit.api.model.ToxicityResult;
 import tn.esprit.api.model.TrendingGame;
 
 import java.io.File;
@@ -79,6 +83,8 @@ public class MainController {
 
     private ServicePost servicePost = new ServicePost();
     private GameTrendingClient gameTrendingClient = new GameTrendingClient();
+    private TextFixClient textFixClient = new TextFixClient();
+    private ToxicityClient toxicityClient = new ToxicityClient();
     private ServiceShare serviceShare = new ServiceShare();
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private static final int CURRENT_USER_ID = 1;
@@ -387,8 +393,30 @@ public class MainController {
         String content = postInput.getText();
         String selectedGame = gameTagSelector.getValue();
 
-        if (content == null || content.trim().isEmpty() && tempSelectedImages.isEmpty()) return;
+        if ((content == null || content.trim().isEmpty()) && tempSelectedImages.isEmpty()) return;
 
+        String textToCheck = content != null ? content.trim() : "";
+        if (!textToCheck.isEmpty() && toxicityClient.isConfigured()) {
+            new Thread(() -> {
+                ToxicityResult result = toxicityClient.check(textToCheck);
+                if (result != null && result.isToxic()) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING,
+                            "⚠ Content Flagged\n\nYour message was flagged as " + result.getLabel()
+                            + " (" + String.format("%.0f", result.getScore() * 100) + "% confidence).\nPlease revise.",
+                            ButtonType.OK);
+                        alert.show();
+                    });
+                    return;
+                }
+                Platform.runLater(() -> createPost(content, selectedGame));
+            }).start();
+        } else {
+            createPost(content, selectedGame);
+        }
+    }
+
+    private void createPost(String content, String selectedGame) {
         Post newPost = new Post();
         newPost.setContent(content);
         newPost.setGameTag(selectedGame != null ? selectedGame : "General");
@@ -526,6 +554,24 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleFixPost() {
+        String content = postInput.getText();
+        if (content == null || content.trim().isEmpty()) return;
+
+        new Thread(() -> {
+            TextFixResult result = textFixClient.fix(content);
+            Platform.runLater(() -> {
+                if (result.isSuccess()) {
+                    postInput.setText(result.getFixedText());
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, result.getError(), ButtonType.OK);
+                    alert.show();
+                }
+            });
+        }).start();
     }
 
     @FXML

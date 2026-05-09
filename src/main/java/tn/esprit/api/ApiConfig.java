@@ -36,4 +36,20 @@ public class ApiConfig {
     public boolean hasRawgApiKey() {
         return !getRawgApiKey().isEmpty() && !getRawgApiKey().equals("YOUR_RAWG_API_KEY_HERE");
     }
+
+    public String getGroqApiKey() {
+        return properties.getProperty("groq.api.key", "");
+    }
+
+    public boolean hasGroqApiKey() {
+        return !getGroqApiKey().isEmpty() && !getGroqApiKey().equals("YOUR_GROQ_API_KEY_HERE");
+    }
+
+    public String getHuggingFaceToken() {
+        return properties.getProperty("huggingface.api.token", "");
+    }
+
+    public boolean hasHuggingFaceToken() {
+        return !getHuggingFaceToken().isEmpty() && !getHuggingFaceToken().equals("YOUR_HF_TOKEN_HERE");
+    }
 }

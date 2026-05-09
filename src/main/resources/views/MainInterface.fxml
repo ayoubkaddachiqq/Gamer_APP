@@ -50,7 +50,7 @@
                     <!-- Notifications Button with Red Dot -->
                     <StackPane>
                         <children>
-                            <Button mnemonicParsing="false" onAction="#handleNotifications" styleClass="icon-button" text="🔔" />
+                            <Button mnemonicParsing="false" onAction="#handleNotifications" styleClass="icon-button" text="!" />
                             <Circle fill="#ff4b4b" radius="4.0" StackPane.alignment="TOP_RIGHT">
                                 <StackPane.margin>
                                     <Insets right="5.0" top="5.0" />
@@ -122,9 +122,12 @@
                                       promptText="Game Tag"
                                       style="-fx-background-color: #051424; -fx-text-fill: white;" />
 
-                            <Region HBox.hgrow="ALWAYS" /> <Button text="Post"
-                                                                   onAction="#handleCreatePost"
-                                                                   style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25 8 25;" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button text="✎ Fix" onAction="#handleFixPost"
+                                    style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 20 8 20; -fx-cursor: hand;" />
+                            <Button text="Post"
+                                    onAction="#handleCreatePost"
+                                    style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25 8 25;" />
                         </HBox>
                     </VBox>
 

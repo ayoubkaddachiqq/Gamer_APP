@@ -1,7 +1,10 @@
 package tn.esprit.Controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -10,6 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import tn.esprit.api.TextFixClient;
+import tn.esprit.api.ToxicityClient;
+import tn.esprit.api.model.TextFixResult;
+import tn.esprit.api.model.ToxicityResult;
 import tn.esprit.entities.Comment;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceComment;
@@ -94,6 +101,8 @@ public class PostCardController {
     private ServiceLike serviceLike = new ServiceLike();
     private ServiceShare serviceShare = new ServiceShare();
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
+    private TextFixClient textFixClient = new TextFixClient();
+    private ToxicityClient toxicityClient = new ToxicityClient();
     private boolean commentsExpanded = false;
 
     private static final int CURRENT_USER_ID = 1;
@@ -493,11 +502,51 @@ public class PostCardController {
         String text = commentInput.getText();
         if (text == null || text.trim().isEmpty() || post == null) return;
 
-        Comment newComment = new Comment(post.getId(), CURRENT_USER_ID, text.trim());
+        String textToCheck = text.trim();
+        if (toxicityClient.isConfigured()) {
+            new Thread(() -> {
+                ToxicityResult result = toxicityClient.check(textToCheck);
+                if (result != null && result.isToxic()) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING,
+                            "⚠ Content Flagged\n\nYour comment was flagged as " + result.getLabel()
+                            + " (" + String.format("%.0f", result.getScore() * 100) + "% confidence).\nPlease revise.",
+                            ButtonType.OK);
+                        alert.show();
+                    });
+                    return;
+                }
+                Platform.runLater(() -> addComment(textToCheck));
+            }).start();
+        } else {
+            addComment(textToCheck);
+        }
+    }
+
+    private void addComment(String text) {
+        Comment newComment = new Comment(post.getId(), CURRENT_USER_ID, text);
         serviceComment.add(newComment);
         commentInput.clear();
         loadComments();
         updateCommentCount();
+    }
+
+    @FXML
+    private void handleFixComment() {
+        String text = commentInput.getText();
+        if (text == null || text.trim().isEmpty()) return;
+
+        new Thread(() -> {
+            TextFixResult result = textFixClient.fix(text);
+            Platform.runLater(() -> {
+                if (result.isSuccess()) {
+                    commentInput.setText(result.getFixedText());
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, result.getError(), ButtonType.OK);
+                    alert.show();
+                }
+            });
+        }).start();
     }
 
     private void handleDeleteComment(Comment comment) {
