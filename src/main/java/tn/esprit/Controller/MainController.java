@@ -20,7 +20,12 @@ import tn.esprit.services.ServicePost;
 import tn.esprit.entities.Share;
 import tn.esprit.services.ServiceShare;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.geometry.Side;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.util.Duration;
 import tn.esprit.api.GameTrendingClient;
 import tn.esprit.api.TextFixClient;
 import tn.esprit.api.ToxicityClient;
@@ -46,7 +51,7 @@ public class MainController {
     private TextArea postInput;
 
     @FXML
-    private ComboBox<String> gameTagSelector;
+    private TextField gameTagSelector;
 
     @FXML
     private TextField searchBar;
@@ -58,7 +63,7 @@ public class MainController {
     private ComboBox<String> filterTime;
 
     @FXML
-    private ComboBox<String> filterGameTag;
+    private TextField filterGameTag;
 
     @FXML
     private ComboBox<String> filterType;
@@ -113,31 +118,20 @@ public class MainController {
         return "Player " + userId;
     }
 
-    private String[] gameTags = {
-        "General", "VALORANT", "League of Legends", "CS2", "Fortnite",
-        "Apex Legends", "Overwatch 2", "Dota 2", "Rocket League",
-        "EA FC 25", "Call of Duty", "Minecraft", "GTA V", "Rainbow Six Siege"
-    };
-
     @FXML
     public void initialize() {
         System.out.println("Initializing controller...");
-        gameTagSelector.getItems().addAll(gameTags);
-        gameTagSelector.setValue("General");
 
         filterTime.getItems().addAll("All Time", "Last Hour", "Today", "This Week");
         filterTime.setValue("All Time");
-
-        filterGameTag.getItems().addAll("All", "VALORANT", "League of Legends", "CS2", "Fortnite",
-            "Apex Legends", "Overwatch 2", "Dota 2", "Rocket League",
-            "EA FC 25", "Call of Duty", "Minecraft", "GTA V", "Rainbow Six Siege", "General");
-        filterGameTag.setValue("All");
 
         filterType.getItems().addAll("All", "Content", "Users");
         filterType.setValue("All");
 
         loadHeaderProfile();
         setupSearchBar();
+        setupGameTagAutocomplete(gameTagSelector);
+        setupGameTagAutocomplete(filterGameTag);
         loadFeed();
         loadTrendingGames();
     }
@@ -194,11 +188,9 @@ public class MainController {
 
     private void setupSearchBar() {
         if (searchBar != null) {
-            searchBar.focusedProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal) {
-                    filterBar.setVisible(true);
-                    filterBar.setManaged(true);
-                }
+            searchBar.setOnMouseClicked(e -> {
+                filterBar.setVisible(true);
+                filterBar.setManaged(true);
             });
 
             searchBar.setOnKeyPressed(e -> {
@@ -214,13 +206,55 @@ public class MainController {
         }
     }
 
+    private void setupGameTagAutocomplete(TextField field) {
+        ContextMenu suggestions = new ContextMenu();
+        PauseTransition debounce = new PauseTransition(Duration.millis(300));
+
+        field.textProperty().addListener((obs, oldVal, newVal) -> {
+            debounce.setOnFinished(e -> {
+                String query = newVal != null ? newVal.trim() : "";
+                if (query.isEmpty()) {
+                    suggestions.hide();
+                    return;
+                }
+                new Thread(() -> {
+                    List<String> results = gameTrendingClient.searchGames(query, 6);
+                    Platform.runLater(() -> {
+                        suggestions.getItems().clear();
+                        if (results.isEmpty()) {
+                            suggestions.hide();
+                            return;
+                        }
+                        for (String name : results) {
+                            MenuItem item = new MenuItem(name);
+                            item.setOnAction(ev -> {
+                                field.setText(name);
+                                field.positionCaret(name.length());
+                                suggestions.hide();
+                            });
+                            suggestions.getItems().add(item);
+                        }
+                        suggestions.show(field, Side.BOTTOM, 0, 0);
+                    });
+                }).start();
+            });
+            debounce.playFromStart();
+        });
+
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                suggestions.hide();
+            }
+        });
+    }
+
     private void loadFeed() {
         feedContainer.getChildren().clear();
         List<Post> posts = servicePost.getTrendingPosts();
         servicePost.loadImagesForPosts(posts);
         System.out.println("Fetched " + posts.size() + " posts sorted by trending score.");
-        for (Post p : posts) {
-            addPostToFeed(p);
+        for (int i = 0; i < posts.size(); i++) {
+            addPostToFeed(posts.get(i), i + 1);
         }
         loadLeaderboard();
     }
@@ -342,12 +376,12 @@ public class MainController {
     private void applyFilters() {
         String query = searchBar.getText();
         String timeFilter = filterTime.getValue();
-        String gameTagFilter = filterGameTag.getValue();
+        String gameTagFilter = filterGameTag.getText();
         String typeFilter = filterType.getValue();
 
         boolean hasSearch = query != null && !query.trim().isEmpty();
         boolean hasTimeFilter = timeFilter != null && !"All Time".equals(timeFilter);
-        boolean hasGameTagFilter = gameTagFilter != null && !"All".equals(gameTagFilter);
+        boolean hasGameTagFilter = gameTagFilter != null && !gameTagFilter.trim().isEmpty();
         boolean hasTypeFilter = typeFilter != null && !"All".equals(typeFilter);
 
         if (!hasSearch && !hasTimeFilter && !hasGameTagFilter && !hasTypeFilter) {
@@ -363,8 +397,8 @@ public class MainController {
         List<Post> results = servicePost.searchCombined(query, gameTag, time, type);
         servicePost.loadImagesForPosts(results);
         System.out.println("Combined search returned " + results.size() + " results (query='" + query + "', tag=" + gameTag + ", time=" + time + ", type=" + type + ")");
-        for (Post p : results) {
-            addPostToFeed(p);
+        for (int i = 0; i < results.size(); i++) {
+            addPostToFeed(results.get(i), i + 1);
         }
     }
 
@@ -372,7 +406,7 @@ public class MainController {
     private void clearFilters() {
         searchBar.clear();
         filterTime.setValue("All Time");
-        filterGameTag.setValue("All");
+        filterGameTag.clear();
         filterType.setValue("All");
         filterBar.setVisible(false);
         filterBar.setManaged(false);
@@ -391,7 +425,7 @@ public class MainController {
     @FXML
     private void handleCreatePost() {
         String content = postInput.getText();
-        String selectedGame = gameTagSelector.getValue();
+        String selectedGame = gameTagSelector.getText();
 
         if ((content == null || content.trim().isEmpty()) && tempSelectedImages.isEmpty()) return;
 
@@ -419,7 +453,7 @@ public class MainController {
     private void createPost(String content, String selectedGame) {
         Post newPost = new Post();
         newPost.setContent(content);
-        newPost.setGameTag(selectedGame != null ? selectedGame : "General");
+        newPost.setGameTag(selectedGame != null && !selectedGame.trim().isEmpty() ? selectedGame : "General");
         newPost.setUserId(CURRENT_USER_ID);
         newPost.setUsername("Ayoub");
 
@@ -503,11 +537,12 @@ public class MainController {
         mediaPreviewContainer.getChildren().add(previewRow);
     }
 
-    private void addPostToFeed(Post post) {
+    private void addPostToFeed(Post post, int rank) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/PostCard.fxml"));
             VBox card = loader.load();
             PostCardController cardController = loader.getController();
+            cardController.setPostRank(rank);
             cardController.setData(post);
             cardController.setOnShare(() -> handleSharePost(post));
             feedContainer.getChildren().add(card);

@@ -1,15 +1,20 @@
 package tn.esprit.Controller;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import tn.esprit.api.GameTrendingClient;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServicePost;
 
@@ -25,6 +30,7 @@ public class MyPostsController {
     private Label emptyLabel;
 
     private ServicePost servicePost = new ServicePost();
+    private GameTrendingClient gameTrendingClient = new GameTrendingClient();
     private Stage primaryStage;
     private static final int CURRENT_USER_ID = 1;
 
@@ -90,20 +96,16 @@ public class MyPostsController {
         contentArea.setWrapText(true);
         contentArea.setStyle("-fx-control-inner-background: #0d1c2d; -fx-text-fill: white; -fx-background-radius: 10;");
 
-        ComboBox<String> gameSelector = new ComboBox<>();
-        gameSelector.getItems().addAll(
-            "General", "VALORANT", "League of Legends", "CS2", "Fortnite",
-            "Apex Legends", "Overwatch 2", "Dota 2", "Rocket League",
-            "EA FC 25", "Call of Duty", "Minecraft", "GTA V", "Rainbow Six Siege"
-        );
-        gameSelector.setValue(post.getGameTag() != null ? post.getGameTag() : "General");
-        gameSelector.setStyle("-fx-background-color: #0d1c2d; -fx-text-fill: white; -fx-prompt-text-fill: #64748b;");
+        TextField gameTagField = new TextField();
+        gameTagField.setText(post.getGameTag() != null ? post.getGameTag() : "General");
+        gameTagField.setStyle("-fx-background-color: #0d1c2d; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 8;");
+        setupGameTagAutocomplete(gameTagField);
 
         Button saveBtn = new Button("Save Changes");
         saveBtn.setStyle("-fx-background-color: #00ff88; -fx-text-fill: #0d1c2d; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 30 8 30;");
         saveBtn.setOnAction(e -> {
             post.setContent(contentArea.getText());
-            post.setGameTag(gameSelector.getValue());
+            post.setGameTag(gameTagField.getText());
             servicePost.update(post);
 
             dialog.close();
@@ -131,11 +133,53 @@ public class MyPostsController {
         Label gameLabel = new Label("Game Tag:");
         gameLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        dialogVBox.getChildren().addAll(titleLabel, contentLabel, contentArea, gameLabel, gameSelector, buttonBox);
+        dialogVBox.getChildren().addAll(titleLabel, contentLabel, contentArea, gameLabel, gameTagField, buttonBox);
 
         Scene scene = new Scene(dialogVBox, 500, 380);
         dialog.setScene(scene);
         dialog.showAndWait();
+    }
+
+    private void setupGameTagAutocomplete(TextField field) {
+        ContextMenu suggestions = new ContextMenu();
+        PauseTransition debounce = new PauseTransition(Duration.millis(300));
+
+        field.textProperty().addListener((obs, oldVal, newVal) -> {
+            debounce.setOnFinished(e -> {
+                String query = newVal != null ? newVal.trim() : "";
+                if (query.isEmpty()) {
+                    suggestions.hide();
+                    return;
+                }
+                new Thread(() -> {
+                    List<String> results = gameTrendingClient.searchGames(query, 6);
+                    Platform.runLater(() -> {
+                        suggestions.getItems().clear();
+                        if (results.isEmpty()) {
+                            suggestions.hide();
+                            return;
+                        }
+                        for (String name : results) {
+                            MenuItem item = new MenuItem(name);
+                            item.setOnAction(ev -> {
+                                field.setText(name);
+                                field.positionCaret(name.length());
+                                suggestions.hide();
+                            });
+                            suggestions.getItems().add(item);
+                        }
+                        suggestions.show(field, Side.BOTTOM, 0, 0);
+                    });
+                }).start();
+            });
+            debounce.playFromStart();
+        });
+
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                suggestions.hide();
+            }
+        });
     }
 
     @FXML

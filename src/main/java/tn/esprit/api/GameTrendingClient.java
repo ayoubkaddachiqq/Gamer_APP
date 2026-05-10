@@ -74,6 +74,46 @@ public class GameTrendingClient {
         return games;
     }
 
+    public List<String> searchGames(String query, int limit) {
+        if (!config.hasRawgApiKey() || query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        try {
+            String url = RAWG_BASE_URL + "?key=" + config.getRawgApiKey()
+                    + "&search=" + java.net.URLEncoder.encode(query.trim(), "UTF-8")
+                    + "&page_size=" + Math.min(limit, 10);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .timeout(TIMEOUT)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                return List.of();
+            }
+
+            List<String> names = new ArrayList<>();
+            JsonNode root = objectMapper.readTree(response.body());
+            JsonNode results = root.get("results");
+
+            if (results != null && results.isArray()) {
+                for (JsonNode node : results) {
+                    if (node.has("name")) {
+                        names.add(node.get("name").asText());
+                    }
+                }
+            }
+            return names;
+        } catch (Exception e) {
+            System.err.println("⚠  RAWG search failed: " + e.getMessage());
+            return List.of();
+        }
+    }
+
     public byte[] downloadImage(String imageUrl) throws Exception {
         if (imageUrl == null || imageUrl.isEmpty()) return null;
         HttpRequest request = HttpRequest.newBuilder()

@@ -31,7 +31,7 @@
                 </HBox>
                 <HBox fx:id="filterBar" alignment="CENTER" spacing="10" visible="false" managed="false" styleClass="filter-bar">
                     <ComboBox fx:id="filterTime" promptText="Time" prefWidth="120" styleClass="filter-combo" />
-                    <ComboBox fx:id="filterGameTag" promptText="Game Tag" prefWidth="140" styleClass="filter-combo" />
+                    <TextField fx:id="filterGameTag" promptText="Game Tag" prefWidth="140" styleClass="dark-search-bar" />
                     <ComboBox fx:id="filterType" promptText="Type" prefWidth="110" styleClass="filter-combo" />
                     <Button text="Apply" onAction="#applyFilters" styleClass="filter-apply-btn" />
                     <Button text="Clear" onAction="#clearFilters" styleClass="filter-clear-btn" />
@@ -118,9 +118,9 @@
                                     onAction="#handleMedia"
                                     style="-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-cursor: hand;" />
 
-                            <ComboBox fx:id="gameTagSelector"
+                            <TextField fx:id="gameTagSelector"
                                       promptText="Game Tag"
-                                      style="-fx-background-color: #051424; -fx-text-fill: white;" />
+                                      style="-fx-background-color: #051424; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 8;" />
 
                             <Region HBox.hgrow="ALWAYS" />
                             <Button text="✎ Fix" onAction="#handleFixPost"

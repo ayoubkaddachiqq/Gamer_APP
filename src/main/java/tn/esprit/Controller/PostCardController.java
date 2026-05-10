@@ -114,6 +114,7 @@ public class PostCardController {
 
     private List<String> currentImages = new ArrayList<>();
     private int currentImageIndex = 0;
+    private int postRank = Integer.MAX_VALUE;
 
     private String getProfilePhoto(int userId) {
         try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT profile_photo FROM users WHERE id = ?")) {
@@ -159,7 +160,7 @@ public class PostCardController {
                 postDateLabel.setText(formatTimeAgo(post.getCreatedAt().toInstant()));
             }
 
-            if (trendingBadge != null && post.getTrendingScore() >= 10.0) {
+            if (trendingBadge != null && postRank <= 10) {
                 trendingBadge.setVisible(true);
                 trendingBadge.setManaged(true);
             }
@@ -172,6 +173,10 @@ public class PostCardController {
             updateShareCount();
             updateLikeButtonStyle();
         }
+    }
+
+    public void setPostRank(int rank) {
+        this.postRank = rank;
     }
 
     public void setEditable(boolean editable) {

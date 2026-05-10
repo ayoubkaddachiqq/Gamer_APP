@@ -97,14 +97,11 @@ public class ServicePost implements IService<Post> {
         ServiceShare serviceShare = new ServiceShare();
         ServiceComment serviceComment = new ServiceComment();
 
-        double now = System.currentTimeMillis();
         for (Post post : posts) {
             int likes = serviceLike.getLikeCount(post.getId());
             int comments = serviceComment.getCommentsByPost(post.getId()).size();
             int shares = serviceShare.getShareCount(post.getId());
-            double hoursAgo = (now - post.getCreatedAt().getTime()) / (1000.0 * 60 * 60);
-            if (hoursAgo < 1) hoursAgo = 1;
-            double score = ((likes * 2) + (comments * 3) + (shares * 4)) / Math.pow(hoursAgo, 1.5);
+            double score = (likes * 2) + (comments * 3) + (shares * 4);
             post.setTrendingScore(score);
         }
         posts.sort((a, b) -> Double.compare(b.getTrendingScore(), a.getTrendingScore()));

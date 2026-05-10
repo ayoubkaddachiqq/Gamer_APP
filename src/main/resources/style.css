@@ -362,3 +362,30 @@
     -fx-text-fill: #64748b;
     -fx-font-size: 10px;
 }
+
+/* Autocomplete suggestion popup */
+.context-menu {
+    -fx-background-color: #0d1c2d;
+    -fx-border-color: rgba(0, 238, 252, 0.3);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+}
+
+.context-menu .menu-item {
+    -fx-padding: 8 12;
+    -fx-background-radius: 4;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: rgba(189, 0, 255, 0.2);
+}
+
+.context-menu .menu-item .label {
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 13px;
+}
+
+.context-menu .menu-item:hover .label {
+    -fx-text-fill: #ffffff;
+}
