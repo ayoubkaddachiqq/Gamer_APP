@@ -9,15 +9,16 @@ import java.util.List;
 
 public class ServiceImagePost {
 
-    private Connection cnx;
-
     public ServiceImagePost() {
-        cnx = MyDB.getInstance().getConnection();
+    }
+
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
     }
 
     public void addImage(int postId, String imagePath) {
         String qry = "INSERT INTO imagepost (post_id, image_path) VALUES (?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ps.setString(2, imagePath);
             ps.executeUpdate();
@@ -28,7 +29,7 @@ public class ServiceImagePost {
 
     public void removeImage(int imageId) {
         String qry = "DELETE FROM imagepost WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, imageId);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -39,7 +40,7 @@ public class ServiceImagePost {
     public List<ImagePost> getImagesByPost(int postId) {
         List<ImagePost> list = new ArrayList<>();
         String qry = "SELECT * FROM imagepost WHERE post_id = ? ORDER BY created_at ASC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -59,7 +60,7 @@ public class ServiceImagePost {
 
     public void removeImagesByPost(int postId) {
         String qry = "DELETE FROM imagepost WHERE post_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -69,7 +70,7 @@ public class ServiceImagePost {
 
     public boolean hasMedia(int postId) {
         String qry = "SELECT COUNT(*) FROM imagepost WHERE post_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {

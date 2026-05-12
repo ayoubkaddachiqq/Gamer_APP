@@ -17,6 +17,7 @@ import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServicePost;
+import tn.esprit.services.UserService;
 import tn.esprit.entities.Share;
 import tn.esprit.services.ServiceShare;
 
@@ -92,30 +93,18 @@ public class MainController {
     private ToxicityClient toxicityClient = new ToxicityClient();
     private ServiceShare serviceShare = new ServiceShare();
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
+    private UserService userService = new UserService();
     private static final int CURRENT_USER_ID = 1;
     private static final String DEFAULT_AVATAR = "uploads/profiles/default.png";
 
     private List<File> tempSelectedImages = new ArrayList<>();
 
     private String getProfilePhoto(int userId) {
-        try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT profile_photo FROM users WHERE id = ?")) {
-            ps.setInt(1, userId);
-            java.sql.ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String path = rs.getString("profile_photo");
-                if (path != null && !path.isEmpty()) return path;
-            }
-        } catch (Exception e) { /* ignore */ }
-        return DEFAULT_AVATAR;
+        return userService.getProfilePhoto(userId);
     }
 
     private String getUsername(int userId) {
-        try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT username FROM users WHERE id = ?")) {
-            ps.setInt(1, userId);
-            java.sql.ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getString("username");
-        } catch (Exception e) { /* ignore */ }
-        return "Player " + userId;
+        return userService.getUsername(userId);
     }
 
     @FXML
@@ -134,6 +123,7 @@ public class MainController {
         setupGameTagAutocomplete(filterGameTag);
         loadFeed();
         loadTrendingGames();
+        toxicityClient.warmUp();
     }
 
     private void loadHeaderProfile() {
@@ -149,11 +139,13 @@ public class MainController {
                 Image image = new Image(imgFile.toURI().toString());
                 double size = 36;
                 double scale = Math.max(size / image.getWidth(), size / image.getHeight());
-                headerAvatarImage.setFitWidth(image.getWidth() * scale);
-                headerAvatarImage.setFitHeight(image.getHeight() * scale);
+                double fitW = image.getWidth() * scale;
+                double fitH = image.getHeight() * scale;
+                headerAvatarImage.setFitWidth(fitW);
+                headerAvatarImage.setFitHeight(fitH);
                 headerAvatarImage.setImage(image);
                 headerAvatarImage.setPreserveRatio(true);
-                headerAvatarImage.setClip(new Circle(size / 2));
+                headerAvatarImage.setClip(new Circle(fitW / 2, fitH / 2, size / 2));
             }
         }
     }
@@ -341,7 +333,7 @@ public class MainController {
                         HBox.setHgrow(infoBox, javafx.scene.layout.Priority.ALWAYS);
 
                         Label nameLabel = new Label(game.getName());
-                        nameLabel.getStyleClass().add("player-name");
+                        nameLabel.getStyleClass().add("leaderboard-name");
 
                         Label ratingLabel = new Label("⭐ " + String.format("%.1f", game.getRating()));
                         ratingLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 9px;");
@@ -455,7 +447,7 @@ public class MainController {
         newPost.setContent(content);
         newPost.setGameTag(selectedGame != null && !selectedGame.trim().isEmpty() ? selectedGame : "General");
         newPost.setUserId(CURRENT_USER_ID);
-        newPost.setUsername("Ayoub");
+        newPost.setUsername(getUsername(CURRENT_USER_ID));
 
         int postId = servicePost.add(newPost);
         if (postId > 0) {
@@ -563,7 +555,7 @@ public class MainController {
         sharedPost.setContent(shareContent);
         sharedPost.setGameTag(originalPost.getGameTag());
         sharedPost.setUserId(CURRENT_USER_ID);
-        sharedPost.setUsername("Ayoub");
+        sharedPost.setUsername(getUsername(CURRENT_USER_ID));
 
         int sharedPostId = servicePost.add(sharedPost);
 
@@ -584,6 +576,8 @@ public class MainController {
             controller.init((Stage) feedContainer.getScene().getWindow());
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
             stage.setTitle("My Posts - Team Hub");
             stage.show();
         } catch (IOException e) {

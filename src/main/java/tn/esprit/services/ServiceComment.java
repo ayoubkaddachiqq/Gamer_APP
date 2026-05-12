@@ -10,16 +10,17 @@ import java.util.List;
 
 public class ServiceComment implements IService<Comment> {
 
-    private Connection cnx;
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
+    }
 
     public ServiceComment() {
-        cnx = MyDB.getInstance().getConnection();
     }
 
     @Override
     public int add(Comment c) {
         String qry = "INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, c.getPostId());
             ps.setInt(2, c.getUserId());
             ps.setString(3, c.getCommentText());
@@ -38,7 +39,7 @@ public class ServiceComment implements IService<Comment> {
     public List<Comment> getAll() {
         List<Comment> list = new ArrayList<>();
         String qry = "SELECT * FROM comments";
-        try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(qry)) {
+        try (Statement st = getConnection().createStatement(); ResultSet rs = st.executeQuery(qry)) {
             while (rs.next()) {
                 list.add(new Comment(
                         rs.getInt("id"),
@@ -57,7 +58,7 @@ public class ServiceComment implements IService<Comment> {
     @Override
     public void update(Comment c) {
         String qry = "UPDATE comments SET comment_text = ? WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setString(1, c.getCommentText());
             ps.setInt(2, c.getId());
             ps.executeUpdate();
@@ -68,8 +69,8 @@ public class ServiceComment implements IService<Comment> {
 
     @Override
     public void delete(int id) {
-        String qry = "DELETE FROM        comments WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        String qry = "DELETE FROM comments WHERE id = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -80,7 +81,7 @@ public class ServiceComment implements IService<Comment> {
     @Override
     public Comment getById(int id) {
         String qry = "SELECT * FROM comments WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -102,7 +103,7 @@ public class ServiceComment implements IService<Comment> {
     public List<Comment> getCommentsByPost(int postId) {
         List<Comment> list = new ArrayList<>();
         String qry = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -118,5 +119,17 @@ public class ServiceComment implements IService<Comment> {
             System.err.println(e.getMessage());
         }
         return list;
+    }
+
+    public int getCommentCount(int postId) {
+        String qry = "SELECT COUNT(*) FROM comments WHERE post_id = ?";
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
+            ps.setInt(1, postId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return 0;
     }
 }

@@ -29,12 +29,11 @@ public class MyDB {
     }
 
 
-    public static MyDB getInstance() {
+    public static synchronized MyDB getInstance() {
         if (instance == null) {
             instance = new MyDB();
         } else {
             try {
-                // Vérifie si la connexion n'a pas été fermée entre temps
                 if (instance.getConnection().isClosed()) {
                     instance = new MyDB();
                 }

@@ -18,6 +18,8 @@ public class MainApp extends Application {
 
         primaryStage.setTitle("Team Hub - E-Sport Recruitment");
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(700);
         primaryStage.show();
     }
 

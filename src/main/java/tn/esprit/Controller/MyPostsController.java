@@ -6,19 +6,28 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.esprit.api.GameTrendingClient;
+import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
+import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServicePost;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyPostsController {
@@ -30,6 +39,7 @@ public class MyPostsController {
     private Label emptyLabel;
 
     private ServicePost servicePost = new ServicePost();
+    private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private GameTrendingClient gameTrendingClient = new GameTrendingClient();
     private Stage primaryStage;
     private static final int CURRENT_USER_ID = 1;
@@ -86,10 +96,13 @@ public class MyPostsController {
     }
 
     private void handleEdit(Post post, VBox card) {
+        boolean wasMaximized = primaryStage.isMaximized();
+
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
         dialog.setTitle("Edit Post");
+        dialog.setResizable(false);
 
         TextArea contentArea = new TextArea(post.getContent());
         contentArea.setPrefHeight(100);
@@ -99,7 +112,70 @@ public class MyPostsController {
         TextField gameTagField = new TextField();
         gameTagField.setText(post.getGameTag() != null ? post.getGameTag() : "General");
         gameTagField.setStyle("-fx-background-color: #0d1c2d; -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 8;");
-        setupGameTagAutocomplete(gameTagField);
+
+        ListView<String> suggestionList = new ListView<>();
+        suggestionList.setVisible(false);
+        suggestionList.setManaged(false);
+        suggestionList.setPrefHeight(0);
+        suggestionList.setMaxHeight(120);
+        suggestionList.setStyle("-fx-background-color: #0d1c2d; -fx-control-inner-background: #0d1c2d; -fx-text-fill: white;");
+
+        PauseTransition debounce = new PauseTransition(Duration.millis(300));
+        gameTagField.textProperty().addListener((obs, oldVal, newVal) -> {
+            debounce.setOnFinished(e -> {
+                String query = newVal != null ? newVal.trim() : "";
+                if (query.isEmpty()) {
+                    suggestionList.setVisible(false);
+                    suggestionList.setManaged(false);
+                    return;
+                }
+                new Thread(() -> {
+                    List<String> results = gameTrendingClient.searchGames(query, 6);
+                    Platform.runLater(() -> {
+                        suggestionList.getItems().setAll(results);
+                        if (results.isEmpty()) {
+                            suggestionList.setVisible(false);
+                            suggestionList.setManaged(false);
+                        } else {
+                            suggestionList.setVisible(true);
+                            suggestionList.setManaged(true);
+                            suggestionList.setPrefHeight(Math.min(results.size() * 28 + 10, 120));
+                        }
+                    });
+                }).start();
+            });
+            debounce.playFromStart();
+        });
+
+        suggestionList.setOnMouseClicked(e -> {
+            String selected = suggestionList.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                gameTagField.setText(selected);
+                suggestionList.setVisible(false);
+                suggestionList.setManaged(false);
+            }
+        });
+
+        List<ImagePost> existingImagePosts = serviceImagePost.getImagesByPost(post.getId());
+        List<ImagePost> imagesToKeep = new ArrayList<>(existingImagePosts);
+        List<File> newImageFiles = new ArrayList<>();
+
+        VBox mediaPreviewBox = new VBox(8);
+
+        Button addMediaBtn = new Button("+ Add Media");
+        addMediaBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-cursor: hand;");
+        addMediaBtn.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp"));
+            fc.setInitialDirectory(new File(System.getProperty("user.home")));
+            File selected = fc.showOpenDialog(dialog);
+            if (selected != null) {
+                newImageFiles.add(selected);
+                refreshMediaPreview(mediaPreviewBox, imagesToKeep, newImageFiles);
+            }
+        });
+
+        refreshMediaPreview(mediaPreviewBox, imagesToKeep, newImageFiles);
 
         Button saveBtn = new Button("Save Changes");
         saveBtn.setStyle("-fx-background-color: #00ff88; -fx-text-fill: #0d1c2d; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 30 8 30;");
@@ -107,6 +183,25 @@ public class MyPostsController {
             post.setContent(contentArea.getText());
             post.setGameTag(gameTagField.getText());
             servicePost.update(post);
+
+            for (ImagePost img : existingImagePosts) {
+                if (!imagesToKeep.contains(img)) {
+                    try { Files.deleteIfExists(Paths.get(img.getImagePath())); } catch (IOException ignored) {}
+                    serviceImagePost.removeImage(img.getId());
+                }
+            }
+
+            for (File f : newImageFiles) {
+                try {
+                    String fileName = "post_" + post.getId() + "_" + System.currentTimeMillis() + "_" + f.getName();
+                    String destPath = "uploads/images/" + fileName;
+                    Path dest = Paths.get(destPath).toAbsolutePath();
+                    Files.copy(f.toPath(), dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    serviceImagePost.addImage(post.getId(), destPath);
+                } catch (IOException ex) {
+                    System.err.println("Error saving image: " + ex.getMessage());
+                }
+            }
 
             dialog.close();
             loadPosts();
@@ -119,10 +214,10 @@ public class MyPostsController {
         HBox buttonBox = new HBox(15, cancelBtn, saveBtn);
         buttonBox.setAlignment(Pos.CENTER);
 
-        VBox dialogVBox = new VBox(15);
+        VBox dialogVBox = new VBox(12);
         dialogVBox.setPadding(new Insets(25));
         dialogVBox.setStyle("-fx-background-color: #1e293b;");
-        dialogVBox.setAlignment(Pos.CENTER);
+        dialogVBox.setAlignment(Pos.TOP_CENTER);
 
         Label titleLabel = new Label("Edit Post");
         titleLabel.setStyle("-fx-text-fill: #bd00ff; -fx-font-size: 20px; -fx-font-weight: bold;");
@@ -133,53 +228,76 @@ public class MyPostsController {
         Label gameLabel = new Label("Game Tag:");
         gameLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        dialogVBox.getChildren().addAll(titleLabel, contentLabel, contentArea, gameLabel, gameTagField, buttonBox);
+        Label mediaLabel = new Label("Media:");
+        mediaLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
 
-        Scene scene = new Scene(dialogVBox, 500, 380);
+        dialogVBox.getChildren().addAll(
+                titleLabel,
+                contentLabel, contentArea,
+                gameLabel, gameTagField, suggestionList,
+                mediaLabel, addMediaBtn, mediaPreviewBox,
+                buttonBox
+        );
+
+        Scene scene = new Scene(dialogVBox, 500, 520);
+        String css = getClass().getResource("/style.css").toExternalForm();
+        if (css != null) scene.getStylesheets().add(css);
         dialog.setScene(scene);
         dialog.showAndWait();
+
+        if (wasMaximized) {
+            primaryStage.setMaximized(true);
+        }
     }
 
-    private void setupGameTagAutocomplete(TextField field) {
-        ContextMenu suggestions = new ContextMenu();
-        PauseTransition debounce = new PauseTransition(Duration.millis(300));
+    private void refreshMediaPreview(VBox container, List<ImagePost> imagesToKeep, List<File> newImageFiles) {
+        container.getChildren().clear();
+        HBox row = new HBox(10);
+        row.setStyle("-fx-padding: 5 0; -fx-wrap-space: true;");
 
-        field.textProperty().addListener((obs, oldVal, newVal) -> {
-            debounce.setOnFinished(e -> {
-                String query = newVal != null ? newVal.trim() : "";
-                if (query.isEmpty()) {
-                    suggestions.hide();
-                    return;
-                }
-                new Thread(() -> {
-                    List<String> results = gameTrendingClient.searchGames(query, 6);
-                    Platform.runLater(() -> {
-                        suggestions.getItems().clear();
-                        if (results.isEmpty()) {
-                            suggestions.hide();
-                            return;
-                        }
-                        for (String name : results) {
-                            MenuItem item = new MenuItem(name);
-                            item.setOnAction(ev -> {
-                                field.setText(name);
-                                field.positionCaret(name.length());
-                                suggestions.hide();
-                            });
-                            suggestions.getItems().add(item);
-                        }
-                        suggestions.show(field, Side.BOTTOM, 0, 0);
-                    });
-                }).start();
+        for (ImagePost img : imagesToKeep) {
+            VBox thumbBox = buildThumbnail(new File(img.getImagePath()).toURI().toString(), () -> {
+                imagesToKeep.remove(img);
+                refreshMediaPreview(container, imagesToKeep, newImageFiles);
             });
-            debounce.playFromStart();
-        });
+            row.getChildren().add(thumbBox);
+        }
 
-        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) {
-                suggestions.hide();
-            }
-        });
+        for (File f : newImageFiles) {
+            VBox thumbBox = buildThumbnail(f.toURI().toString(), () -> {
+                newImageFiles.remove(f);
+                refreshMediaPreview(container, imagesToKeep, newImageFiles);
+            });
+            row.getChildren().add(thumbBox);
+        }
+
+        if (!row.getChildren().isEmpty()) {
+            container.getChildren().add(row);
+        }
+    }
+
+    private VBox buildThumbnail(String imageUri, Runnable onRemove) {
+        VBox thumbBox = new VBox(5);
+        thumbBox.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView();
+        try {
+            Image image = new Image(imageUri, 80, 80, true, true);
+            imageView.setImage(image);
+        } catch (Exception e) {
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+        }
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        imageView.setStyle("-fx-background-radius: 8; -fx-border-color: rgba(0, 238, 252, 0.3); -fx-border-radius: 8;");
+
+        Button removeBtn = new Button("x");
+        removeBtn.setStyle("-fx-background-color: #ff4b4b; -fx-text-fill: white; -fx-font-size: 10px; -fx-background-radius: 50%; -fx-min-width: 20px; -fx-min-height: 20px; -fx-cursor: hand;");
+        removeBtn.setOnAction(e -> onRemove.run());
+
+        thumbBox.getChildren().addAll(imageView, removeBtn);
+        return thumbBox;
     }
 
     @FXML
@@ -189,6 +307,8 @@ public class MyPostsController {
             javafx.scene.Parent root = loader.load();
             Stage stage = (Stage) myPostsContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
             stage.setTitle("Team Hub - E-Sport Recruitment");
             stage.show();
         } catch (Exception e) {

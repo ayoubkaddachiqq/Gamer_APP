@@ -9,15 +9,16 @@ import java.util.List;
 
 public class ServiceLike {
 
-    private Connection cnx;
-
     public ServiceLike() {
-        cnx = MyDB.getInstance().getConnection();
+    }
+
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
     }
 
     public void addLike(int postId, int userId) {
         String qry = "INSERT INTO likes (post_id, user_id) VALUES (?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ps.setInt(2, userId);
             ps.executeUpdate();
@@ -32,7 +33,7 @@ public class ServiceLike {
 
     public void removeLike(int postId, int userId) {
         String qry = "DELETE FROM likes WHERE post_id = ? AND user_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ps.setInt(2, userId);
             ps.executeUpdate();
@@ -43,7 +44,7 @@ public class ServiceLike {
 
     public boolean hasUserLiked(int postId, int userId) {
         String qry = "SELECT COUNT(*) FROM likes WHERE post_id = ? AND user_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ps.setInt(2, userId);
             ResultSet rs = ps.executeQuery();
@@ -58,7 +59,7 @@ public class ServiceLike {
 
     public int getLikeCount(int postId) {
         String qry = "SELECT COUNT(*) FROM likes WHERE post_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -73,7 +74,7 @@ public class ServiceLike {
     public List<Like> getLikesByPost(int postId) {
         List<Like> list = new ArrayList<>();
         String qry = "SELECT * FROM likes WHERE post_id = ? ORDER BY created_at DESC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

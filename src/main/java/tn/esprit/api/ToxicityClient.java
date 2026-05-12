@@ -13,7 +13,7 @@ import java.time.Duration;
 public class ToxicityClient {
     private static final String HF_URL = "https://router.huggingface.co/hf-inference/models/unitary/toxic-bert";
     private static final double TOXICITY_THRESHOLD = 0.7;
-    private static final Duration TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration TIMEOUT = Duration.ofSeconds(60);
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -23,6 +23,19 @@ public class ToxicityClient {
         this.httpClient = HttpClient.newBuilder().connectTimeout(TIMEOUT).build();
         this.objectMapper = new ObjectMapper();
         this.config = ApiConfig.getInstance();
+    }
+
+    public void warmUp() {
+        if (!isConfigured()) return;
+        new Thread(() -> {
+            try {
+                System.out.println("Warming up toxicity model...");
+                check("hello world");
+                System.out.println("Toxicity model ready.");
+            } catch (Exception e) {
+                System.err.println("Toxicity warm-up failed (will warm on first use): " + e.getMessage());
+            }
+        }).start();
     }
 
     public boolean isConfigured() {

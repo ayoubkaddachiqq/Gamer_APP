@@ -23,6 +23,7 @@ import tn.esprit.services.ServiceComment;
 import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServiceLike;
 import tn.esprit.services.ServiceShare;
+import tn.esprit.services.UserService;
 
 import java.io.File;
 import java.time.Duration;
@@ -103,6 +104,7 @@ public class PostCardController {
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private TextFixClient textFixClient = new TextFixClient();
     private ToxicityClient toxicityClient = new ToxicityClient();
+    private UserService userService = new UserService();
     private boolean commentsExpanded = false;
 
     private static final int CURRENT_USER_ID = 1;
@@ -117,27 +119,11 @@ public class PostCardController {
     private int postRank = Integer.MAX_VALUE;
 
     private String getProfilePhoto(int userId) {
-        try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT profile_photo FROM users WHERE id = ?")) {
-            ps.setInt(1, userId);
-            java.sql.ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String path = rs.getString("profile_photo");
-                if (path != null && !path.isEmpty()) return path;
-            }
-        } catch (Exception e) { /* ignore */ }
-        return DEFAULT_AVATAR;
+        return userService.getProfilePhoto(userId);
     }
 
     private String getUsername(int userId) {
-        try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("SELECT username FROM users WHERE id = ?")) {
-            ps.setInt(1, userId);
-            java.sql.ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String name = rs.getString("username");
-                if (name != null && !name.isEmpty()) return name;
-            }
-        } catch (Exception e) { /* ignore */ }
-        return "Player " + userId;
+        return userService.getUsername(userId);
     }
 
     public void setData(Post post) {
@@ -317,11 +303,13 @@ public class PostCardController {
                 return false;
             }
             double scale = Math.max(size / image.getWidth(), size / image.getHeight());
-            imageView.setFitWidth(image.getWidth() * scale);
-            imageView.setFitHeight(image.getHeight() * scale);
+            double fitW = image.getWidth() * scale;
+            double fitH = image.getHeight() * scale;
+            imageView.setFitWidth(fitW);
+            imageView.setFitHeight(fitH);
             imageView.setImage(image);
             imageView.setPreserveRatio(true);
-            imageView.setClip(new Circle(size / 2));
+            imageView.setClip(new Circle(fitW / 2, fitH / 2, size / 2));
             return true;
         } catch (Exception e) {
             return false;
@@ -372,13 +360,6 @@ public class PostCardController {
 
         if (imageCounter != null) {
             imageCounter.setText((currentImageIndex + 1) + " / " + currentImages.size());
-        }
-
-        if (prevImageBtn != null) {
-            prevImageBtn.setVisible(currentImages.size() > 1);
-        }
-        if (nextImageBtn != null) {
-            nextImageBtn.setVisible(currentImages.size() > 1);
         }
     }
 
@@ -451,8 +432,6 @@ public class PostCardController {
         avatarImg.setFitWidth(24);
         avatarImg.setFitHeight(24);
         avatarImg.setPreserveRatio(false);
-        Circle clip = new Circle(12);
-        avatarImg.setClip(clip);
 
         String photoPath = getProfilePhoto(comment.getUserId());
         File imgFile = new File(photoPath).getAbsoluteFile();
@@ -460,10 +439,13 @@ public class PostCardController {
             Image image = new Image(imgFile.toURI().toString());
             double size = 24;
             double scale = Math.max(size / image.getWidth(), size / image.getHeight());
-            avatarImg.setFitWidth(image.getWidth() * scale);
-            avatarImg.setFitHeight(image.getHeight() * scale);
+            double fitW = image.getWidth() * scale;
+            double fitH = image.getHeight() * scale;
+            avatarImg.setFitWidth(fitW);
+            avatarImg.setFitHeight(fitH);
             avatarImg.setImage(image);
             avatarImg.setPreserveRatio(true);
+            avatarImg.setClip(new Circle(fitW / 2, fitH / 2, size / 2));
         }
 
         avatarPane.getChildren().addAll(bgCircle, avatarImg);
@@ -562,8 +544,7 @@ public class PostCardController {
 
     private void updateCommentCount() {
         if (post == null) return;
-        List<Comment> comments = serviceComment.getCommentsByPost(post.getId());
-        int count = comments.size();
-        commentsButton.setText(count > 0 ? "💬 " + count + " Comment" + (count > 1 ? "s" : "") : "💬 Comments");
+        int count = serviceComment.getCommentCount(post.getId());
+        commentsButton.setText(count > 0 ? "\uD83D\uDCAC " + count + " Comment" + (count > 1 ? "s" : "") : "\uD83D\uDCAC Comments");
     }
 }

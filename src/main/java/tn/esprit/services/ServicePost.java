@@ -10,16 +10,14 @@ import java.util.List;
 
 public class ServicePost implements IService<Post> {
 
-    private Connection cnx;
-
-    public ServicePost() {
-        cnx = MyDB.getInstance().getConnection();
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
     }
 
     @Override
     public Post getById(int id) {
         String qry = "SELECT * FROM posts WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -42,7 +40,7 @@ public class ServicePost implements IService<Post> {
     @Override
     public int add(Post p) {
         String qry = "INSERT INTO posts (user_id, username, content, game_tag) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, p.getUserId());
             ps.setString(2, p.getUsername() != null ? p.getUsername() : "");
             ps.setString(3, p.getContent());
@@ -64,7 +62,7 @@ public class ServicePost implements IService<Post> {
     public List<Post> getAll() {
         List<Post> list = new ArrayList<>();
         String qry = "SELECT * FROM posts ORDER BY created_at DESC";
-        try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(qry)) {
+        try (Statement st = getConnection().createStatement(); ResultSet rs = st.executeQuery(qry)) {
             while (rs.next()) {
                 Post p = new Post();
                 p.setId(rs.getInt("id"));
@@ -92,43 +90,61 @@ public class ServicePost implements IService<Post> {
     }
 
     public List<Post> getTrendingPosts() {
-        List<Post> posts = getAll();
-        ServiceLike serviceLike = new ServiceLike();
-        ServiceShare serviceShare = new ServiceShare();
-        ServiceComment serviceComment = new ServiceComment();
-
-        for (Post post : posts) {
-            int likes = serviceLike.getLikeCount(post.getId());
-            int comments = serviceComment.getCommentsByPost(post.getId()).size();
-            int shares = serviceShare.getShareCount(post.getId());
-            double score = (likes * 2) + (comments * 3) + (shares * 4);
-            post.setTrendingScore(score);
+        List<Post> posts = new ArrayList<>();
+        String qry = "SELECT p.*, " +
+                "COALESCE(l.cnt, 0) AS like_count, " +
+                "COALESCE(c.cnt, 0) AS comment_count, " +
+                "COALESCE(s.cnt, 0) AS share_count " +
+                "FROM posts p " +
+                "LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM likes GROUP BY post_id) l ON p.id = l.post_id " +
+                "LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) c ON p.id = c.post_id " +
+                "LEFT JOIN (SELECT original_post_id, COUNT(*) AS cnt FROM shares GROUP BY original_post_id) s ON p.id = s.original_post_id " +
+                "ORDER BY (COALESCE(l.cnt, 0) * 2 + COALESCE(c.cnt, 0) * 3 + COALESCE(s.cnt, 0) * 4) DESC " +
+                "LIMIT 50";
+        try (Statement st = getConnection().createStatement(); ResultSet rs = st.executeQuery(qry)) {
+            while (rs.next()) {
+                Post p = new Post();
+                p.setId(rs.getInt("id"));
+                p.setUserId(rs.getInt("user_id"));
+                p.setUsername(rs.getString("username"));
+                p.setContent(rs.getString("content"));
+                p.setGameTag(rs.getString("game_tag"));
+                p.setCreatedAt(rs.getTimestamp("created_at"));
+                double score = (rs.getInt("like_count") * 2) + (rs.getInt("comment_count") * 3) + (rs.getInt("share_count") * 4);
+                p.setTrendingScore(score);
+                posts.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching trending posts: " + e.getMessage());
         }
-        posts.sort((a, b) -> Double.compare(b.getTrendingScore(), a.getTrendingScore()));
         return posts;
     }
 
     public List<UserRanking> getUserLeaderboard() {
-        String qry = "SELECT user_id, username FROM posts GROUP BY user_id, username";
         List<UserRanking> rankings = new ArrayList<>();
-        try (Statement st = cnx.createStatement(); ResultSet rs = st.executeQuery(qry)) {
-            ServiceLike serviceLike = new ServiceLike();
-            ServiceComment serviceComment = new ServiceComment();
-            ServiceShare serviceShare = new ServiceShare();
+        String qry = "SELECT " +
+                "p.user_id, " +
+                "COALESCE(p.username, '') AS username, " +
+                "COUNT(DISTINCT p.id) AS total_posts, " +
+                "COALESCE(SUM(l.cnt), 0) AS total_likes, " +
+                "COALESCE(SUM(c.cnt), 0) AS total_comments, " +
+                "COALESCE(SUM(s.cnt), 0) AS total_shares " +
+                "FROM posts p " +
+                "LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM likes GROUP BY post_id) l ON p.id = l.post_id " +
+                "LEFT JOIN (SELECT post_id, COUNT(*) AS cnt FROM comments GROUP BY post_id) c ON p.id = c.post_id " +
+                "LEFT JOIN (SELECT original_post_id, COUNT(*) AS cnt FROM shares GROUP BY original_post_id) s ON p.id = s.original_post_id " +
+                "GROUP BY p.user_id, p.username";
+        try (Statement st = getConnection().createStatement(); ResultSet rs = st.executeQuery(qry)) {
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
                 String username = rs.getString("username");
                 if (username == null || username.isEmpty()) {
                     username = "Player " + userId;
                 }
-                List<Post> userPosts = getPostsByUser(userId);
-                int totalPosts = userPosts.size();
-                int totalLikes = 0, totalComments = 0, totalShares = 0;
-                for (Post p : userPosts) {
-                    totalLikes += serviceLike.getLikeCount(p.getId());
-                    totalComments += serviceComment.getCommentsByPost(p.getId()).size();
-                    totalShares += serviceShare.getShareCount(p.getId());
-                }
+                int totalPosts = rs.getInt("total_posts");
+                int totalLikes = rs.getInt("total_likes");
+                int totalComments = rs.getInt("total_comments");
+                int totalShares = rs.getInt("total_shares");
                 int score = (totalPosts * 5) + (totalLikes * 2) + (totalComments * 1) + (totalShares * 3);
                 String title;
                 if (score < 100) title = "Rookie";
@@ -148,7 +164,7 @@ public class ServicePost implements IService<Post> {
     public List<Post> search(String query) {
         List<Post> list = new ArrayList<>();
         String qry = "SELECT * FROM posts WHERE content LIKE ? OR game_tag LIKE ? OR username LIKE ? ORDER BY created_at DESC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             String searchPattern = "%" + query + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
@@ -206,7 +222,7 @@ public class ServicePost implements IService<Post> {
         }
         baseQry += " ORDER BY created_at DESC";
 
-        try (PreparedStatement ps = cnx.prepareStatement(baseQry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(baseQry)) {
             for (int i = 0; i < params.size(); i++) {
                 ps.setString(i + 1, params.get(i));
             }
@@ -230,7 +246,7 @@ public class ServicePost implements IService<Post> {
     public List<Post> getPostsByGameTag(String gameTag) {
         List<Post> list = new ArrayList<>();
         String qry = "SELECT * FROM posts WHERE game_tag = ? ORDER BY created_at DESC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setString(1, gameTag);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -252,7 +268,7 @@ public class ServicePost implements IService<Post> {
     public List<Post> getPostsByUser(int userId) {
         List<Post> list = new ArrayList<>();
         String qry = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -274,7 +290,7 @@ public class ServicePost implements IService<Post> {
     @Override
     public void delete(int id) {
         String qry = "DELETE FROM posts WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -285,7 +301,7 @@ public class ServicePost implements IService<Post> {
     @Override
     public void update(Post p) {
         String qry = "UPDATE posts SET content = ?, game_tag = ? WHERE id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setString(1, p.getContent());
             ps.setString(2, p.getGameTag());
             ps.setInt(3, p.getId());

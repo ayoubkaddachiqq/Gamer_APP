@@ -9,15 +9,16 @@ import java.util.List;
 
 public class ServiceShare {
 
-    private Connection cnx;
-
     public ServiceShare() {
-        cnx = MyDB.getInstance().getConnection();
+    }
+
+    private Connection getConnection() {
+        return MyDB.getInstance().getConnection();
     }
 
     public void addShare(Share share) {
         String qry = "INSERT INTO shares (original_post_id, user_id, share_text) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, share.getOriginalPostId());
             ps.setInt(2, share.getUserId());
             ps.setString(3, share.getShareText());
@@ -30,7 +31,7 @@ public class ServiceShare {
 
     public int getShareCount(int postId) {
         String qry = "SELECT COUNT(*) FROM shares WHERE original_post_id = ?";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -45,7 +46,7 @@ public class ServiceShare {
     public List<Share> getSharesByPost(int postId) {
         List<Share> list = new ArrayList<>();
         String qry = "SELECT * FROM shares WHERE original_post_id = ? ORDER BY created_at DESC";
-        try (PreparedStatement ps = cnx.prepareStatement(qry)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(qry)) {
             ps.setInt(1, postId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
