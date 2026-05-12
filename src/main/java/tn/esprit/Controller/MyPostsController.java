@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.esprit.api.GameTrendingClient;
 import tn.esprit.entities.ImagePost;
+import tn.esprit.utils.SessionManager;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServicePost;
@@ -42,7 +43,6 @@ public class MyPostsController {
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private GameTrendingClient gameTrendingClient = new GameTrendingClient();
     private Stage primaryStage;
-    private static final int CURRENT_USER_ID = 1;
 
     public void init(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -53,7 +53,7 @@ public class MyPostsController {
         myPostsContainer.getChildren().clear();
 
         List<Post> posts = servicePost.getAll();
-        posts.removeIf(p -> p.getUserId() != CURRENT_USER_ID);
+        posts.removeIf(p -> p.getUserId() != SessionManager.getCurrentUser().getId());
         servicePost.loadImagesForPosts(posts);
 
         if (posts.isEmpty()) {

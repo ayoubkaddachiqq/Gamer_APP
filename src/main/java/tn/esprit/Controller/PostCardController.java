@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import tn.esprit.api.TextFixClient;
 import tn.esprit.api.ToxicityClient;
+import tn.esprit.utils.SessionManager;
 import tn.esprit.api.model.TextFixResult;
 import tn.esprit.api.model.ToxicityResult;
 import tn.esprit.entities.Comment;
@@ -107,7 +108,6 @@ public class PostCardController {
     private UserService userService = new UserService();
     private boolean commentsExpanded = false;
 
-    private static final int CURRENT_USER_ID = 1;
     private static final String DEFAULT_AVATAR = "uploads/profiles/default.png";
 
     private Consumer<Post> onEditCallback;
@@ -237,7 +237,7 @@ public class PostCardController {
     private void handleLike() {
         if (post == null) return;
 
-        serviceLike.toggleLike(post.getId(), CURRENT_USER_ID);
+        serviceLike.toggleLike(post.getId(), SessionManager.getCurrentUser().getId());
         updateLikeCount();
         updateLikeButtonStyle();
     }
@@ -249,7 +249,7 @@ public class PostCardController {
         if (onShareCallback != null) {
             onShareCallback.run();
         } else {
-            serviceShare.addShare(new tn.esprit.entities.Share(post.getId(), CURRENT_USER_ID, "Shared post"));
+            serviceShare.addShare(new tn.esprit.entities.Share(post.getId(), SessionManager.getCurrentUser().getId(), "Shared post"));
             updateShareCount();
         }
     }
@@ -276,7 +276,7 @@ public class PostCardController {
     private void loadCommentAvatar() {
         if (commentAvatarImage == null) return;
 
-        String photoPath = getProfilePhoto(CURRENT_USER_ID);
+        String photoPath = getProfilePhoto(SessionManager.getCurrentUser().getId());
         double size = 28;
 
         if (loadAvatarImage(photoPath, commentAvatarImage, size)) {
@@ -380,7 +380,7 @@ public class PostCardController {
     private void updateLikeButtonStyle() {
         if (likeButton == null || post == null) return;
 
-        boolean hasLiked = serviceLike.hasUserLiked(post.getId(), CURRENT_USER_ID);
+        boolean hasLiked = serviceLike.hasUserLiked(post.getId(), SessionManager.getCurrentUser().getId());
         if (hasLiked) {
             likeButton.getStyleClass().clear();
             likeButton.getStyleClass().add("liked-button");
@@ -511,7 +511,7 @@ public class PostCardController {
     }
 
     private void addComment(String text) {
-        Comment newComment = new Comment(post.getId(), CURRENT_USER_ID, text);
+        Comment newComment = new Comment(post.getId(), SessionManager.getCurrentUser().getId(), text);
         serviceComment.add(newComment);
         commentInput.clear();
         loadComments();

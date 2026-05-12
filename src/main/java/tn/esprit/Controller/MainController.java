@@ -18,8 +18,7 @@ import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServicePost;
 import tn.esprit.services.UserService;
-import tn.esprit.entities.Share;
-import tn.esprit.services.ServiceShare;
+import tn.esprit.utils.SessionManager;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -94,7 +93,6 @@ public class MainController {
     private ServiceShare serviceShare = new ServiceShare();
     private ServiceImagePost serviceImagePost = new ServiceImagePost();
     private UserService userService = new UserService();
-    private static final int CURRENT_USER_ID = 1;
     private static final String DEFAULT_AVATAR = "uploads/profiles/default.png";
 
     private List<File> tempSelectedImages = new ArrayList<>();
@@ -128,11 +126,11 @@ public class MainController {
 
     private void loadHeaderProfile() {
         if (headerUsernameLabel != null) {
-            headerUsernameLabel.setText(getUsername(CURRENT_USER_ID));
+            headerUsernameLabel.setText(getUsername(SessionManager.getCurrentUser().getId()));
         }
 
         if (headerAvatarImage != null) {
-            String photoPath = getProfilePhoto(CURRENT_USER_ID);
+            String photoPath = getProfilePhoto(SessionManager.getCurrentUser().getId());
             File imgFile = new File(photoPath).getAbsoluteFile();
             System.out.println("Loading header avatar from: " + imgFile.getAbsolutePath() + " (exists: " + imgFile.exists() + ")");
             if (imgFile.exists()) {
@@ -159,14 +157,14 @@ public class MainController {
         File selectedFile = fileChooser.showOpenDialog(headerAvatarImage.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                String fileName = "user_" + CURRENT_USER_ID + "_" + System.currentTimeMillis() + "_" + selectedFile.getName();
+                String fileName = "user_" + SessionManager.getCurrentUser().getId() + "_" + System.currentTimeMillis() + "_" + selectedFile.getName();
                 String destPath = "uploads/profiles/" + fileName;
                 Path dest = Paths.get(destPath).toAbsolutePath();
                 Files.copy(selectedFile.toPath(), dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 System.out.println("Saved profile photo to: " + dest.toAbsolutePath());
                 try (java.sql.PreparedStatement ps = tn.esprit.utils.MyDB.getInstance().getConnection().prepareStatement("UPDATE users SET profile_photo = ? WHERE id = ?")) {
                     ps.setString(1, destPath);
-                    ps.setInt(2, CURRENT_USER_ID);
+                    ps.setInt(2, SessionManager.getCurrentUser().getId());
                     ps.executeUpdate();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -446,8 +444,8 @@ public class MainController {
         Post newPost = new Post();
         newPost.setContent(content);
         newPost.setGameTag(selectedGame != null && !selectedGame.trim().isEmpty() ? selectedGame : "General");
-        newPost.setUserId(CURRENT_USER_ID);
-        newPost.setUsername(getUsername(CURRENT_USER_ID));
+        newPost.setUserId(SessionManager.getCurrentUser().getId());
+        newPost.setUsername(getUsername(SessionManager.getCurrentUser().getId()));
 
         int postId = servicePost.add(newPost);
         if (postId > 0) {
@@ -544,7 +542,7 @@ public class MainController {
     }
 
     private void handleSharePost(Post originalPost) {
-        Share share = new Share(originalPost.getId(), CURRENT_USER_ID, "Check out this post!");
+        Share share = new Share(originalPost.getId(), SessionManager.getCurrentUser().getId(), "Check out this post!");
         serviceShare.addShare(share);
 
         String shareContent = "Shared from " +
@@ -554,8 +552,8 @@ public class MainController {
         Post sharedPost = new Post();
         sharedPost.setContent(shareContent);
         sharedPost.setGameTag(originalPost.getGameTag());
-        sharedPost.setUserId(CURRENT_USER_ID);
-        sharedPost.setUsername(getUsername(CURRENT_USER_ID));
+        sharedPost.setUserId(SessionManager.getCurrentUser().getId());
+        sharedPost.setUsername(getUsername(SessionManager.getCurrentUser().getId()));
 
         int sharedPostId = servicePost.add(sharedPost);
 

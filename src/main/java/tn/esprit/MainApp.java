@@ -10,15 +10,14 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Note: The path starts from the 'resources' folder
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainInterface.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1100, 700);
+        Scene scene = new Scene(root, 1000, 700);
 
         primaryStage.setTitle("Team Hub - E-Sport Recruitment");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1100);
+        primaryStage.setMinWidth(1000);
         primaryStage.setMinHeight(700);
         primaryStage.show();
     }

@@ -2,14 +2,21 @@
 -- Run this script to populate the database with realistic test data
 
 -- ========================================
--- 1. USERS (5 users with varying activity levels)
+-- 0. FIRST: run database/migration.sql to add auth columns
 -- ========================================
-INSERT INTO users (id, username, email, password, profile_photo) VALUES
-(1, 'GhostProtocol', 'ghost@example.com', 'password123', 'uploads/profiles/default.png'),
-(2, 'NeonSniper', 'neon@example.com', 'password123', 'uploads/profiles/default.png'),
-(3, 'PixelQueen', 'pixel@example.com', 'password123', 'uploads/profiles/default.png'),
-(4, 'ShadowBlade', 'shadow@example.com', 'password123', 'uploads/profiles/default.png'),
-(5, 'CyberWolf', 'cyber@example.com', 'password123', 'uploads/profiles/default.png');
+
+-- ========================================
+-- 1. USERS (5 users with varying activity levels)
+--    Passwords are stored as plain text for migration compatibility.
+--    On first login, AuthService will detect non-BCrypt passwords and
+--    automatically rehash them using BCrypt.
+-- ========================================
+INSERT INTO users (id, username, email, password_hash, role, status, email_verified, profile_photo) VALUES
+(1, 'GhostProtocol', 'ghost@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(2, 'NeonSniper', 'neon@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(3, 'PixelQueen', 'pixel@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(4, 'ShadowBlade', 'shadow@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(5, 'CyberWolf', 'cyber@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png');
 
 -- ========================================
 -- 2. POSTS (15 posts across different users and timestamps)
