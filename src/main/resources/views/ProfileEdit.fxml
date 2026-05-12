@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.Controller.ProfileEditController"
+           prefWidth="1000" prefHeight="700"
+           style="-fx-background-color: #050814;">
+
+    <VBox alignment="CENTER" spacing="30" style="-fx-padding: 40;">
+
+        <Label text="Edit Profile" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+        <VBox spacing="25" alignment="CENTER"
+              style="-fx-background-color: #0d1c2d; -fx-padding: 35; -fx-background-radius: 16; -fx-border-color: rgba(0,229,255,0.15); -fx-border-radius: 16; -fx-max-width: 500;">
+
+            <StackPane>
+                <Circle radius="45" fill="#1e293b" stroke="#00E5FF" strokeWidth="2"/>
+                <ImageView fx:id="avatarImage" fitWidth="80" fitHeight="80" preserveRatio="true"/>
+            </StackPane>
+
+            <Button text="Change Avatar" onAction="#handleChangeAvatar"
+                    style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-background-radius: 15; -fx-padding: 8 20; -fx-cursor: hand;"/>
+
+            <Label text="DISPLAY NAME" style="-fx-text-fill: #7a8899; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+            <TextField fx:id="displayNameField" promptText="Your display name"
+                       style="-fx-background-color: #12192e; -fx-text-fill: #dde4f0; -fx-prompt-text-fill: #3d4a5c; -fx-border-color: #243044; -fx-border-radius: 7; -fx-background-radius: 7; -fx-padding: 12 14; -fx-font-size: 13px; -fx-max-width: 400;"/>
+
+            <Label text="BIO" style="-fx-text-fill: #7a8899; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+            <TextArea fx:id="bioArea" promptText="Tell us about yourself..."
+                      wrapText="true" prefHeight="100" prefWidth="400" maxWidth="400"
+                      style="-fx-control-inner-background: #12192e; -fx-text-fill: #dde4f0; -fx-prompt-text-fill: #3d4a5c; -fx-border-color: #243044; -fx-border-radius: 7; -fx-background-radius: 7;"/>
+
+            <Label fx:id="errorLabel" text="" wrapText="true" visible="false" managed="false"
+                   style="-fx-text-fill: #ff4d4d; -fx-font-size: 11px;"/>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="Cancel" onAction="#handleCancel"
+                        style="-fx-background-color: transparent; -fx-text-fill: #5a6478; -fx-border-color: #5a6478; -fx-border-radius: 20; -fx-padding: 10 25; -fx-cursor: hand;"/>
+                <Button text="Save" onAction="#handleSave"
+                        style="-fx-background-color: #00E5FF; -fx-text-fill: #050814; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 30; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</StackPane>

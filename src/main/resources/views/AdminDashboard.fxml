@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.Controller.AdminDashboardController"
+           prefWidth="1100" prefHeight="700"
+           style="-fx-background-color: #050814;">
+
+    <VBox spacing="15" style="-fx-padding: 25 30;">
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Button text="← Back to Feed" onAction="#handleBackToFeed"
+                    style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="⚙ Admin Dashboard" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <HBox spacing="20">
+            <VBox spacing="10"
+                  style="-fx-background-color: #0d1c2d; -fx-padding: 20; -fx-background-radius: 12; -fx-border-color: rgba(0,229,255,0.15); -fx-border-radius: 12; -fx-pref-width: 200;">
+                <Label text="Total Users" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;"/>
+                <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: #00E5FF; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+            </VBox>
+            <VBox spacing="10"
+                  style="-fx-background-color: #0d1c2d; -fx-padding: 20; -fx-background-radius: 12; -fx-border-color: rgba(189,0,255,0.15); -fx-border-radius: 12; -fx-pref-width: 200;">
+                <Label text="Total Posts" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;"/>
+                <Label fx:id="totalPostsLabel" text="0" style="-fx-text-fill: #bd00ff; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+            </VBox>
+        </HBox>
+
+        <Label text="USERS" style="-fx-text-fill: #4fc3f7; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <ScrollPane fitToWidth="true" prefHeight="200"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <content>
+                <VBox fx:id="usersContainer" spacing="8" style="-fx-padding: 5 0;"/>
+            </content>
+        </ScrollPane>
+
+        <Label text="AUDIT LOG" style="-fx-text-fill: #ffd700; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <ScrollPane fitToWidth="true" prefHeight="200"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <content>
+                <VBox fx:id="auditContainer" spacing="6" style="-fx-padding: 5 0;"/>
+            </content>
+        </ScrollPane>
+    </VBox>
+</StackPane>

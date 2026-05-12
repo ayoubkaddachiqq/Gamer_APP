@@ -58,6 +58,16 @@ public class LoginController {
     }
 
     @FXML
+    private void goToForgotPassword(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ForgotPassword.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Team Hub - Reset Password");
+        stage.setScene(new Scene(root, 1000, 700));
+        stage.show();
+    }
+
+    @FXML
     private void goToRegister(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Register.fxml"));
         Parent root = loader.load();

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.Controller.AvatarPickerController"
+           prefWidth="700" prefHeight="500"
+           style="-fx-background-color: #050814;">
+
+    <VBox spacing="20" alignment="CENTER" style="-fx-padding: 30;">
+        <Label text="Choose Your Avatar" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+        <GridPane fx:id="avatarGrid" hgap="15" vgap="15" alignment="CENTER"/>
+
+        <HBox spacing="15" alignment="CENTER">
+            <ImageView fx:id="previewImage" fitWidth="60" fitHeight="60" preserveRatio="true"
+                       style="-fx-border-color: #00E5FF; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;"/>
+            <Label fx:id="selectedLabel" text="No avatar selected"
+                   style="-fx-text-fill: #5a6478; -fx-font-size: 12px;"/>
+        </HBox>
+
+        <Label fx:id="errorLabel" text="" wrapText="true" visible="false" managed="false"
+               style="-fx-text-fill: #ff4d4d; -fx-font-size: 11px;"/>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button text="Cancel" onAction="#handleCancel"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a6478; -fx-border-color: #5a6478; -fx-border-radius: 20; -fx-padding: 10 25; -fx-cursor: hand;"/>
+            <Button text="Confirm" onAction="#handleConfirm"
+                    style="-fx-background-color: #00E5FF; -fx-text-fill: #050814; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 10 30; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+</StackPane>

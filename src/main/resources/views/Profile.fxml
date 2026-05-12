@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="tn.esprit.Controller.ProfileController"
+           prefWidth="1000" prefHeight="700"
+           style="-fx-background-color: #050814;">
+
+    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+        <content>
+            <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 40 60;">
+                <HBox alignment="CENTER_LEFT" spacing="15" prefWidth="880">
+                    <Button text="← Back to Feed" onAction="#handleBackToFeed"
+                            style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Logout" onAction="#handleLogout"
+                            style="-fx-background-color: transparent; -fx-text-fill: #ff4d4d; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #ff4d4d44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+                </HBox>
+
+                <VBox spacing="25" alignment="CENTER"
+                      style="-fx-background-color: #0d1c2d; -fx-padding: 35; -fx-background-radius: 16; -fx-border-color: rgba(0,229,255,0.15); -fx-border-radius: 16; -fx-max-width: 600;">
+                    <StackPane>
+                        <Circle radius="50" fill="#1e293b" stroke="#00E5FF" strokeWidth="2"/>
+                        <ImageView fx:id="avatarImage" fitWidth="90" fitHeight="90" preserveRatio="true"
+                                   style="-fx-cursor: hand;"/>
+                    </StackPane>
+
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label fx:id="displayNameLabel" text="Display Name"
+                               style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                        <Label fx:id="usernameLabel" text="@username"
+                               style="-fx-text-fill: #5a6478; -fx-font-size: 13px;"/>
+                    </VBox>
+
+                    <Region prefHeight="1" style="-fx-background-color: rgba(255,255,255,0.08);"/>
+
+                    <GridPane hgap="15" vgap="12" alignment="CENTER_LEFT">
+                        <Label text="Email" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="emailLabel" text="-" style="-fx-text-fill: #dde4f0; -fx-font-size: 13px;" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Role" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="roleLabel" text="-" style="-fx-text-fill: #4fc3f7; -fx-font-size: 13px;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Member Since" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <Label fx:id="memberSinceLabel" text="-" style="-fx-text-fill: #dde4f0; -fx-font-size: 13px;" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Games" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="gamesCountLabel" text="0" style="-fx-text-fill: #dde4f0; -fx-font-size: 13px;" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <Label text="Bio" style="-fx-text-fill: #7a8899; -fx-font-size: 11px;"/>
+                    <Label fx:id="bioLabel" text="No bio yet." wrapText="true" maxWidth="500"
+                           style="-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-background-color: #051424; -fx-padding: 12; -fx-background-radius: 8;"/>
+
+                    <VBox fx:id="riotInfoBox" spacing="8"
+                          style="-fx-background-color: #051424; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: rgba(255,215,0,0.2); -fx-border-radius: 10;">
+                        <Label text="RIOT ACCOUNT" style="-fx-text-fill: #ffd700; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                        <Label fx:id="riotIdLabel" text="-" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                        <Label fx:id="rankLabel" text="-" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+                        <Label fx:id="winRateLabel" text="-" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <HBox spacing="15" alignment="CENTER">
+                        <Button text="✏ Edit Profile" onAction="#handleEditProfile"
+                                style="-fx-background-color: #00E5FF; -fx-text-fill: #050814; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 12 30; -fx-cursor: hand;"/>
+                        <Button text="🎮 Game Library" onAction="#handleGameLibrary"
+                                style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 12 30; -fx-cursor: hand;"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </content>
+    </ScrollPane>
+</StackPane>

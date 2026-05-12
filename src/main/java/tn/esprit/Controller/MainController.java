@@ -13,7 +13,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.esprit.entities.Share;
+import tn.esprit.entities.User;
 import tn.esprit.entities.UserRanking;
+import tn.esprit.entities.UserRole;
 import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
@@ -88,6 +90,9 @@ public class MainController {
     @FXML
     private VBox trendingGamesContainer;
 
+    @FXML
+    private Button adminButton;
+
     private ServicePost servicePost = new ServicePost();
     private GameTrendingClient gameTrendingClient = new GameTrendingClient();
     private TextFixClient textFixClient = new TextFixClient();
@@ -118,6 +123,11 @@ public class MainController {
         filterType.setValue("All");
 
         loadHeaderProfile();
+        if (adminButton != null) {
+            User currentUser = SessionManager.getCurrentUser();
+            adminButton.setVisible(currentUser != null && currentUser.getRole() == UserRole.ADMIN);
+            adminButton.setManaged(currentUser != null && currentUser.getRole() == UserRole.ADMIN);
+        }
         setupSearchBar();
         setupGameTagAutocomplete(gameTagSelector);
         setupGameTagAutocomplete(filterGameTag);
@@ -616,6 +626,36 @@ public class MainController {
     @FXML
     private void handleTournaments() {
         System.out.println("Tournaments clicked - feature coming soon");
+    }
+
+    @FXML
+    private void handleProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));
+            javafx.scene.Parent root = loader.load();
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.setTitle("Team Hub - Profile");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAdminDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminDashboard.fxml"));
+            javafx.scene.Parent root = loader.load();
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("Admin Dashboard - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

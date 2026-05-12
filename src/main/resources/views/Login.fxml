@@ -87,11 +87,16 @@
                    maxWidth="308"
                    visible="false" managed="false"
                    style="-fx-text-fill: #ff4d4d; -fx-font-size: 11px;
-                          -fx-background-color: rgba(255,77,77,0.08);
-                          -fx-background-radius: 6; -fx-padding: 6 10;"/>
+                           -fx-background-color: rgba(255,77,77,0.08);
+                           -fx-background-radius: 6; -fx-padding: 6 10;"/>
+
+            <HBox alignment="CENTER_RIGHT" prefWidth="308">
+                <Button text="Forgot Password?" onAction="#goToForgotPassword"
+                        style="-fx-background-color: transparent; -fx-text-fill: #5a6478; -fx-font-size: 11px; -fx-cursor: hand; -fx-underline: true; -fx-padding: 0; -fx-border-color: transparent;"/>
+            </HBox>
 
             <Button text="Sign In"
-                    onAction="#handleLogin"
+                     onAction="#handleLogin"
                     prefWidth="308" maxWidth="308"
                     style="-fx-background-color: #00E5FF;
                            -fx-text-fill: #050814;
