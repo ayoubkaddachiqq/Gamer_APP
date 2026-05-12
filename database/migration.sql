@@ -4,6 +4,10 @@
 
 SET @db = (SELECT DATABASE());
 
+-- Temporarily disable FK checks so we can rename/drop tables safely
+SET @fk_was_on = (SELECT @@FOREIGN_KEY_CHECKS);
+SET FOREIGN_KEY_CHECKS = 0;
+
 -- ============================================================
 -- STEP 1: Backup old users table if it exists
 --         First drop any leftover backup from a previous failed run
@@ -74,6 +78,44 @@ SET @sql = IF(@user_count = 0,
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ============================================================
--- STEP 5: Clean up backup table
+-- STEP 5: Re-add foreign key constraints to the new users table
+--         (Drop old ones if they exist, create new ones)
+-- ============================================================
+
+-- Drop old FK from posts -> users_old_backup, add new FK -> users
+SET @fk_posts = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'posts' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_posts IS NOT NULL, CONCAT('ALTER TABLE posts DROP FOREIGN KEY ', @fk_posts), 'SELECT \'no fk on posts\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+ALTER TABLE posts ADD CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+-- Drop old FK from comments -> users_old_backup, add new FK -> users
+SET @fk_comments = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'comments' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_comments IS NOT NULL, CONCAT('ALTER TABLE comments DROP FOREIGN KEY ', @fk_comments), 'SELECT \'no fk on comments\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+ALTER TABLE comments ADD CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+-- Drop old FK from likes -> users_old_backup, add new FK -> users
+SET @fk_likes = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'likes' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_likes IS NOT NULL, CONCAT('ALTER TABLE likes DROP FOREIGN KEY ', @fk_likes), 'SELECT \'no fk on likes\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+ALTER TABLE likes ADD CONSTRAINT fk_like_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+-- Drop old FK from shares -> users_old_backup, add new FK -> users
+SET @fk_shares = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'shares' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_shares IS NOT NULL, CONCAT('ALTER TABLE shares DROP FOREIGN KEY ', @fk_shares), 'SELECT \'no fk on shares\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+ALTER TABLE shares ADD CONSTRAINT fk_share_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+-- Drop old FK from imagepost -> users_old_backup if any (imagepost may reference posts, not users directly)
+SET @fk_imagepost = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'imagepost' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_imagepost IS NOT NULL, CONCAT('ALTER TABLE imagepost DROP FOREIGN KEY ', @fk_imagepost), 'SELECT \'no fk on imagepost\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- ============================================================
+-- STEP 6: Clean up backup table
 -- ============================================================
 DROP TABLE IF EXISTS users_old_backup;
+
+-- Re-enable FK checks to their original state
+SET @sql = CONCAT('SET FOREIGN_KEY_CHECKS = ', @fk_was_on);
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
