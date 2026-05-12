@@ -10,6 +10,7 @@ public class User {
     private UserRole role;
     private UserStatus status;
     private boolean emailVerified;
+    private boolean faceEnrolled;
     private String profilePhoto;
     private Instant createdAt;
     private Instant updatedAt;
@@ -45,6 +46,9 @@ public class User {
 
     public boolean isEmailVerified() { return emailVerified; }
     public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+
+    public boolean isFaceEnrolled() { return faceEnrolled; }
+    public void setFaceEnrolled(boolean faceEnrolled) { this.faceEnrolled = faceEnrolled; }
 
     public String getProfilePhoto() { return profilePhoto; }
     public void setProfilePhoto(String profilePhoto) { this.profilePhoto = profilePhoto; }

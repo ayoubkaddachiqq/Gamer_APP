@@ -104,8 +104,17 @@ public class AuthService {
 
                 try (ResultSet keys = ps.getGeneratedKeys()) {
                     if (keys.next()) {
+                        int newId = keys.getInt(1);
+
+                        try (PreparedStatement pp = conn.prepareStatement(
+                            "INSERT INTO user_profiles (user_id, display_name) VALUES (?, ?)")) {
+                            pp.setInt(1, newId);
+                            pp.setString(2, username);
+                            pp.executeUpdate();
+                        }
+
                         User user = new User();
-                        user.setId(keys.getInt(1));
+                        user.setId(newId);
                         user.setUsername(username);
                         user.setEmail(email);
                         user.setPasswordHash(hash);
