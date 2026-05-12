@@ -12,11 +12,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import tn.esprit.entities.Share;
 import tn.esprit.entities.UserRanking;
 import tn.esprit.entities.ImagePost;
 import tn.esprit.entities.Post;
 import tn.esprit.services.ServiceImagePost;
 import tn.esprit.services.ServicePost;
+import tn.esprit.services.ServiceShare;
 import tn.esprit.services.UserService;
 import tn.esprit.utils.SessionManager;
 
