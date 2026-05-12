@@ -629,6 +629,20 @@ public class MainController {
     }
 
     @FXML
+    private void handleAnnonces() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Annonces.fxml"));
+            javafx.scene.Parent root = loader.load();
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Gestion des Annonces");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void handleProfile() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));

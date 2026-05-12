@@ -197,7 +197,55 @@ SET @sql = IF(@fk_imagepost IS NOT NULL, CONCAT('ALTER TABLE imagepost DROP FORE
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ============================================================
--- 9. Cleanup
+-- 9. categorie
+-- ============================================================
+CREATE TABLE IF NOT EXISTS categorie (
+  id INT NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(100) NOT NULL,
+  description VARCHAR(500) NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_categorie_nom (nom)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- 10. annonce
+-- ============================================================
+CREATE TABLE IF NOT EXISTS annonce (
+  id INT NOT NULL AUTO_INCREMENT,
+  titre VARCHAR(200) NOT NULL,
+  description TEXT NULL,
+  jeu VARCHAR(100) NOT NULL,
+  salaire DOUBLE NOT NULL DEFAULT 0,
+  date_publication DATE NULL,
+  statut VARCHAR(20) NOT NULL DEFAULT 'OUVERTE',
+  id_categorie INT NOT NULL,
+  user_id INT NOT NULL,
+  image_path VARCHAR(500) NULL,
+  PRIMARY KEY (id),
+  KEY idx_annonce_categorie (id_categorie),
+  KEY idx_annonce_user (user_id),
+  CONSTRAINT fk_annonce_categorie FOREIGN KEY (id_categorie) REFERENCES categorie (id) ON DELETE CASCADE,
+  CONSTRAINT fk_annonce_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Add user_id to existing annonce table (if it was created by old teamhub.sql without it)
+SET @annonce_exists = (SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'annonce');
+SET @has_user_id = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'annonce' AND COLUMN_NAME = 'user_id');
+SET @sql = IF(@annonce_exists = 1 AND @has_user_id = 0, 'ALTER TABLE annonce ADD COLUMN user_id INT NOT NULL DEFAULT 1', 'SELECT \'user_id already exists\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Add FK on user_id if missing
+SET @fk_exists = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'annonce' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@annonce_exists = 1 AND @fk_exists IS NULL AND @has_user_id = 1, 'ALTER TABLE annonce ADD CONSTRAINT fk_annonce_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE', 'SELECT \'fk already exists\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Add FK on id_categorie if missing (table might exist from old schema with different FK name)
+SET @fk_cat_exists = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'annonce' AND COLUMN_NAME = 'id_categorie' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@annonce_exists = 1 AND @fk_cat_exists IS NULL, 'ALTER TABLE annonce ADD CONSTRAINT fk_annonce_categorie FOREIGN KEY (id_categorie) REFERENCES categorie(id) ON DELETE CASCADE', 'SELECT \'fk_cat already exists\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- ============================================================
+-- 11. Cleanup
 -- ============================================================
 DROP TABLE IF EXISTS users_old_backup;
 SET @sql = CONCAT('SET FOREIGN_KEY_CHECKS = ', @fk_was_on);

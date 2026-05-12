@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" styleClass="gaming-root"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.AnnonceFormController"
+            stylesheets="@../style.css">
+    <center>
+        <VBox alignment="CENTER" spacing="22.0">
+            <padding>
+                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+            </padding>
+            <Label styleClass="gaming-title" text="Annonce" />
+            <GridPane hgap="16.0" maxWidth="640.0" styleClass="form-panel" vgap="16.0">
+                <padding>
+                    <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+                </padding>
+
+                <Label text="Titre" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="tfTitre" promptText="Titre de l'annonce"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label text="Description" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextArea fx:id="tfDescription" prefRowCount="3" promptText="Description" wrapText="true"
+                          style="-fx-control-inner-background: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;"
+                          GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label text="Jeu" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <TextField fx:id="tfJeu" promptText="Nom du jeu"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="Salaire" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField fx:id="tfSalaire" promptText="0.0"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="Statut" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <ComboBox fx:id="cbStatut" prefWidth="420.0"
+                          style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;"
+                          GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                <Label text="Categorie" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <ComboBox fx:id="cbCategorie" prefWidth="420.0"
+                          style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;"
+                          GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                <Label text="Image" textFill="#e6edf3" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <HBox alignment="CENTER_LEFT" spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                    <ImageView fx:id="imagePreview" fitHeight="90.0" fitWidth="140.0" preserveRatio="true"
+                               style="-fx-background-color: #0d1117; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    <VBox spacing="8.0">
+                        <TextField fx:id="tfImagePath" editable="false" prefWidth="260.0" promptText="Aucune image choisie"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                        <Button onAction="#choisirImage" styleClass="btn-secondary" text="Choisir image" />
+                    </VBox>
+                </HBox>
+
+                <HBox alignment="CENTER_RIGHT" spacing="12.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                    <Button onAction="#corrigerOrthographe" styleClass="btn-secondary" text="Corriger orthographe" />
+                    <Button onAction="#annuler" styleClass="btn-secondary" text="Annuler" />
+                    <Button onAction="#enregistrerAnnonce" styleClass="btn-primary" text="Enregistrer" />
+                </HBox>
+            </GridPane>
+        </VBox>
+    </center>
+</BorderPane>

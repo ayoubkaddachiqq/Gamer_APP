@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="gaming-root"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.AnnonceController"
+            stylesheets="@../style.css">
+    <top>
+        <VBox spacing="12.0" styleClass="gaming-header">
+            <padding>
+                <Insets bottom="16.0" left="28.0" right="28.0" top="20.0" />
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button text="← Back to Feed" onAction="#handleBackToFeed"
+                        style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label styleClass="gaming-title" text="Gestion des Annonces" />
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                <TextField fx:id="tfRecherche" prefWidth="320.0" promptText="Rechercher par titre, description ou jeu"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                <TextField fx:id="tfSalaireMin" prefWidth="120.0" promptText="Salaire min"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                <TextField fx:id="tfSalaireMax" prefWidth="120.0" promptText="Salaire max"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                <Button onAction="#rechercherAnnonce" styleClass="btn-primary" text="Rechercher" />
+                <Button onAction="#ajouterAnnonce" styleClass="btn-primary" text="+ Nouvelle Annonce" />
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox alignment="TOP_CENTER" fillWidth="true" styleClass="gaming-content">
+            <padding>
+                <Insets bottom="28.0" left="28.0" right="28.0" top="28.0" />
+            </padding>
+            <ListView fx:id="listAnnonces" prefHeight="620.0" prefWidth="1244.0" VBox.vgrow="ALWAYS" />
+        </VBox>
+    </center>
+</BorderPane>
