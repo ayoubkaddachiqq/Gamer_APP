@@ -1,22 +1,19 @@
 -- Test Data for Trending Feed & Leaderboard
 -- Run this script to populate the database with realistic test data
-
--- ========================================
--- 0. FIRST: run database/migration.sql to add auth columns
--- ========================================
+-- NOTE: The migration.sql script already inserts test users.
+-- Run this only if you skipped migration.sql or want to reset user data.
 
 -- ========================================
 -- 1. USERS (5 users with varying activity levels)
---    Passwords are stored as plain text for migration compatibility.
---    On first login, AuthService will detect non-BCrypt passwords and
---    automatically rehash them using BCrypt.
+--    Passwords are BCrypt-hashed. All test users use: password123
+--    Hash generated with BCrypt cost 12
 -- ========================================
 INSERT INTO users (id, username, email, password_hash, role, status, email_verified, profile_photo) VALUES
-(1, 'GhostProtocol', 'ghost@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
-(2, 'NeonSniper', 'neon@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
-(3, 'PixelQueen', 'pixel@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
-(4, 'ShadowBlade', 'shadow@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
-(5, 'CyberWolf', 'cyber@example.com', 'password123', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png');
+(1, 'GhostProtocol', 'ghost@example.com', '$2a$12$4y/i8djOcnj6rRKZVtWY4eWCpbl0HIHc5csxxIJu/wYAGKVf5Fyhq', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(2, 'NeonSniper', 'neon@example.com', '$2a$12$4y/i8djOcnj6rRKZVtWY4eWCpbl0HIHc5csxxIJu/wYAGKVf5Fyhq', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(3, 'PixelQueen', 'pixel@example.com', '$2a$12$4y/i8djOcnj6rRKZVtWY4eWCpbl0HIHc5csxxIJu/wYAGKVf5Fyhq', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(4, 'ShadowBlade', 'shadow@example.com', '$2a$12$4y/i8djOcnj6rRKZVtWY4eWCpbl0HIHc5csxxIJu/wYAGKVf5Fyhq', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png'),
+(5, 'CyberWolf', 'cyber@example.com', '$2a$12$4y/i8djOcnj6rRKZVtWY4eWCpbl0HIHc5csxxIJu/wYAGKVf5Fyhq', 'PLAYER', 'ACTIVE', TRUE, 'uploads/profiles/default.png');
 
 -- ========================================
 -- 2. POSTS (15 posts across different users and timestamps)

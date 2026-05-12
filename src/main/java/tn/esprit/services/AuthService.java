@@ -36,30 +36,26 @@ public class AuthService {
                     throw new IllegalArgumentException("Invalid email or password");
                 }
 
-                if (!passwordHasher.matches(password, storedHash)) {
-                    if (isBcryptHash(storedHash)) {
-                        throw new IllegalArgumentException("Invalid email or password");
-                    }
-                    if (!password.equals(storedHash)) {
-                        throw new IllegalArgumentException("Invalid email or password");
-                    }
-                    rehashPassword(conn, user.getId(), password);
+                if (passwordHasher.matches(password, storedHash)) {
+                    SessionManager.setCurrentUser(user);
+                    return user;
                 }
 
-                if (user.getStatus() == UserStatus.LOCKED) {
-                    throw new IllegalArgumentException("Account is locked");
+                if (storedHash.startsWith("$2a$") || storedHash.startsWith("$2b$")) {
+                    throw new IllegalArgumentException("Invalid email or password");
                 }
 
+                if (!password.equals(storedHash)) {
+                    throw new IllegalArgumentException("Invalid email or password");
+                }
+
+                rehashPassword(conn, user.getId(), password);
                 SessionManager.setCurrentUser(user);
                 return user;
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Database error during login", e);
         }
-    }
-
-    private boolean isBcryptHash(String hash) {
-        return hash.startsWith("$2a$") || hash.startsWith("$2b$") || hash.startsWith("$2y$");
     }
 
     private void rehashPassword(Connection conn, int userId, String plainPassword) throws SQLException {
@@ -159,11 +155,7 @@ public class AuthService {
         user.setUsername(rs.getString("username"));
         user.setEmail(rs.getString("email"));
 
-        String hash = rs.getString("password_hash");
-        if (hash == null || hash.isEmpty()) {
-            hash = rs.getString("password");
-        }
-        user.setPasswordHash(hash);
+        user.setPasswordHash(rs.getString("password_hash"));
 
         try {
             user.setRole(UserRole.valueOf(rs.getString("role")));
