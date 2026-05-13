@@ -245,7 +245,66 @@ SET @sql = IF(@annonce_exists = 1 AND @fk_cat_exists IS NULL, 'ALTER TABLE annon
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ============================================================
--- 11. Cleanup
+-- 11. produit (marketplace)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS produit (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    nom         VARCHAR(150) NOT NULL,
+    description TEXT,
+    prix        DECIMAL(10,2) NOT NULL CHECK (prix >= 0),
+    stock       INT NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    categorie   VARCHAR(100),
+    image_path  VARCHAR(500),
+    actif       BOOLEAN NOT NULL DEFAULT TRUE,
+    user_id     INT NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_produit_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_produit_nom ON produit (nom);
+CREATE INDEX idx_produit_actif ON produit (actif);
+
+-- ============================================================
+-- 12. panier (marketplace)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS panier (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    reference   VARCHAR(100) UNIQUE,
+    user_id     INT NOT NULL,
+    statut      VARCHAR(50) NOT NULL DEFAULT 'ACTIF',
+    total       DECIMAL(10,2) NOT NULL DEFAULT 0.00 CHECK (total >= 0),
+    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_panier_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_panier_statut ON panier (statut);
+
+-- ============================================================
+-- 13. produit_panier (marketplace)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS produit_panier (
+    panier_id     INT NOT NULL,
+    produit_id    INT NOT NULL,
+    quantite      INT NOT NULL CHECK (quantite > 0),
+    prix_unitaire DECIMAL(10,2) NOT NULL CHECK (prix_unitaire >= 0),
+    sous_total    DECIMAL(10,2) NOT NULL CHECK (sous_total >= 0),
+    added_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (panier_id, produit_id),
+    CONSTRAINT fk_produit_panier_panier FOREIGN KEY (panier_id) REFERENCES panier(id) ON DELETE CASCADE,
+    CONSTRAINT fk_produit_panier_produit FOREIGN KEY (produit_id) REFERENCES produit(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insert seed products
+INSERT INTO produit (nom, description, prix, stock, categorie, actif, user_id) VALUES
+    ('Clavier Mecanique', 'Clavier RGB pour gaming', 249.90, 25, 'Accessoires', TRUE, 1),
+    ('Souris Sans Fil', 'Souris ergonomique rechargeable', 89.90, 40, 'Accessoires', TRUE, 1),
+    ('Casque Audio', 'Casque stereo avec micro integre', 159.50, 15, 'Audio', TRUE, 1)
+ON DUPLICATE KEY UPDATE nom = VALUES(nom);
+
+-- ============================================================
+-- 14. Cleanup
 -- ============================================================
 DROP TABLE IF EXISTS users_old_backup;
 SET @sql = CONCAT('SET FOREIGN_KEY_CHECKS = ', @fk_was_on);

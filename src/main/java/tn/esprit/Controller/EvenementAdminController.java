@@ -1,17 +1,15 @@
 package tn.esprit.Controller;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.entities.Evenement;
 import tn.esprit.entities.TypeEvenement;
@@ -21,18 +19,23 @@ import tn.esprit.services.EvenementService;
 import tn.esprit.services.TypeEvenementService;
 import tn.esprit.utils.SessionManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class EvenementController {
+public class EvenementAdminController {
 
-    @FXML private FlowPane eventsFlow;
+    @FXML private TableView<Evenement> tableEvenements;
+    @FXML private TableColumn<Evenement, String> colTitre;
+    @FXML private TableColumn<Evenement, String> colType;
+    @FXML private TableColumn<Evenement, String> colLieu;
+    @FXML private TableColumn<Evenement, Date> colDateDebut;
+    @FXML private TableColumn<Evenement, Date> colDateFin;
+    @FXML private TableColumn<Evenement, Void> colActions;
     @FXML private TextField tfRechercheTitre;
     @FXML private TextField tfRechercheLieu;
-    @FXML private Label lbEmptyState;
     @FXML private Button btnAjouter;
     @FXML private Button btnAdminInscriptionsFooter;
     @FXML private Button adminButton;
@@ -46,8 +49,6 @@ public class EvenementController {
     private void initialize() {
         User currentUser = SessionManager.getCurrentUser();
         boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
-        btnAjouter.setVisible(isAdmin);
-        btnAjouter.setManaged(isAdmin);
         if (btnAdminInscriptionsFooter != null) {
             btnAdminInscriptionsFooter.setVisible(isAdmin);
             btnAdminInscriptionsFooter.setManaged(isAdmin);
@@ -56,7 +57,68 @@ public class EvenementController {
             adminButton.setVisible(isAdmin);
             adminButton.setManaged(isAdmin);
         }
+
+        colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
+        colType.setCellValueFactory(cellData -> {
+            int typeId = cellData.getValue().getTypeId();
+            String libelle = "Inconnu";
+            if (typesEvenement != null) {
+                libelle = typesEvenement.stream()
+                        .filter(t -> t.getId() == typeId)
+                        .map(TypeEvenement::getLibelle)
+                        .findFirst()
+                        .orElse("Inconnu");
+            }
+            return new SimpleStringProperty(libelle);
+        });
+        colLieu.setCellValueFactory(new PropertyValueFactory<>("lieu"));
+        colDateDebut.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
+        colDateFin.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
+
+        colDateDebut.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : dateFormat.format(item));
+            }
+        });
+        colDateFin.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : dateFormat.format(item));
+            }
+        });
+
+        tableEvenements.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        configurerActions();
         chargerEvenements();
+    }
+
+    private void configurerActions() {
+        colActions.setCellFactory(column -> new TableCell<>() {
+            private final Button btnDetails = new Button("Details");
+            private final Button btnModifier = new Button("Modifier");
+            private final Button btnSupprimer = new Button("Suppr.");
+            private final HBox actions = new HBox(8, btnDetails, btnModifier, btnSupprimer);
+
+            {
+                actions.setAlignment(Pos.CENTER);
+                btnDetails.getStyleClass().addAll("success-button", "compact-action-button");
+                btnModifier.getStyleClass().addAll("warning-button", "compact-action-button");
+                btnSupprimer.getStyleClass().addAll("danger-button", "compact-action-button");
+
+                btnDetails.setOnAction(event -> ouvrirDetails(getTableView().getItems().get(getIndex())));
+                btnModifier.setOnAction(event -> ouvrirModifier(getTableView().getItems().get(getIndex())));
+                btnSupprimer.setOnAction(event -> supprimerEvenement(getTableView().getItems().get(getIndex())));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : actions);
+            }
+        });
     }
 
     private void chargerEvenements() {
@@ -64,22 +126,9 @@ public class EvenementController {
             typesEvenement = typeService.getAll();
             typeService.garantirTypesParDefaut();
             List<Evenement> liste = evenementService.getAll();
-            afficherEvenements(liste);
+            tableEvenements.setItems(FXCollections.observableArrayList(liste));
         } catch (Exception e) {
             afficherErreur(e.getMessage());
-        }
-    }
-
-    private void afficherEvenements(List<Evenement> evenements) {
-        eventsFlow.getChildren().clear();
-        boolean empty = evenements == null || evenements.isEmpty();
-        lbEmptyState.setVisible(empty);
-        lbEmptyState.setManaged(empty);
-
-        if (evenements != null) {
-            for (Evenement evenement : evenements) {
-                eventsFlow.getChildren().add(creerCarteEvenement(evenement));
-            }
         }
     }
 
@@ -96,7 +145,7 @@ public class EvenementController {
             } else {
                 liste = evenementService.getAll();
             }
-            afficherEvenements(liste);
+            tableEvenements.setItems(FXCollections.observableArrayList(liste));
         } catch (Exception e) {
             afficherErreur(e.getMessage());
         }
@@ -109,124 +158,13 @@ public class EvenementController {
         chargerEvenements();
     }
 
-    private VBox creerCarteEvenement(Evenement evenement) {
-        User currentUser = SessionManager.getCurrentUser();
-        boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
-
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(260);
-        imageView.setFitHeight(146);
-        imageView.setPreserveRatio(false);
-
-        StackPane imageBox = new StackPane();
-        imageBox.setPrefSize(260, 146);
-        imageBox.setMinSize(260, 146);
-        imageBox.setMaxSize(260, 146);
-        imageBox.getStyleClass().add("event-card-image");
-
-        Image image = chargerImage(evenement.getImage());
-        if (image != null) {
-            imageView.setImage(image);
-            imageBox.getChildren().add(imageView);
-        } else {
-            Label fallback = new Label("Aucune image");
-            fallback.getStyleClass().add("event-image-placeholder");
-            imageBox.getChildren().add(fallback);
-        }
-
-        Label titre = new Label(valeurOuTiret(evenement.getTitre()));
-        titre.getStyleClass().add("event-card-title");
-        titre.setWrapText(true);
-
-        Label lieu = new Label(valeurOuTiret(evenement.getLieu()));
-        lieu.getStyleClass().add("event-card-detail");
-        lieu.setWrapText(true);
-
-        Label date = new Label(evenement.getDateDebut() == null ? "-" : dateFormat.format(evenement.getDateDebut()));
-        date.getStyleClass().add("event-card-detail");
-        date.setWrapText(true);
-
-        Label type = new Label(libelleType(evenement.getTypeId()));
-        type.getStyleClass().add("status-pill");
-
-        Label statut = new Label(valeurOuTiret(evenement.getStatut()));
-        statut.getStyleClass().add("status-pill");
-
-        Label capacite = new Label(evenement.getNbParticipantsMax() + " participants max");
-        capacite.getStyleClass().add("event-card-detail");
-
-        HBox badges = new HBox(8, type, statut);
-        badges.setAlignment(Pos.CENTER_LEFT);
-
-        HBox actions = new HBox(8);
-        actions.setAlignment(Pos.CENTER_LEFT);
-
-        Button btnDetails = new Button("Details");
-        btnDetails.getStyleClass().addAll("success-button", "compact-action-button");
-        btnDetails.setOnAction(e -> ouvrirDetails(evenement));
-
-        Button btnModifier = new Button("Modifier");
-        btnModifier.getStyleClass().addAll("warning-button", "compact-action-button");
-        btnModifier.setVisible(isAdmin);
-        btnModifier.setManaged(isAdmin);
-        btnModifier.setOnAction(e -> ouvrirModifier(evenement));
-
-        Button btnSupprimer = new Button("Suppr.");
-        btnSupprimer.getStyleClass().addAll("danger-button", "compact-action-button");
-        btnSupprimer.setVisible(isAdmin);
-        btnSupprimer.setManaged(isAdmin);
-        btnSupprimer.setOnAction(e -> supprimerEvenement(evenement));
-
-        actions.getChildren().addAll(btnDetails, btnModifier, btnSupprimer);
-
-        VBox details = new VBox(8, titre, badges, lieu, date, capacite, actions);
-        details.getStyleClass().add("event-card-body");
-
-        VBox card = new VBox(imageBox, details);
-        card.getStyleClass().add("event-card");
-        card.setPrefWidth(260);
-        card.setMinWidth(260);
-        card.setMaxWidth(260);
-        return card;
-    }
-
-    private Image chargerImage(String chemin) {
-        if (chemin == null || chemin.isBlank()) return null;
-        try {
-            if (chemin.startsWith("/")) {
-                Image img = new Image(getClass().getResourceAsStream(chemin), 260, 146, true, true);
-                return img.isError() ? null : img;
-            }
-            String source = chemin.startsWith("http://") || chemin.startsWith("https://") || chemin.startsWith("file:")
-                    ? chemin
-                    : new File(chemin).toURI().toString();
-            Image image = new Image(source, 260, 146, false, true, false);
-            return image.isError() ? null : image;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private String libelleType(int typeId) {
-        if (typesEvenement == null) return "Inconnu";
-        return typesEvenement.stream()
-                .filter(t -> t.getId() == typeId)
-                .map(TypeEvenement::getLibelle)
-                .findFirst()
-                .orElse("Inconnu");
-    }
-
-    private String valeurOuTiret(String valeur) {
-        return valeur == null || valeur.isBlank() ? "-" : valeur;
-    }
-
     @FXML
     private void ouvrirAjouter() {
         try {
             EvenementFormController.evenementToEdit = null;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/EvenementForm.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Nouvel Evenement");
             stage.show();
@@ -241,7 +179,7 @@ public class EvenementController {
             EvenementFormController.evenementToEdit = evenement;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/EvenementForm.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Modifier Evenement");
             stage.show();
@@ -273,7 +211,7 @@ public class EvenementController {
             DetailsEvenementController.evenementAffiche = evenement;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/DetailsEvenement.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 800));
             stage.setTitle("Team Hub - Details de l'evenement");
             stage.show();
@@ -287,7 +225,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminInscription.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Administration des inscriptions");
             stage.show();
@@ -301,7 +239,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GestionInscription.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Inscription aux evenements");
             stage.show();
@@ -315,7 +253,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainInterface.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
@@ -336,7 +274,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Annonces.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Annonces");
             stage.show();
@@ -350,7 +288,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Profile");
             stage.show();
@@ -364,7 +302,7 @@ public class EvenementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminDashboard.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) eventsFlow.getScene().getWindow();
+            Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
             stage.setMinWidth(1100);
             stage.setMinHeight(700);

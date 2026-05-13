@@ -8,21 +8,52 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="gaming-root"
+<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="app-shell"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.Controller.AnnonceController"
-            stylesheets="@../style.css">
+            stylesheets="@../styles/gaming-theme.css, @../style.css">
+    <left>
+        <VBox spacing="8" styleClass="sidebar" prefWidth="220">
+            <padding><Insets top="24" right="14" bottom="20" left="14"/></padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox>
+                    <Label text="TEAM HUB" styleClass="brand-title"/>
+                    <Label text="E-Sport Platform" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
+            <Region prefHeight="18"/>
+            <Button text="🏠  Home" onAction="#handleHome" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📋  My Posts" onAction="#handleMyPosts" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📢  Annonces" onAction="#handleAnnonces" styleClass="nav-button-active" maxWidth="Infinity"/>
+            <Button text="📅  Evenements" onAction="#handleEvenements" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="🛒  Marketplace" onAction="#handleMarketplace" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region prefHeight="18"/>
+            <Button text="👤  Profile" onAction="#handleProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="adminButton" text="🔧  Admin" onAction="#handleAdmin" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox spacing="8" styleClass="glass-panel">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="MODE E-SPORT" style="-fx-text-fill: #d8b4fe; -fx-font-size: 10px; -fx-font-weight: 800;"/>
+                <Label text="Stay competitive, track your stats &amp; rank up." wrapText="true"
+                       style="-fx-text-fill: #9ca9c6; -fx-font-size: 11px;"/>
+            </VBox>
+            <Region prefHeight="10"/>
+            <Button text="🚪  Logout" onAction="#handleLogout" styleClass="nav-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
     <top>
         <VBox spacing="12.0" styleClass="gaming-header">
             <padding>
                 <Insets bottom="16.0" left="28.0" right="28.0" top="20.0" />
             </padding>
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Button text="← Back to Feed" onAction="#handleBackToFeed"
-                        style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label styleClass="gaming-title" text="Gestion des Annonces" />
                 <Region HBox.hgrow="ALWAYS"/>

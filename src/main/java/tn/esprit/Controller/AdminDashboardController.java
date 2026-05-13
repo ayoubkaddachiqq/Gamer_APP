@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.entities.AuditEvent;
 import tn.esprit.entities.User;
+import tn.esprit.entities.UserRole;
 import tn.esprit.services.AuditService;
 import tn.esprit.utils.MyDB;
 import tn.esprit.utils.SessionManager;
@@ -30,13 +31,18 @@ public class AdminDashboardController {
     @FXML private Label totalPostsLabel;
     @FXML private VBox usersContainer;
     @FXML private VBox auditContainer;
+    @FXML private Button adminButton;
 
     @FXML
     public void initialize() {
         User currentUser = SessionManager.getCurrentUser();
-        if (currentUser == null || currentUser.getRole() != tn.esprit.entities.UserRole.ADMIN) {
+        if (currentUser == null || currentUser.getRole() != UserRole.ADMIN) {
             showError("Access denied. Admin only.");
             return;
+        }
+        if (adminButton != null) {
+            adminButton.setVisible(true);
+            adminButton.setManaged(true);
         }
         loadStats();
         loadUsers();
@@ -129,6 +135,127 @@ public class AdminDashboardController {
         stage.setMinWidth(1100);
         stage.setMinHeight(700);
         stage.setTitle("Team Hub - E-Sport Recruitment");
+        stage.show();
+    }
+
+    @FXML
+    private void handleHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainInterface.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("Team Hub - E-Sport Recruitment");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMyPosts(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MyPosts.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("My Posts - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAnnonces(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Annonces.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Gestion des Annonces");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleEvenements(ActionEvent event) {
+        try {
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/EvenementsAdmin.fxml" : "/views/Evenements.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMarketplace(ActionEvent event) {
+        try {
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/MarketplaceAdmin.fxml" : "/views/Marketplace.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Marketplace");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleProfile(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.setTitle("Team Hub - Profile");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAdmin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminDashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("Admin Dashboard - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) throws IOException {
+        SessionManager.logout();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 1000, 700));
+        stage.setTitle("Team Hub - Login");
         stage.show();
     }
 

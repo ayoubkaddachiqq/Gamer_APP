@@ -2,6 +2,7 @@ package tn.esprit.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -645,11 +646,31 @@ public class MainController {
     @FXML
     private void handleEvenements() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Evenements.fxml"));
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/EvenementsAdmin.fxml" : "/views/Evenements.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             javafx.scene.Parent root = loader.load();
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMarketplace() {
+        try {
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/MarketplaceAdmin.fxml" : "/views/Marketplace.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            javafx.scene.Parent root = loader.load();
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Marketplace");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -699,5 +720,20 @@ public class MainController {
     @FXML
     private void handleSettings() {
         System.out.println("Settings clicked - feature coming soon");
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            SessionManager.logout();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) feedContainer.getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.setTitle("Team Hub - Login");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

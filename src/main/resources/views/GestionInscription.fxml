@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane"
+            prefHeight="800.0"
+            prefWidth="1300.0"
+            styleClass="app-shell"
+            stylesheets="@../styles/gaming-theme.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.GestionInscriptionController">
+
+    <left>
+        <VBox prefWidth="230" spacing="20" styleClass="sidebar">
+            <padding>
+                <Insets top="28" right="18" bottom="28" left="18"/>
+            </padding>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox spacing="4">
+                    <Label text="Team Hub" styleClass="brand-title"/>
+                    <Label text="User registration" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
+            <VBox spacing="8">
+                <Button fx:id="btnRetourEvenements" maxWidth="Infinity" text="Gestion des evenements" onAction="#retour" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Inscription aux evenements" styleClass="nav-button-active"/>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox spacing="6" styleClass="glass-panel">
+                <padding>
+                    <Insets top="14" right="14" bottom="14" left="14"/>
+                </padding>
+                <Label text="Mode e-sport" styleClass="section-title"/>
+                <Label text="Choisis une carte evenement, puis confirme ton inscription." wrapText="true" styleClass="muted-label"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="18" styleClass="content">
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Inscription aux evenements" styleClass="page-title"/>
+                    <Label text="Choisis une carte evenement, puis confirme ton inscription." styleClass="page-subtitle"/>
+                </VBox>
+                <Button fx:id="btnRetourHeader" text="Retour" onAction="#retour" styleClass="secondary-button"/>
+            </HBox>
+
+            <HBox spacing="16" VBox.vgrow="ALWAYS">
+                <VBox spacing="14" styleClass="glass-panel" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Tous les evenements" styleClass="section-title"/>
+                            <Label text="Photo en haut, details en dessous, selection au clic." styleClass="page-subtitle"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox alignment="BOTTOM_LEFT" spacing="12">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Recherche par titre" styleClass="form-label"/>
+                            <TextField fx:id="tfRechercheTitre" promptText="Titre de l'evenement"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Recherche par lieu" styleClass="form-label"/>
+                            <TextField fx:id="tfRechercheLieu" promptText="Lieu"/>
+                        </VBox>
+                        <HBox spacing="10" alignment="BOTTOM_LEFT">
+                            <Button text="Rechercher" onAction="#rechercher" styleClass="primary-button"/>
+                            <Button text="Reinitialiser" onAction="#reinitialiser" styleClass="secondary-button"/>
+                        </HBox>
+                    </HBox>
+
+                    <Label fx:id="lbEmptyState" text="Aucun evenement disponible." styleClass="muted-label"/>
+
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="event-scroll" VBox.vgrow="ALWAYS">
+                        <content>
+                            <FlowPane fx:id="eventsFlow" hgap="14" vgap="14" prefWrapLength="680"/>
+                        </content>
+                    </ScrollPane>
+                </VBox>
+
+                <VBox spacing="16" prefWidth="310" maxWidth="330" styleClass="glass-panel">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
+                    <VBox spacing="6">
+                        <Label text="Inscription" styleClass="section-title"/>
+                        <Label fx:id="lbSelection" wrapText="true" styleClass="page-subtitle"/>
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label text="Utilisateur ID" styleClass="form-label"/>
+                        <TextField fx:id="tfUtilisateurId" promptText="Ex: 42"/>
+                    </VBox>
+
+                    <Button fx:id="btnInscrire" maxWidth="Infinity" text="S'inscrire" onAction="#inscrire" styleClass="primary-button"/>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+
+                    <VBox spacing="8" styleClass="user-register-note">
+                        <Label text="Statut" styleClass="muted-label"/>
+                        <Label text="En attente" styleClass="status-pill"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.esprit.entities.Annonce;
 import tn.esprit.entities.User;
+import tn.esprit.entities.UserRole;
 import tn.esprit.services.AnnonceService;
 import tn.esprit.services.CategorieService;
 import tn.esprit.utils.SessionManager;
@@ -37,6 +38,7 @@ public class AnnonceController {
     @FXML private TextField tfRecherche;
     @FXML private TextField tfSalaireMin;
     @FXML private TextField tfSalaireMax;
+    @FXML private Button adminButton;
 
     private final AnnonceService annonceService = new AnnonceService();
     private final CategorieService categorieService = new CategorieService();
@@ -46,6 +48,11 @@ public class AnnonceController {
 
     @FXML
     private void initialize() {
+        if (adminButton != null) {
+            User currentUser = SessionManager.getCurrentUser();
+            adminButton.setVisible(currentUser != null && currentUser.getRole() == UserRole.ADMIN);
+            adminButton.setManaged(currentUser != null && currentUser.getRole() == UserRole.ADMIN);
+        }
         listAnnonces.setItems(annoncesFiltrees);
         listAnnonces.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -109,16 +116,6 @@ public class AnnonceController {
         btnSupprimer.setMaxWidth(Double.MAX_VALUE);
         btnModifier.getStyleClass().add("btn-secondary");
         btnSupprimer.getStyleClass().add("btn-danger");
-
-        User currentUser = SessionManager.getCurrentUser();
-        boolean isOwner = currentUser != null && currentUser.getId() == annonce.getUserId();
-        boolean isAdmin = currentUser != null && currentUser.getRole() == tn.esprit.entities.UserRole.ADMIN;
-        boolean canModify = isOwner || isAdmin;
-
-        btnModifier.setVisible(canModify);
-        btnModifier.setManaged(canModify);
-        btnSupprimer.setVisible(canModify);
-        btnSupprimer.setManaged(canModify);
 
         btnModifier.setOnAction(event -> {
             AnnonceFormController.annonceToEdit = annonce;
@@ -274,6 +271,127 @@ public class AnnonceController {
         stage.setMinWidth(1100);
         stage.setMinHeight(700);
         stage.setTitle("Team Hub - E-Sport Recruitment");
+        stage.show();
+    }
+
+    @FXML
+    private void handleHome(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainInterface.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("Team Hub - E-Sport Recruitment");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMyPosts(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MyPosts.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("My Posts - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAnnonces(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Annonces.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Gestion des Annonces");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleEvenements(ActionEvent event) {
+        try {
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/EvenementsAdmin.fxml" : "/views/Evenements.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleMarketplace(ActionEvent event) {
+        try {
+            User currentUser = SessionManager.getCurrentUser();
+            boolean isAdmin = currentUser != null && currentUser.getRole() == UserRole.ADMIN;
+            String fxml = isAdmin ? "/views/MarketplaceAdmin.fxml" : "/views/Marketplace.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1300, 760));
+            stage.setTitle("Team Hub - Marketplace");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleProfile(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.setTitle("Team Hub - Profile");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAdmin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AdminDashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 1100, 700));
+            stage.setMinWidth(1100);
+            stage.setMinHeight(700);
+            stage.setTitle("Admin Dashboard - Team Hub");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogout(ActionEvent event) throws IOException {
+        SessionManager.logout();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Login.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 1000, 700));
+        stage.setTitle("Team Hub - Login");
         stage.show();
     }
 

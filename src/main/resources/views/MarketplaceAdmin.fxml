@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="app-shell"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.MarketplaceAdminController"
+            stylesheets="@../styles/gaming-theme.css">
+    <left>
+        <VBox spacing="8" styleClass="sidebar" prefWidth="220">
+            <padding><Insets top="24" right="14" bottom="20" left="14"/></padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox>
+                    <Label text="TEAM HUB" styleClass="brand-title"/>
+                    <Label text="E-Sport Platform" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
+            <Region prefHeight="18"/>
+            <Button text="🏠  Home" onAction="#handleHome" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📋  My Posts" onAction="#handleMyPosts" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📢  Annonces" onAction="#handleAnnonces" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📅  Evenements" onAction="#handleEvenements" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="🛒  Marketplace" onAction="#handleMarketplace" styleClass="nav-button-active" maxWidth="Infinity"/>
+            <Region prefHeight="18"/>
+            <Button text="👤  Profile" onAction="#handleProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="adminButton" text="🔧  Admin" onAction="#handleAdmin" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox spacing="8" styleClass="glass-panel">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="MODE E-SPORT" style="-fx-text-fill: #d8b4fe; -fx-font-size: 10px; -fx-font-weight: 800;"/>
+                <Label text="Stay competitive, track your stats &amp; rank up." wrapText="true"
+                       style="-fx-text-fill: #9ca9c6; -fx-font-size: 11px;"/>
+            </VBox>
+            <Region prefHeight="10"/>
+            <Button text="🚪  Logout" onAction="#handleLogout" styleClass="nav-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="16" styleClass="gaming-content">
+            <padding><Insets bottom="28" left="28" right="28" top="20"/></padding>
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Marketplace Admin" styleClass="gaming-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox spacing="5"
+                      style="-fx-background-color: #0d1c2d; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: rgba(0,229,255,0.15); -fx-border-radius: 10; -fx-pref-width: 140;">
+                    <Label text="Total Products" style="-fx-text-fill: #7a8899; -fx-font-size: 10px;"/>
+                    <Label fx:id="totalProductsLabel" text="0" style="-fx-text-fill: #00E5FF; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="5"
+                      style="-fx-background-color: #0d1c2d; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: rgba(189,0,255,0.15); -fx-border-radius: 10; -fx-pref-width: 140;">
+                    <Label text="Categories" style="-fx-text-fill: #7a8899; -fx-font-size: 10px;"/>
+                    <Label fx:id="totalCategoriesLabel" text="0" style="-fx-text-fill: #bd00ff; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="5"
+                      style="-fx-background-color: #0d1c2d; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: rgba(255,215,0,0.15); -fx-border-radius: 10; -fx-pref-width: 140;">
+                    <Label text="Total Carts" style="-fx-text-fill: #7a8899; -fx-font-size: 10px;"/>
+                    <Label fx:id="totalCartsLabel" text="0" style="-fx-text-fill: #ffd700; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox spacing="5"
+                      style="-fx-background-color: #0d1c2d; -fx-padding: 14; -fx-background-radius: 10; -fx-border-color: rgba(248,113,113,0.25); -fx-border-radius: 10; -fx-pref-width: 140;">
+                    <Label text="Low Stock" style="-fx-text-fill: #7a8899; -fx-font-size: 10px;"/>
+                    <Label fx:id="lowStockLabel" text="0" style="-fx-text-fill: #f87171; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Search products..." prefWidth="220"
+                           style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                <ComboBox fx:id="categoryComboBox" prefWidth="140"
+                          style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                <ComboBox fx:id="sortComboBox" prefWidth="150"
+                          style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                <Button fx:id="refreshButton" text="Refresh" styleClass="btn-primary"/>
+                <Button fx:id="addProductButton" text="+ Add Product" styleClass="btn-primary"/>
+            </HBox>
+            <HBox spacing="16" VBox.vgrow="NEVER">
+                <VBox spacing="6" prefWidth="280">
+                    <Label text="CATEGORIES" style="-fx-text-fill: #4fc3f7; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TableView fx:id="categoryTable" prefHeight="140" prefWidth="260">
+                        <columns>
+                            <TableColumn fx:id="catNameCol" text="Category"/>
+                            <TableColumn fx:id="catCountCol" text="Count"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="LOW STOCK" style="-fx-text-fill: #f87171; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TableView fx:id="lowStockTable" prefHeight="140">
+                        <columns>
+                            <TableColumn fx:id="lowStockNameCol" text="Name"/>
+                            <TableColumn fx:id="lowStockStockCol" text="Stock"/>
+                            <TableColumn fx:id="lowStockPriceCol" text="Price"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </HBox>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <content>
+                    <GridPane fx:id="productsGrid" hgap="16" vgap="16"
+                              style="-fx-padding: 10 0 10 0;"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

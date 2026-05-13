@@ -8,7 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="tn.esprit.Controller.MainController"
-            stylesheets="@../style.css" styleClass="main-background">
+            stylesheets="@../style.css, @../styles/gaming-theme.css" styleClass="main-background">
 
     <top>
         <HBox spacing="20" alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: #0d1c2d; -fx-border-color: rgba(189, 0, 255, 0.2); -fx-border-width: 0 0 1 0;">
@@ -86,14 +86,35 @@
     </top>
 
     <left>
-        <VBox spacing="10" styleClass="sidebar">
-            <Button text="🏠 Home" onAction="#handleHome" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="📋 My Posts" onAction="#handleMyPosts" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="📢 Annonces" onAction="#handleAnnonces" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="📅 Evenements" onAction="#handleEvenements" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Region prefHeight="20" />
-            <Button text="👤 Profile" onAction="#handleProfile" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button fx:id="adminButton" text="🔧 Admin" onAction="#handleAdminDashboard" styleClass="sidebar-button" maxWidth="Infinity" />
+        <VBox spacing="8" styleClass="sidebar" prefWidth="220">
+            <padding><Insets top="24" right="14" bottom="20" left="14"/></padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox>
+                    <Label text="TEAM HUB" styleClass="brand-title"/>
+                    <Label text="E-Sport Platform" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
+            <Region prefHeight="18"/>
+            <Button text="🏠  Home" onAction="#handleHome" styleClass="nav-button-active" maxWidth="Infinity"/>
+            <Button text="📋  My Posts" onAction="#handleMyPosts" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📢  Annonces" onAction="#handleAnnonces" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📅  Evenements" onAction="#handleEvenements" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="🛒  Marketplace" onAction="#handleMarketplace" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region prefHeight="18"/>
+            <Button text="👤  Profile" onAction="#handleProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button fx:id="adminButton" text="🔧  Admin" onAction="#handleAdminDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <VBox spacing="8" styleClass="glass-panel">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <Label text="MODE E-SPORT" style="-fx-text-fill: #d8b4fe; -fx-font-size: 10px; -fx-font-weight: 800;"/>
+                <Label text="Stay competitive, track your stats &amp; rank up." wrapText="true"
+                       style="-fx-text-fill: #9ca9c6; -fx-font-size: 11px;"/>
+            </VBox>
+            <Region prefHeight="10"/>
+            <Button text="🚪  Logout" onAction="#handleLogout" styleClass="nav-button" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -141,8 +162,8 @@
         </ScrollPane>
     </center>
     <right>
-        <VBox prefWidth="230.0" spacing="25.0" styleClass="sidebar"
-              style="-fx-border-width: 0 0 0 1; -fx-background-color: #051424;">
+        <VBox prefWidth="230.0" spacing="25.0"
+              style="-fx-border-width: 0 0 0 1; -fx-border-color: rgba(216, 180, 254, 0.22); -fx-background-color: #051424;">
             <padding>
                 <Insets top="30.0" right="20.0" bottom="20.0" left="20.0" />
             </padding>
