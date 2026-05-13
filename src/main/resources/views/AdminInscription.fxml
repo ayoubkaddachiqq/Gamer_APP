@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="760.0" prefWidth="1300.0" styleClass="gaming-root"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.AdminInscriptionController"
+            stylesheets="@../style.css">
+
+    <top>
+        <VBox spacing="12.0" styleClass="gaming-header">
+            <padding>
+                <Insets bottom="16.0" left="28.0" right="28.0" top="20.0" />
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button text="← Back to Evenements" onAction="#retourEvenements"
+                        style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label styleClass="gaming-title" text="Administration des inscriptions" />
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="18" styleClass="gaming-content">
+            <padding>
+                <Insets bottom="28.0" left="28.0" right="28.0" top="20.0" />
+            </padding>
+
+            <HBox spacing="14">
+                <VBox prefWidth="180" spacing="4"
+                      style="-fx-background-color: #1e293b; -fx-padding: 16; -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.05);">
+                    <Label text="Inscriptions" style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                    <Label fx:id="lbTotal" text="0" style="-fx-text-fill: #e6edf3; -fx-font-size: 28px; -fx-font-weight: bold;" />
+                </VBox>
+                <VBox prefWidth="180" spacing="4"
+                      style="-fx-background-color: #1e293b; -fx-padding: 16; -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.05);">
+                    <Label text="En attente" style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                    <Label fx:id="lbEnAttente" text="0" style="-fx-text-fill: #4fc3f7; -fx-font-size: 28px; -fx-font-weight: bold;" />
+                </VBox>
+                <VBox prefWidth="180" spacing="4"
+                      style="-fx-background-color: #1e293b; -fx-padding: 16; -fx-background-radius: 10; -fx-border-color: rgba(255,255,255,0.05);">
+                    <Label text="Confirmes" style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                    <Label fx:id="lbConfirmes" text="0" style="-fx-text-fill: #00ff88; -fx-font-size: 28px; -fx-font-weight: bold;" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="16" styleClass="form-panel" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Liste des demandes" style="-fx-text-fill: #e6edf3; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label text="Confirme, annule ou supprime chaque inscription."
+                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                    </VBox>
+                </HBox>
+
+                <TableView fx:id="tableInscriptions" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: #0d1117; -fx-border-color: #30363d;">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="0" />
+                        <TableColumn fx:id="colEvenement" text="Evenement" prefWidth="250" />
+                        <TableColumn fx:id="colUtilisateur" text="Utilisateur" prefWidth="150" />
+                        <TableColumn fx:id="colDateInscription" text="Date inscription" prefWidth="180" />
+                        <TableColumn fx:id="colStatut" text="Statut" prefWidth="130" />
+                        <TableColumn fx:id="colActions" text="Actions" prefWidth="270" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -89,9 +89,8 @@
         <VBox spacing="10" styleClass="sidebar">
             <Button text="🏠 Home" onAction="#handleHome" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button text="📋 My Posts" onAction="#handleMyPosts" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="🌍 Explore" onAction="#handleExplore" styleClass="sidebar-button" maxWidth="Infinity" />
-            <Button text="🏆 Tournaments" onAction="#handleTournaments" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button text="📢 Annonces" onAction="#handleAnnonces" styleClass="sidebar-button" maxWidth="Infinity" />
+            <Button text="📅 Evenements" onAction="#handleEvenements" styleClass="sidebar-button" maxWidth="Infinity" />
             <Region prefHeight="20" />
             <Button text="👤 Profile" onAction="#handleProfile" styleClass="sidebar-button" maxWidth="Infinity" />
             <Button fx:id="adminButton" text="🔧 Admin" onAction="#handleAdminDashboard" styleClass="sidebar-button" maxWidth="Infinity" />

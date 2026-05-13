@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane"
+            prefHeight="800.0"
+            prefWidth="1300.0"
+            styleClass="gaming-root"
+            stylesheets="@../style.css"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.EvenementController">
+
+    <left>
+        <VBox prefWidth="230" spacing="16" styleClass="sidebar">
+            <padding>
+                <Insets top="28" right="16" bottom="28" left="16"/>
+            </padding>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <StackPane styleClass="brand-mark">
+                    <Label text="TH" styleClass="brand-mark-text"/>
+                </StackPane>
+                <VBox spacing="2">
+                    <Label text="Team Hub" styleClass="brand-title"/>
+                    <Label text="E-Sport Platform" styleClass="brand-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <Region prefHeight="12"/>
+
+            <VBox spacing="4">
+                <Button maxWidth="Infinity" text="Home" onAction="#handleHome" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="My Posts" onAction="#handleMyPosts" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Annonces" onAction="#handleAnnonces" styleClass="nav-button"/>
+                <Button maxWidth="Infinity" text="Evenements" styleClass="nav-button nav-button-active"/>
+                <Region prefHeight="20"/>
+                <Button maxWidth="Infinity" text="Profile" onAction="#handleProfile" styleClass="nav-button"/>
+                <Button fx:id="adminButton" maxWidth="Infinity" text="Admin" onAction="#handleAdmin" styleClass="nav-button"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="6" styleClass="glass-panel">
+                <padding>
+                    <Insets top="14" right="14" bottom="14" left="14"/>
+                </padding>
+                <Label text="Mode e-sport" styleClass="section-title" style="-fx-text-fill: #d8b4fe; -fx-font-weight: bold;"/>
+                <Label text="Gestion rapide des tournois, matchs et inscriptions." wrapText="true" styleClass="muted-label"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="18" styleClass="content" style="-fx-padding: 28 32 28 32;">
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Gestion des evenements" styleClass="page-title"/>
+                    <Label text="Consulte, filtre et pilote les evenements e-sport depuis un seul espace." styleClass="page-subtitle"/>
+                </VBox>
+                <Button fx:id="btnAjouter" text="+ Ajouter" onAction="#ouvrirAjouter" styleClass="primary-button"/>
+            </HBox>
+
+            <HBox spacing="14">
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="Events" styleClass="muted-label"/>
+                    <Label text="Live hub" styleClass="stat-number" style="-fx-text-fill: #d8b4fe; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="Recherche" styleClass="muted-label"/>
+                    <Label text="Titre / Lieu" styleClass="stat-number" style="-fx-text-fill: #d8b4fe; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox prefWidth="180" spacing="4" styleClass="stat-card">
+                    <Label text="Actions" styleClass="muted-label"/>
+                    <Label text="CRUD" styleClass="stat-number" style="-fx-text-fill: #d8b4fe; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="14" styleClass="glass-panel" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="18" right="18" bottom="18" left="18"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Recherche par titre" styleClass="form-label"/>
+                        <TextField fx:id="tfRechercheTitre" promptText="Titre de l'evenement"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Recherche par lieu" styleClass="form-label"/>
+                        <TextField fx:id="tfRechercheLieu" promptText="Lieu"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text=" " styleClass="form-label"/>
+                        <HBox spacing="10">
+                            <Button text="Rechercher" onAction="#rechercher" styleClass="primary-button"/>
+                            <Button text="Reinitialiser" onAction="#reinitialiser" styleClass="secondary-button"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <TableView fx:id="tableEvenements" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTitre" text="Titre" prefWidth="230"/>
+                        <TableColumn fx:id="colType" text="Type" prefWidth="105"/>
+                        <TableColumn fx:id="colLieu" text="Lieu" prefWidth="145"/>
+                        <TableColumn fx:id="colDateDebut" text="Date debut" prefWidth="125"/>
+                        <TableColumn fx:id="colDateFin" text="Date fin" prefWidth="125"/>
+                        <TableColumn fx:id="colActions" text="Actions" prefWidth="280"/>
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button text="Inscription user" onAction="#ouvrirInscriptionUser" styleClass="primary-button"/>
+                    <Button fx:id="btnAdminInscriptionsFooter" text="Admin inscriptions" onAction="#ouvrirAdmin" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

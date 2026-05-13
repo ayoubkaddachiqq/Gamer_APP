@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="800.0" prefWidth="1200.0" styleClass="gaming-root"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.EvenementFormController"
+            stylesheets="@../style.css">
+
+    <center>
+        <VBox spacing="18" styleClass="gaming-content">
+            <padding>
+                <Insets bottom="28.0" left="28.0" right="28.0" top="20.0" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Ajouter / Modifier un evenement" styleClass="gaming-title" />
+                    <Label text="Configure les informations, le lieu, la capacite et l'affiche." style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="14" alignment="TOP_LEFT" fillHeight="true" VBox.vgrow="ALWAYS">
+                <GridPane hgap="12" vgap="9" minWidth="0" prefWidth="430" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="form-panel">
+                    <padding>
+                        <Insets top="14" right="14" bottom="14" left="14"/>
+                    </padding>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="32"/>
+                        <ColumnConstraints percentWidth="68"/>
+                    </columnConstraints>
+
+                    <Label text="Titre" textFill="#e6edf3" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <TextField fx:id="tfTitre" promptText="Nom de l'evenement"
+                               style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <Label text="Description" textFill="#e6edf3" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <TextArea fx:id="taDescription" prefRowCount="2" wrapText="true"
+                                  style="-fx-control-inner-background: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                        <Button text="Corriger l'orthographe" onAction="#corrigerDescription"
+                                style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;" />
+                    </VBox>
+
+                    <Label text="Type" textFill="#e6edf3" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="cbType" maxWidth="Infinity"
+                              style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;"
+                              GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                    <Label text="Date debut" textFill="#e6edf3" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <HBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                        <DatePicker fx:id="dpDateDebut" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                    style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;" />
+                        <TextField fx:id="tfHeureDebut" prefWidth="92" promptText="18:00"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                    </HBox>
+
+                    <Label text="Date fin" textFill="#e6edf3" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                    <HBox spacing="8" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                        <DatePicker fx:id="dpDateFin" maxWidth="Infinity" HBox.hgrow="ALWAYS"
+                                    style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;" />
+                        <TextField fx:id="tfHeureFin" prefWidth="92" promptText="22:00"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                    </HBox>
+
+                    <Label text="Lieu" textFill="#e6edf3" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                    <TextField fx:id="tfLieu" promptText="Ex: Tunis, Lac 2"
+                               style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                               GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+                    <Label text="Meteo" textFill="#e6edf3" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+                    <HBox spacing="10" alignment="CENTER_LEFT"
+                          style="-fx-background-color: #0d1117; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-padding: 8;"
+                          GridPane.rowIndex="6" GridPane.columnIndex="1">
+                        <Label fx:id="lbWeatherIcon" text="--"
+                               style="-fx-font-size: 20px; -fx-min-width: 30px;" />
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lbWeatherTitle" text="Meteo non verifiee"
+                                   style="-fx-text-fill: #e6edf3; -fx-font-size: 12px; -fx-font-weight: bold;" />
+                            <Label fx:id="lbWeatherDetails" text="Choisir lieu et date debut" wrapText="true"
+                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                        </VBox>
+                        <Button text="Verifier" onAction="#verifierMeteo"
+                                style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-border-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;" />
+                    </HBox>
+
+                    <Label text="Participants max" textFill="#e6edf3" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+                    <TextField fx:id="tfNbMax" promptText="128"
+                               style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"
+                               GridPane.rowIndex="7" GridPane.columnIndex="1" />
+
+                    <Label text="Statut" textFill="#e6edf3" GridPane.rowIndex="8" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="cbStatut" maxWidth="Infinity"
+                              style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-border-color: #30363d; -fx-border-radius: 6;"
+                              GridPane.rowIndex="8" GridPane.columnIndex="1" />
+
+                    <Label text="Image" textFill="#e6edf3" GridPane.rowIndex="9" GridPane.columnIndex="0" />
+                    <HBox spacing="10" GridPane.rowIndex="9" GridPane.columnIndex="1">
+                        <TextField fx:id="tfImagePath" HBox.hgrow="ALWAYS" promptText="Chemin de l'affiche"
+                                   editable="false"
+                                   style="-fx-background-color: #0d1117; -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #8b949e; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" />
+                        <ImageView fx:id="imagePreview" fitHeight="50.0" fitWidth="70.0" preserveRatio="true"
+                                   style="-fx-background-color: #0d1117; -fx-border-color: #30363d; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                        <Button text="Choisir" onAction="#choisirImage"
+                                style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-border-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;" />
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="10" GridPane.columnIndex="1">
+                        <Button onAction="#annuler"
+                                style="-fx-background-color: #30363d; -fx-text-fill: #e6edf3; -fx-background-radius: 6; -fx-padding: 8 20; -fx-cursor: hand;" text="Annuler" />
+                        <Button onAction="#enregistrerEvenement"
+                                style="-fx-background-color: #bd00ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 20; -fx-cursor: hand;" text="Enregistrer" />
+                    </HBox>
+                </GridPane>
+
+                <VBox spacing="10" minWidth="0" prefWidth="430" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="form-panel">
+                    <padding>
+                        <Insets top="14" right="14" bottom="14" left="14"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Localisation" style="-fx-text-fill: #e6edf3; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                            <Label text="Entre un lieu puis charge la carte."
+                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                        </VBox>
+                        <Button text="Voir sur Maps" onAction="#ouvrirMaps"
+                                style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-border-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;" />
+                    </HBox>
+                    <WebView fx:id="mapView" prefHeight="440" maxHeight="470"
+                             style="-fx-background-color: #0f1729; -fx-border-color: rgba(168, 85, 247, 0.28);"
+                             VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

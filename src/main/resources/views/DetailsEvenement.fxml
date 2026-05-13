@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane prefHeight="800.0" prefWidth="1300.0" styleClass="gaming-root"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.Controller.DetailsEvenementController"
+            stylesheets="@../style.css">
+
+    <center>
+        <VBox spacing="18" styleClass="gaming-content">
+            <padding>
+                <Insets bottom="28.0" left="28.0" right="28.0" top="20.0" />
+            </padding>
+
+            <HBox alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label fx:id="lbTitre" text="Details de l'evenement" styleClass="gaming-title" />
+                    <HBox spacing="10">
+                        <Label fx:id="lbType" style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-padding: 4 12; -fx-background-radius: 12; -fx-font-size: 11px;" />
+                        <Label fx:id="lbStatut" style="-fx-background-color: #1e3a5f; -fx-text-fill: #4fc3f7; -fx-padding: 4 12; -fx-background-radius: 12; -fx-font-size: 11px;" />
+                    </HBox>
+                </VBox>
+                <Button text="← Retour" onAction="#retour"
+                        style="-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #00E5FF44; -fx-border-radius: 20; -fx-padding: 8 18;"/>
+            </HBox>
+
+            <HBox spacing="18" VBox.vgrow="ALWAYS">
+                <VBox spacing="16" minWidth="360" prefWidth="470" styleClass="form-panel">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <ImageView fx:id="imageEvenement" fitWidth="420" fitHeight="235" preserveRatio="true"
+                               style="-fx-background-color: #0f1729; -fx-background-radius: 10;" />
+
+                    <VBox spacing="8">
+                        <Label text="Description" style="-fx-text-fill: #e6edf3; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <Label fx:id="lbDescription" wrapText="true" style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" />
+                    </VBox>
+
+                    <GridPane hgap="14" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="38"/>
+                            <ColumnConstraints percentWidth="62"/>
+                        </columnConstraints>
+
+                        <Label text="Lieu" style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                        <Label fx:id="lbLieu" style="-fx-text-fill: #e6edf3; -fx-font-size: 12px;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                        <Label text="Date debut" style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                        <Label fx:id="lbDateDebut" style="-fx-text-fill: #e6edf3; -fx-font-size: 12px;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                        <Label text="Date fin" style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                        <Label fx:id="lbDateFin" style="-fx-text-fill: #e6edf3; -fx-font-size: 12px;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                        <Label text="Participants max" style="-fx-text-fill: #8b949e; -fx-font-size: 12px;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                        <Label fx:id="lbNbMax" style="-fx-text-fill: #e6edf3; -fx-font-size: 12px;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                    </GridPane>
+
+                    <VBox spacing="8">
+                        <Label text="Meteo" style="-fx-text-fill: #e6edf3; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                        <HBox spacing="10" alignment="CENTER_LEFT"
+                              style="-fx-background-color: #0d1117; -fx-border-color: #30363d; -fx-border-radius: 8; -fx-padding: 12;">
+                            <Label fx:id="lbWeatherIcon" text="--" style="-fx-font-size: 24px; -fx-min-width: 40px;" />
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label fx:id="lbWeatherTitle" text="Meteo non verifiee"
+                                       style="-fx-text-fill: #e6edf3; -fx-font-size: 13px; -fx-font-weight: bold;" />
+                                <Label fx:id="lbWeatherDetails" text="Choisir lieu et date debut" wrapText="true"
+                                       style="-fx-text-fill: #8b949e; -fx-font-size: 11px;" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <VBox spacing="12" prefWidth="660" maxWidth="760" HBox.hgrow="ALWAYS" styleClass="form-panel">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Localisation sur la carte" style="-fx-text-fill: #e6edf3; -fx-font-size: 14px; -fx-font-weight: bold;" />
+                    <WebView fx:id="mapView" prefHeight="560" maxHeight="580"
+                             style="-fx-background-color: #0f1729; -fx-border-color: rgba(168, 85, 247, 0.28);"
+                             VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
