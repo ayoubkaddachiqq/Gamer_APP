@@ -38,6 +38,8 @@ public class GestionInscriptionController {
     @FXML private TextField tfUtilisateurId;
     @FXML private Label lbSelection;
     @FXML private Label lbEmptyState;
+    @FXML private Label lbMesInscriptionsEmpty;
+    @FXML private VBox mesInscriptionsBox;
     @FXML private Button btnInscrire;
     @FXML private Button btnRetourEvenements;
     @FXML private Button btnRetourHeader;
@@ -56,6 +58,8 @@ public class GestionInscriptionController {
         evenementSelectionne = GestionEvenementController.evenementSelectionne;
         chargerEvenements();
         afficherSelection();
+        tfUtilisateurId.textProperty().addListener((observable, oldValue, newValue) -> chargerMesInscriptions());
+        chargerMesInscriptions();
     }
 
     private void chargerEvenements() {
@@ -213,10 +217,81 @@ public class GestionInscriptionController {
             Inscription inscription = new Inscription(evenementSelectionne.getId(), utilisateurId, "En attente");
             inscriptionService.add(inscription);
             afficherAlerte(Alert.AlertType.INFORMATION, "Inscription envoyee pour : " + evenementSelectionne.getTitre());
-            tfUtilisateurId.clear();
+            chargerMesInscriptions(utilisateurId);
         } catch (NumberFormatException e) {
             afficherAlerte(Alert.AlertType.ERROR, "L'ID utilisateur doit etre un nombre.");
         }
+    }
+
+    @FXML
+    void actualiserMesInscriptions(ActionEvent event) {
+        chargerMesInscriptions();
+    }
+
+    private void chargerMesInscriptions() {
+        String valeur = tfUtilisateurId.getText().trim();
+        if (valeur.isEmpty()) {
+            afficherMesInscriptions(List.of());
+            return;
+        }
+
+        try {
+            chargerMesInscriptions(Integer.parseInt(valeur));
+        } catch (NumberFormatException e) {
+            afficherMesInscriptions(List.of());
+        }
+    }
+
+    private void chargerMesInscriptions(int utilisateurId) {
+        afficherMesInscriptions(inscriptionService.getByUtilisateurId(utilisateurId));
+    }
+
+    private void afficherMesInscriptions(List<Inscription> inscriptions) {
+        mesInscriptionsBox.getChildren().clear();
+        boolean empty = inscriptions.isEmpty();
+        lbMesInscriptionsEmpty.setVisible(empty);
+        lbMesInscriptionsEmpty.setManaged(empty);
+        if (empty) {
+            return;
+        }
+
+        List<Evenement> evenements = evenementService.getAll();
+        for (Inscription inscription : inscriptions) {
+            mesInscriptionsBox.getChildren().add(creerLigneInscription(inscription, evenements));
+        }
+    }
+
+    private VBox creerLigneInscription(Inscription inscription, List<Evenement> evenements) {
+        String titre = evenements.stream()
+                .filter(evenement -> evenement.getId() == inscription.getEvenementId())
+                .map(Evenement::getTitre)
+                .findFirst()
+                .orElse("Evenement #" + inscription.getEvenementId());
+
+        Label titreLabel = new Label(titre);
+        titreLabel.getStyleClass().add("user-registration-title");
+        titreLabel.setWrapText(true);
+
+        Label statutLabel = new Label(valeurOuTiret(inscription.getStatut()));
+        statutLabel.getStyleClass().setAll("status-pill", styleStatutInscription(inscription.getStatut()));
+
+        VBox ligne = new VBox(8, titreLabel, statutLabel);
+        ligne.getStyleClass().add("user-registration-item");
+        return ligne;
+    }
+
+    private String styleStatutInscription(String statut) {
+        if (statut == null) {
+            return "status-pending";
+        }
+        String normalized = statut.toLowerCase();
+        if (normalized.contains("confirm")) {
+            return "status-confirmed";
+        }
+        if (normalized.contains("annul")) {
+            return "status-cancelled";
+        }
+        return "status-pending";
     }
 
     private void afficherAlerte(Alert.AlertType type, String message) {

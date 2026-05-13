@@ -98,9 +98,16 @@
 
                     <Region VBox.vgrow="ALWAYS"/>
 
-                    <VBox spacing="8" styleClass="user-register-note">
-                        <Label text="Statut" styleClass="muted-label"/>
-                        <Label text="En attente" styleClass="status-pill"/>
+                    <VBox spacing="10" styleClass="user-register-note">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Mes inscriptions" styleClass="section-title"/>
+                                <Label text="Statut selon l'ID utilisateur saisi." wrapText="true" styleClass="muted-label"/>
+                            </VBox>
+                            <Button text="Actualiser" onAction="#actualiserMesInscriptions" styleClass="secondary-button"/>
+                        </HBox>
+                        <Label fx:id="lbMesInscriptionsEmpty" text="Aucune inscription trouvee." wrapText="true" styleClass="muted-label"/>
+                        <VBox fx:id="mesInscriptionsBox" spacing="8"/>
                     </VBox>
                 </VBox>
             </HBox>

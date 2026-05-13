@@ -54,6 +54,30 @@ public class InscriptionService implements IService<Inscription> {
         return liste;
     }
 
+    public List<Inscription> getByUtilisateurId(int utilisateurId) {
+        List<Inscription> liste = new ArrayList<>();
+        String sql = "SELECT * FROM inscription WHERE utilisateur_id=? ORDER BY date_inscription DESC";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, utilisateurId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Inscription i = new Inscription();
+                i.setId(rs.getInt("id"));
+                i.setEvenementId(rs.getInt("evenement_id"));
+                i.setUtilisateurId(rs.getInt("utilisateur_id"));
+                i.setStatut(rs.getString("statut"));
+                if (rs.getTimestamp("date_inscription") != null) {
+                    i.setDateInscription(rs.getTimestamp("date_inscription").toLocalDateTime());
+                }
+                liste.add(i);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur lecture par utilisateur : " + ex.getMessage());
+        }
+        return liste;
+    }
+
     @Override
     public void update(Inscription i) {
         String sql = "UPDATE inscription SET utilisateur_id=?, statut=? WHERE id=?";

@@ -431,6 +431,19 @@
     -fx-padding: 12;
 }
 
+.user-registration-item {
+    -fx-background-color: rgba(15, 23, 42, 0.78);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: rgba(148, 163, 184, 0.16);
+    -fx-padding: 10;
+}
+
+.user-registration-title {
+    -fx-text-fill: #eef4ff;
+    -fx-font-weight: 800;
+}
+
 .map-frame,
 .image-frame {
     -fx-background-color: rgba(9, 14, 28, 0.94);
