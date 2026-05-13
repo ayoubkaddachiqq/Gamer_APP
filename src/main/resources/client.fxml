@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.ClientController"
+            styleClass="app-root">
+
+    <top>
+        <VBox styleClass="app-header" spacing="12">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🛍️ Marketplace" styleClass="app-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔄 Refresh" fx:id="refreshButton"/>
+            </HBox>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Search products..." HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="categoryComboBox" promptText="Category" prefWidth="150"/>
+                <ComboBox fx:id="sortComboBox" promptText="Sort By" prefWidth="150"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.55">
+            <VBox spacing="15" style="-fx-padding: 20;">
+                <Label text="Products" styleClass="section-title"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                    <GridPane fx:id="productsGrid" hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" fillWidth="true"/>
+                            <ColumnConstraints percentWidth="50" fillWidth="true"/>
+                        </columnConstraints>
+                    </GridPane>
+                </ScrollPane>
+            </VBox>
+
+            <VBox spacing="15" style="-fx-padding: 20;">
+                <Label text="Shopping Cart" styleClass="section-title"/>
+
+                <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 12; -fx-spacing: 10;">
+                    <HBox spacing="8">
+                        <ComboBox fx:id="panierComboBox" promptText="Select or Create Cart..." HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="referenceField" promptText="Reference" HBox.hgrow="ALWAYS"/>
+                        <Button text="+ New Cart" fx:id="createPanierButton"/>
+                    </HBox>
+                </VBox>
+
+                <VBox VBox.vgrow="ALWAYS" spacing="10">
+                    <Label text="Cart Items" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #24313d;"/>
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                        <VBox fx:id="panierItemsContainer" spacing="10"/>
+                    </ScrollPane>
+                </VBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <Label fx:id="panierTotalLabel" text="Total: $0.00" styleClass="total-label"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🗑️ Clear Cart" fx:id="clearPanierButton" styleClass="danger-button"/>
+                </HBox>
+            </VBox>
+        </SplitPane>
+    </center>
+
+</BorderPane>

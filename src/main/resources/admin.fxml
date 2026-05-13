@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.AdminController"
+            styleClass="app-root">
+
+    <top>
+        <VBox styleClass="app-header" spacing="0">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📊 Admin Dashboard" styleClass="app-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔄 Refresh" fx:id="refreshButton"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-padding: 20; -fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox spacing="20">
+
+                <!-- ─── STAT CARDS ─── -->
+                <HBox spacing="16">
+                    <VBox fx:id="totalProductsCard" style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Total Products" style="-fx-font-size: 13; -fx-text-fill: #6b7280;"/>
+                        <Label fx:id="totalProductsLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #2563eb;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Categories" style="-fx-font-size: 13; -fx-text-fill: #6b7280;"/>
+                        <Label fx:id="totalCategoriesLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #059669;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Total Carts" style="-fx-font-size: 13; -fx-text-fill: #6b7280;"/>
+                        <Label fx:id="totalCartsLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #8b5cf6;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20; -fx-spacing: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Low Stock (≤5)" style="-fx-font-size: 13; -fx-text-fill: #6b7280;"/>
+                        <Label fx:id="lowStockLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #dc2626;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- ─── INSIGHTS ─── -->
+                <HBox spacing="16">
+                    <!-- Category breakdown -->
+                    <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16; -fx-spacing: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Products by Category" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2933;"/>
+                        <TableView fx:id="categoryTable" VBox.vgrow="ALWAYS" style="-fx-border-color: transparent;">
+                            <columns>
+                                <TableColumn fx:id="catNameCol" text="Category" prefWidth="140"/>
+                                <TableColumn fx:id="catCountCol" text="Count" prefWidth="70"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Low stock table -->
+                    <VBox style="-fx-background-color: #ffffff; -fx-border-color: #dce3ea; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 16; -fx-spacing: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                        <Label text="Low Stock Alerts" style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1f2933;"/>
+                        <TableView fx:id="lowStockTable" VBox.vgrow="ALWAYS" style="-fx-border-color: transparent;">
+                            <columns>
+                                <TableColumn fx:id="lowStockNameCol" text="Product" prefWidth="130"/>
+                                <TableColumn fx:id="lowStockStockCol" text="Stock" prefWidth="60"/>
+                                <TableColumn fx:id="lowStockPriceCol" text="Price" prefWidth="80"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <!-- ─── PRODUCT MANAGEMENT ─── -->
+                <VBox spacing="12">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <Label text="Product Management" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: #24313d;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Add Product" fx:id="addProductButton"/>
+                    </HBox>
+
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchField" promptText="Search products..." HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="categoryComboBox" promptText="Category" prefWidth="150"/>
+                        <ComboBox fx:id="sortComboBox" promptText="Sort By" prefWidth="150"/>
+                    </HBox>
+
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                        <GridPane fx:id="productsGrid" hgap="12" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="33" fillWidth="true"/>
+                                <ColumnConstraints percentWidth="33" fillWidth="true"/>
+                                <ColumnConstraints percentWidth="33" fillWidth="true"/>
+                            </columnConstraints>
+                        </GridPane>
+                    </ScrollPane>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

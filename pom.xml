@@ -31,6 +31,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>28.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,7 +45,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>tn.esprit.MarketplaceApp</mainClass>
+                    <mainClass>tn.esprit.AdminApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

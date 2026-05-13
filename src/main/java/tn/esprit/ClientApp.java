@@ -8,15 +8,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MarketplaceApp extends Application {
+public class ClientApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/marketplace.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client.fxml"));
         BorderPane root = loader.load();
         Scene scene = new Scene(root, 1180, 720);
         scene.getStylesheets().add(getClass().getResource("/marketplace.css").toExternalForm());
-        stage.setTitle("Marketplace Management");
+        stage.setTitle("Marketplace - Client");
         stage.setScene(scene);
         stage.setMinWidth(980);
         stage.setMinHeight(640);
