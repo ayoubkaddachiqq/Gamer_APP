@@ -57,9 +57,12 @@ SET @has_user_id = (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_
 SET @sql = IF(@has_user_id = 0, 'ALTER TABLE evenement ADD COLUMN user_id INT NOT NULL DEFAULT 1 AFTER image', 'SELECT \'user_id already exists\'');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
--- Add FK on user_id if missing
-SET @fk_user_exists = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'evenement' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
-SET @sql = IF(@fk_user_exists IS NULL, 'ALTER TABLE evenement ADD CONSTRAINT fk_evenement_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE', 'SELECT \'fk_evenement_user already exists\'');
+-- Ensure FK on user_id points to users, not users_old_backup
+SET @fk_user_refs = (SELECT REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'evenement' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @fk_user_name = (SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = @db AND TABLE_NAME = 'evenement' AND COLUMN_NAME = 'user_id' AND REFERENCED_TABLE_NAME IS NOT NULL LIMIT 1);
+SET @sql = IF(@fk_user_refs IS NULL OR @fk_user_refs != 'users', CONCAT('ALTER TABLE evenement DROP FOREIGN KEY ', @fk_user_name), 'SELECT \'fk_evenement_user already correct\'');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+SET @sql = 'ALTER TABLE evenement ADD CONSTRAINT fk_evenement_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE';
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ============================================================
