@@ -100,6 +100,7 @@ public class AvatarPickerController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 1000, 700));
         stage.setTitle("Team Hub - Edit Profile");
+        stage.setMaximized(true);
         stage.show();
     }
 }

@@ -402,7 +402,7 @@ public class MarketplaceController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
             stage.setMinWidth(1100); stage.setMinHeight(700);
-            stage.setTitle("Team Hub - E-Sport Recruitment"); stage.show();
+            stage.setTitle("Team Hub - E-Sport Recruitment"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -413,7 +413,7 @@ public class MarketplaceController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
             stage.setMinWidth(1100); stage.setMinHeight(700);
-            stage.setTitle("My Posts - Team Hub"); stage.show();
+            stage.setTitle("My Posts - Team Hub"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -423,7 +423,7 @@ public class MarketplaceController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
-            stage.setTitle("Team Hub - Gestion des Annonces"); stage.show();
+            stage.setTitle("Team Hub - Gestion des Annonces"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -436,7 +436,7 @@ public class MarketplaceController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
-            stage.setTitle("Team Hub - Gestion des Evenements"); stage.show();
+            stage.setTitle("Team Hub - Gestion des Evenements"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -446,7 +446,7 @@ public class MarketplaceController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
-            stage.setTitle("Team Hub - Profile"); stage.show();
+            stage.setTitle("Team Hub - Profile"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -456,7 +456,7 @@ public class MarketplaceController {
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
-            stage.setTitle("Team Hub - Marketplace"); stage.show();
+            stage.setTitle("Team Hub - Marketplace"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -467,7 +467,7 @@ public class MarketplaceController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1100, 700));
             stage.setMinWidth(1100); stage.setMinHeight(700);
-            stage.setTitle("Admin Dashboard - Team Hub"); stage.show();
+            stage.setTitle("Admin Dashboard - Team Hub"); stage.setMaximized(true); stage.show();
         } catch (IOException e) { e.printStackTrace(); }
     }
 
@@ -477,7 +477,7 @@ public class MarketplaceController {
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 1000, 700));
-        stage.setTitle("Team Hub - Login"); stage.show();
+        stage.setTitle("Team Hub - Login"); stage.setMaximized(true); stage.show();
     }
 
     private void showError(String t, String m) {

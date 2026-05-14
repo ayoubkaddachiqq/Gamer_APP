@@ -73,6 +73,7 @@ public class RegisterController {
         stage.setScene(new Scene(root, 1000, 700));
         stage.setMinWidth(1000);
         stage.setMinHeight(700);
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -84,6 +85,7 @@ public class RegisterController {
         stage.setScene(new Scene(root, 1100, 700));
         stage.setMinWidth(1100);
         stage.setMinHeight(700);
+        stage.setMaximized(true);
         stage.show();
     }
 }

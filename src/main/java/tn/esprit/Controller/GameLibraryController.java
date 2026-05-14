@@ -134,6 +134,7 @@ public class GameLibraryController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 1000, 700));
         stage.setTitle("Team Hub - Profile");
+        stage.setMaximized(true);
         stage.show();
     }
 }

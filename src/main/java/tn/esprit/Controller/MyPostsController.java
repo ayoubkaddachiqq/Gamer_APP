@@ -310,6 +310,7 @@ public class MyPostsController {
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
             stage.setTitle("Team Hub - E-Sport Recruitment");
+            stage.setMaximized(true);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

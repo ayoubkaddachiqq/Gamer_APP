@@ -139,6 +139,7 @@ public class DetailsEvenementController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

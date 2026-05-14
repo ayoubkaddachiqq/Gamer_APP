@@ -590,6 +590,7 @@ public class MainController {
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
             stage.setTitle("My Posts - Team Hub");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -637,6 +638,7 @@ public class MainController {
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Annonces");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -654,6 +656,7 @@ public class MainController {
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -671,6 +674,7 @@ public class MainController {
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Marketplace");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -685,6 +689,7 @@ public class MainController {
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Profile");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -701,6 +706,7 @@ public class MainController {
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
             stage.setTitle("Admin Dashboard - Team Hub");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -731,6 +737,7 @@ public class MainController {
             Stage stage = (Stage) feedContainer.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Login");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

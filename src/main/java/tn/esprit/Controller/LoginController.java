@@ -64,6 +64,7 @@ public class LoginController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("Team Hub - Reset Password");
         stage.setScene(new Scene(root, 1000, 700));
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -76,6 +77,7 @@ public class LoginController {
         stage.setScene(new Scene(root, 1000, 700));
         stage.setMinWidth(1000);
         stage.setMinHeight(700);
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -87,6 +89,7 @@ public class LoginController {
         stage.setScene(new Scene(root, 1100, 700));
         stage.setMinWidth(1100);
         stage.setMinHeight(700);
+        stage.setMaximized(true);
         stage.show();
     }
 }

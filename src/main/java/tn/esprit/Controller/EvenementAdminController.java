@@ -167,6 +167,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Nouvel Evenement");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherErreur(e.getMessage());
@@ -182,6 +183,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Modifier Evenement");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherErreur(e.getMessage());
@@ -214,6 +216,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 800));
             stage.setTitle("Team Hub - Details de l'evenement");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherErreur("Erreur lors de l'ouverture des details");
@@ -228,6 +231,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Administration des inscriptions");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherErreur("Erreur ouverture admin inscriptions");
@@ -242,6 +246,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Inscription aux evenements");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherErreur(e.getMessage());
@@ -258,6 +263,7 @@ public class EvenementAdminController {
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
             stage.setTitle("Team Hub - E-Sport Recruitment");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -277,6 +283,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Annonces");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -291,6 +298,7 @@ public class EvenementAdminController {
             Stage stage = (Stage) tableEvenements.getScene().getWindow();
             stage.setScene(new Scene(root, 1000, 700));
             stage.setTitle("Team Hub - Profile");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -307,6 +315,7 @@ public class EvenementAdminController {
             stage.setMinWidth(1100);
             stage.setMinHeight(700);
             stage.setTitle("Admin Dashboard - Team Hub");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

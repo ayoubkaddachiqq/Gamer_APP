@@ -263,6 +263,7 @@ public class GestionInscriptionController {
             Stage stage = (Stage) eventsFlow.getScene().getWindow();
             stage.setScene(new Scene(root, 1300, 760));
             stage.setTitle("Team Hub - Gestion des Evenements");
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             afficherAlerte(Alert.AlertType.ERROR, e.getMessage());

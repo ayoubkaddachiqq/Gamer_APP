@@ -75,6 +75,7 @@ public class ProfileEditController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 700, 500));
         stage.setTitle("Team Hub - Choose Avatar");
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -89,6 +90,7 @@ public class ProfileEditController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 1000, 700));
         stage.setTitle("Team Hub - Profile");
+        stage.setMaximized(true);
         stage.show();
     }
 
